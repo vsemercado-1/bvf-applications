@@ -184,6 +184,15 @@ export const SECTIONS: Section[] = [
         help: "The type of investment (SAFE, note, or priced round), the amount, the valuation or cap, the lead investor, and when it closed or is expected to close.",
       },
       {
+        key: "Investors",
+        label: "Who are {company's} investors?",
+        type: "textarea",
+        required: true,
+        showIf: { key: "Has Raised", equals: "Yes" },
+        placeholder: "Antler PR (lead), two angels from the Parallel18 network, Techstars",
+        help: "Name the lead investor in your most recent round and any funds, accelerators, or notable angels on your cap table.",
+      },
+      {
         key: "Cash and Burn",
         label: "How much cash does {company} have now, and how much does it spend per month?",
         type: "text",
@@ -299,6 +308,16 @@ export const SCORE_AXES = [
       1: "Immaterial; the company is well funded and the check changes nothing.",
       3: "Helpful, extends runway, but no specific milestone depends on it.",
       5: "Unlocks a round, a key hire, or a milestone the company cannot reach without it.",
+    },
+  },
+  {
+    key: "Investor Signal Score",
+    label: "Investor signal",
+    question: "How much diligence have credible investors already done on this company?",
+    anchors: {
+      1: "No outside investors, or friends and family only.",
+      3: "Angels, an accelerator, or a regional fund; no institutional lead.",
+      5: "A priced or capped round led by an institutional investor with a strong track record.",
     },
   },
   {

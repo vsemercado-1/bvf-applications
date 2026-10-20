@@ -51,6 +51,7 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
               <dt>Team</dt><dd>{f["Team"]}</dd>
               <dt>Raised to date</dt><dd>{f["Has Raised"] === "No" ? "None (no outside investment)" : f["Total Raised"]}</dd>
               <dt>Last round</dt><dd>{f["Last Round"] || "—"}</dd>
+              <dt>Investors</dt><dd>{f["Has Raised"] === "No" ? "None yet" : f["Investors"] || "—"}</dd>
               <dt>Cash &amp; burn</dt><dd>{f["Cash and Burn"]}</dd>
               <dt>Raising</dt><dd>{f["Raising"]}{f["Raise Details"] ? ` — ${f["Raise Details"]}` : ""}</dd>
               <dt>Standard terms</dt><dd>{f["Terms OK"]}{f["Terms Notes"] ? ` — ${f["Terms Notes"]}` : ""}</dd>
