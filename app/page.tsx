@@ -114,6 +114,7 @@ export default function Home() {
             <p className="body" style={{ fontSize: 17 }}>You&apos;ll need to meet the two requirements below. The rest of the application is about you and your company, and takes about twelve minutes. Your answers are saved automatically.</p>
           </div>
           <EligibilityGate />
+          <p className="small muted" style={{ textAlign: "center" }}>Already started? <a href="/resume">Resume your application</a>.</p>
         </div>
       </section>
 

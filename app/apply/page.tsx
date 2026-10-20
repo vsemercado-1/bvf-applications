@@ -12,7 +12,10 @@ export default async function ApplyPage({ searchParams }: { searchParams: Promis
     <>
       <SiteHeader nav={false} />
       <main className="narrow" style={{ padding: "48px 24px 80px", display: "flex", flexDirection: "column", gap: 28 }}>
-        <div className="eyebrow">2027 Cohort application · four short steps · saves as you go</div>
+        <div className="eyebrow">2027 Cohort application · four short steps</div>
+        <p className="body small" style={{ marginTop: -16 }}>
+          Your answers save as you type, so you can close this tab and come back on this browser. After the first step, we&apos;ll also email you a private link to finish from any device.
+        </p>
         <ApplicationForm region={region!} />
       </main>
       <SiteFooter />

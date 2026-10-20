@@ -25,6 +25,7 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [resumeLink, setResumeLink] = useState<string | null>(null);
+  const [emailedTo, setEmailedTo] = useState<string | null>(null);
   const dirty = useRef(false);
 
   useEffect(() => {
@@ -69,7 +70,8 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
         if (!res.ok) throw new Error(await res.text());
         const data = (await res.json()) as { token: string; resumeUrl: string; emailed: boolean };
         setToken(data.token);
-        if (!data.emailed) setResumeLink(data.resumeUrl);
+        if (data.emailed) setEmailedTo(payload["Email"] || null);
+        else setResumeLink(data.resumeUrl);
         setSaving("saved");
         dirty.current = false;
         return data;
@@ -217,9 +219,13 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
         </div>
       </div>
 
-      {resumeLink && (
+      {step > 0 && (emailedTo || resumeLink) && (
         <div className="notice">
-          Your draft is saved. To return to it later from any device, keep this link: <a href={resumeLink}>{resumeLink}</a>
+          {emailedTo ? (
+            <>Your draft is saved. We emailed a private link to <b>{emailedTo}</b> so you can finish from any device. On this browser, your answers are here whenever you come back.</>
+          ) : (
+            <>Your draft is saved in this browser. To finish from another device, keep this link: <a href={resumeLink!}>{resumeLink}</a></>
+          )}
         </div>
       )}
 
