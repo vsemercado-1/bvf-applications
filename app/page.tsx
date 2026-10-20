@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { SiteHeader, SiteFooter, deadlineLabel } from "@/components/SiteChrome";
+import { SiteHeader, SiteFooter, deadlineLong } from "@/components/SiteChrome";
+import { Countdown } from "@/components/Countdown";
+import { BenefitArt } from "@/components/BenefitArt";
 import { EligibilityGate } from "@/components/EligibilityGate";
 import { NominateForm } from "@/components/NominateForm";
 
@@ -18,7 +20,7 @@ export default function Home() {
       <section className="dark hero">
         <div className="hero-glow" aria-hidden="true" />
         <div className="wrap">
-          <div className="eyebrow">2027 Cohort · Applications open through {deadlineLabel()}</div>
+          <div className="eyebrow">Applications open through 11:59 PM PT {deadlineLong()} · <Countdown /></div>
           <h1>Bravo Venture Fellowship</h1>
           <p className="lede">$250,000 in early-stage funding and a one-year fellowship for founders of Puerto Rican descent.</p>
           <p className="desc">
@@ -36,7 +38,7 @@ export default function Home() {
           </div>
           <div className="fellows">
             <span className="eyebrow">Previous Fellows</span>
-            <b>BrainHi</b><b>Skootel</b><b>GoSprout</b><b>Raya Power</b>
+            <a href="https://brainhi.com" target="_blank" rel="noreferrer">BrainHi</a><a href="https://skootel.com" target="_blank" rel="noreferrer">Skootel</a><a href="https://gosprout.app" target="_blank" rel="noreferrer">GoSprout</a><a href="https://rayapower.com" target="_blank" rel="noreferrer">Raya Power</a>
           </div>
         </div>
       </section>
@@ -47,24 +49,23 @@ export default function Home() {
             <div className="eyebrow">Eligibility</div>
             <h2>Who Can Apply</h2>
             <p className="body" style={{ fontSize: 17, lineHeight: 1.6 }}>
-              The Fellowship is designed for founders who have established early traction and are preparing to raise institutional venture capital. The investment is intended to be catalytic: companies are typically pre-Series A and have raised less than approximately $3 million. The Foundation also considers each company&apos;s potential contribution to Puerto Rico&apos;s economy over the course of the program.
+              The Fellowship is designed for founders who have established early traction with their companies and are preparing to raise institutional venture capital. Their companies are typically pre-Series A and have raised less than $3 million. The Foundation will consider each company&apos;s potential contribution to Puerto Rico&apos;s economy over the course of the program.
             </p>
           </div>
           <div className="lists">
             <div className="list">
-              <div className="list-title">Requirements</div>
-              <div className="list-item"><Check />Founder or co-founder of Puerto Rican descent</div>
-              <div className="list-item"><Check />Resident of Puerto Rico, the New York City metro area, the Miami metro area, or the San Francisco Bay Area</div>
-              <div className="list-item"><Check />Venture-stage company with paying customers, pilots, or signed commitments</div>
-              <div className="list-item"><Check />Any industry; previous Fellows have built software, hardware, and services businesses</div>
-              <div className="list-item"><Check />Planning to raise capital within the next twelve months</div>
+              <div className="list-title">Signs you&apos;re a good fit</div>
+              <div className="list-item"><Check />You&apos;re a founder of Puerto Rican descent.</div>
+              <div className="list-item"><Check />You&apos;re a resident of Puerto Rico, or live in one of these metro areas: NYC, San Francisco, Miami.</div>
+              <div className="list-item"><Check />You&apos;re building a venture-stage company with paying customers, pilots, or signed commitments.</div>
+              <div className="list-item"><Check />You&apos;re planning to raise capital in the next 12 months.</div>
             </div>
             <div className="list">
-              <div className="list-title" style={{ color: "var(--muted)" }}>Generally not a fit</div>
-              <div className="list-item body"><Cross />Pre-product or idea-stage companies</div>
-              <div className="list-item body"><Cross />Companies that have raised a priced Series A, or for which $250,000 would not be material</div>
-              <div className="list-item body"><Cross />Founders based in Puerto Rico who are not of Puerto Rican descent</div>
-              <div className="list-item body"><Cross />Businesses not intended to scale</div>
+              <div className="list-title" style={{ color: "var(--muted)" }}>You may not be a good fit</div>
+              <div className="list-item body"><Cross />You&apos;re pre-product or at the idea stage.</div>
+              <div className="list-item body"><Cross />Your company has already raised a priced Series A, or $250,000 would not be material to your business.</div>
+              <div className="list-item body"><Cross />You&apos;re based in Puerto Rico but are not of Puerto Rican descent.</div>
+              <div className="list-item body"><Cross />You don&apos;t intend to scale your business significantly.</div>
               <p className="small muted" style={{ marginTop: 4 }}>Founders who do not yet meet these criteria are welcome to apply and will be considered for future cohorts.</p>
             </div>
           </div>
@@ -79,24 +80,24 @@ export default function Home() {
           </div>
           <div className="cards">
             <div className="card">
-              <span className="num">01</span>
+              <BenefitArt kind="capital" />
               <h3>$250,000 Investment</h3>
-              <p>The Foundation invests $250,000 in each Fellow&apos;s company through a standard SAFE at the valuation cap of the company&apos;s most recent round, together with a small common-stock purchase. Terms are the same for every Fellow.</p>
+              <p>The Foundation invests $250,000 in each Fellow&apos;s company through a standard SAFE at the valuation cap of the company&apos;s most recent round, together with a small common-stock purchase.</p>
             </div>
             <div className="card">
-              <span className="num">02</span>
+              <BenefitArt kind="mentorship" />
               <h3>Mentorship and Network Access</h3>
-              <p>Each Fellow is paired with an advisor from Thoma Bravo for the duration of the program, serving as a thought partner on strategy, go-to-market, and organizational questions. Fellows may request introductions to Thoma Bravo portfolio companies and the firm&apos;s broader network.</p>
+              <p>Each Fellow is paired with an advisor from Thoma Bravo for the duration of the program, serving as a thought partner on strategy, go-to-market, and organizational questions.</p>
             </div>
             <div className="card">
-              <span className="num">03</span>
+              <BenefitArt kind="communications" />
               <h3>Communications and Fundraising Support</h3>
-              <p>Fellows receive dedicated public relations support, including media placements, and hands-on preparation for fundraising, including pitch development and investor outreach. In the 2026 cohort, this work contributed to a seed term sheet and to follow-on capital well in excess of a Fellow&apos;s initial plan.</p>
+              <p>Fellows receive dedicated public relations support, including media placements, and hands-on preparation for fundraising, including pitch development and investor outreach.</p>
             </div>
             <div className="card">
-              <span className="num">04</span>
+              <BenefitArt kind="orlando" />
               <h3>Mentorship from Orlando Bravo</h3>
-              <p>Orlando Bravo meets with each Fellow during the program to review the business and offer guidance drawn from his experience building Thoma Bravo.</p>
+              <p>Orlando Bravo meets with each Fellow during the program to review their business and offer support.</p>
             </div>
           </div>
           <div className="quote">

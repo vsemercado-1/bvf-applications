@@ -36,14 +36,18 @@ export function SiteFooter() {
       <div className="wrap">
         <div style={{ maxWidth: 520 }}>
           <b>Timeline</b>
-          Applications are reviewed on a rolling basis through {deadlineLabel()}. Finalists are interviewed by the selection committee in late January. Fellows are announced in February, and the program runs through December.
+          Applications are reviewed on a rolling basis through {deadlineLong()}. Finalists are interviewed by the selection committee in late January. Fellows are announced in February, and the program runs through December.
         </div>
-        <div>
+        <div className="footer-brand">
+          <a href="https://www.bravofamilyfoundation.org" aria-label="Bravo Family Foundation">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/bff-wordmark.png" alt="Bravo Family Foundation" className="bff-wordmark" width={900} height={251} />
+          </a>
           <b>A program of the Bravo Family Foundation</b>
           <a href="https://www.bravofamilyfoundation.org">bravofamilyfoundation.org</a>
           {email && (
             <>
-              {" · "}
+              {" · Questions? "}
               <a href={`mailto:${email}`}>{email}</a>
             </>
           )}
@@ -57,4 +61,10 @@ export function deadlineLabel(): string {
   const raw = process.env.NEXT_PUBLIC_DEADLINE || "2027-01-15";
   const d = new Date(raw + "T12:00:00Z");
   return d.toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
+}
+
+export function deadlineLong(): string {
+  const raw = process.env.NEXT_PUBLIC_DEADLINE || "2027-01-15";
+  const d = new Date(raw + "T12:00:00Z");
+  return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 }

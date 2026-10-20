@@ -87,7 +87,8 @@ input::placeholder, textarea::placeholder { color: #8a8a8a; }
 .stat span { font-size: 13px; color: var(--on-dark-muted); }
 .fellows { display: flex; align-items: center; gap: 28px; padding: 26px 0 36px; border-top: 1px solid #262626; margin-top: 12px; flex-wrap: wrap; }
 .fellows .eyebrow { color: #6b6b6b; font-size: 12px; }
-.fellows b { font-size: 16px; color: #e6e6e6; }
+.fellows a { font-size: 16px; font-weight: 700; color: #e6e6e6; text-decoration: none; }
+.fellows a:hover { color: #fff; text-decoration: underline; }
 
 /* Sections */
 .section { padding: 72px 0; border-bottom: 1px solid var(--line); }
@@ -103,6 +104,9 @@ input::placeholder, textarea::placeholder { color: #8a8a8a; }
 .list-item svg { flex: 0 0 18px; margin-top: 3px; }
 .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
 .card { background: #fff; border: 1px solid #e4e4e4; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; gap: 12px; }
+.benefit-art { width: 72px; height: 72px; border-radius: 16px; background: var(--accent-tint); display: flex; align-items: center; justify-content: center; }
+.footer-brand { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.bff-wordmark { height: 44px; width: auto; display: block; margin-bottom: 6px; }
 .card .num { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); }
 .card h3 { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
 .card p { font-size: 14px; line-height: 1.55; color: var(--body); }
