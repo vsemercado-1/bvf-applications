@@ -2,7 +2,7 @@
 
 A Next.js site with three parts:
 
-1. **Public application** (`/`) — landing page, eligibility check, four-section application with autosave and a resume-by-email link, nomination form, and a finalist materials page.
+1. **Public application** (`/`) — landing page, eligibility check, four-step application with autosave and a private resume link, nomination form, and a finalist materials page.
 2. **Screening** (`/review`) — Veronica and Blanca (and Kyle) sign in, read each application, score it on five axes, recommend Interview / Not yet / Pass, and move it through stages.
 3. **Interviews** (`/review/interviews`) — one page per finalist with a quick summary, their materials, the three question lanes, shared prep notes, and live scoring that all three reviewers see as it is entered.
 
@@ -44,7 +44,6 @@ Copy `.env.example` to `.env.local` and fill it in:
 | `NEXT_PUBLIC_SITE_URL` | The public URL, used in emails and resume links. |
 | `NEXT_PUBLIC_DEADLINE` | Application close date, e.g. `2027-01-15`. |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Shown in the footer. |
-| `RESEND_API_KEY`, `EMAIL_FROM` | Optional. With these set, applicants get a confirmation email and a resume link. Without them, the resume link is shown on screen instead. |
 
 Run locally with `npm run dev` and open http://localhost:3000.
 
@@ -61,7 +60,7 @@ Every later change: commit in GitHub Desktop, push, and Vercel redeploys automat
 
 ## How the process works in the app
 
-**Applicants** answer the two gate questions (descent, region). An ineligible answer goes to a polite page with the nomination form. Eligible applicants go through four sections — Applicant, Company, Financing, Puerto Rico — with autosave every few seconds. A resume link is emailed (or shown) so they can come back. Submit sends a confirmation.
+**Applicants** answer the two gate questions (descent, region). An ineligible answer goes to a polite page with the nomination form. Eligible applicants go through four sections — Applicant, Company, Financing, Puerto Rico — with autosave every few seconds. Answers are kept in their browser, and after step 1 they get a private link they can copy to finish on another device. No emails are sent.
 
 **Screening.** `/review` lists every submitted application with each reviewer's score, the committee average, and status. Filters: *To review* shows what you personally haven't scored yet. Open one to read it and score five axes (1–5) with anchors, pick Interview / Not yet / Pass, and leave notes. Scores save on click. The *Stage* box moves an application to Finalist, Not yet, or Screened out.
 

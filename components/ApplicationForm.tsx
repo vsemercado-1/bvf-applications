@@ -25,7 +25,7 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [resumeLink, setResumeLink] = useState<string | null>(null);
-  const [emailedTo, setEmailedTo] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const dirty = useRef(false);
 
   useEffect(() => {
@@ -68,10 +68,9 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
           body: JSON.stringify({ token, region, values: payload, status }),
         });
         if (!res.ok) throw new Error(await res.text());
-        const data = (await res.json()) as { token: string; resumeUrl: string; emailed: boolean };
+        const data = (await res.json()) as { token: string; resumeUrl: string };
         setToken(data.token);
-        if (data.emailed) setEmailedTo(payload["Email"] || null);
-        else setResumeLink(data.resumeUrl);
+        setResumeLink(data.resumeUrl);
         setSaving("saved");
         dirty.current = false;
         return data;
@@ -219,13 +218,20 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
         </div>
       </div>
 
-      {step > 0 && (emailedTo || resumeLink) && (
-        <div className="notice">
-          {emailedTo ? (
-            <>Your draft is saved. We emailed a private link to <b>{emailedTo}</b> so you can finish from any device. On this browser, your answers are here whenever you come back.</>
-          ) : (
-            <>Your draft is saved in this browser. To finish from another device, keep this link: <a href={resumeLink!}>{resumeLink}</a></>
-          )}
+      {step > 0 && resumeLink && (
+        <div className="notice" style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", justifyContent: "space-between" }}>
+          <span>Your draft is saved in this browser. To finish from another device, keep your private link.</span>
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={async () => {
+              await navigator.clipboard.writeText(resumeLink);
+              setCopied(true);
+              setTimeout(() => setCopied(false), 1500);
+            }}
+          >
+            {copied ? "Copied" : "Copy link"}
+          </button>
         </div>
       )}
 

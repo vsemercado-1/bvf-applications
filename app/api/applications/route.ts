@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
 import { createRecord, listRecords, updateRecord, q, TABLES } from "@/lib/airtable";
 import { ALL_FIELDS, REGIONS } from "@/lib/schema";
-import { sendEmail, siteUrl } from "@/lib/email";
+import { siteUrl } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -82,25 +82,5 @@ export async function POST(req: Request) {
   }
 
   const resumeUrl = siteUrl(`/resume/${token}`);
-  let emailed = false;
-
-  if (fields["Email"]) {
-    if (submitting) {
-      emailed = await sendEmail({
-        to: fields["Email"],
-        subject: "Your Bravo Venture Fellowship application has been received",
-        text: `Thank you for applying to the Bravo Venture Fellowship.\n\nYour application for ${fields["Company"] || "your company"} has been received. Applications are reviewed on a rolling basis, and the Foundation will be in touch by email.\n\n— Bravo Family Foundation`,
-      });
-    } else if (wasNew) {
-      emailed = await sendEmail({
-        to: fields["Email"],
-        subject: "Your Bravo Venture Fellowship application draft",
-        text: `Your application draft has been saved. You can return to it at any time using this link:\n\n${resumeUrl}\n\nApplications are open through ${process.env.NEXT_PUBLIC_DEADLINE || "January 15"}.\n\n— Bravo Family Foundation`,
-      });
-    } else {
-      emailed = true; // already emailed the link when the draft was created
-    }
-  }
-
-  return NextResponse.json({ id: recordId, token, resumeUrl, emailed });
+  return NextResponse.json({ id: recordId, token, resumeUrl });
 }
