@@ -30,11 +30,12 @@ export default function Home() {
             <Link href="#apply" className="btn btn-accent">Apply · about 12 minutes</Link>
             <Link href="#nominate" style={{ fontWeight: 600, textDecoration: "none", padding: "0 8px" }}>Nominate a founder →</Link>
           </div>
-          <div className="tiles">
-            <Link href="#benefits" className="tile"><BenefitArt kind="capital" dark /><b>$250,000 investment</b><span>Standard SAFE at your last round&apos;s cap</span></Link>
-            <Link href="#benefits" className="tile"><BenefitArt kind="mentorship" dark /><b>Thoma Bravo advisor</b><span>One to one, for the year</span></Link>
-            <Link href="#benefits" className="tile"><BenefitArt kind="communications" dark /><b>PR and fundraising support</b><span>Media placements and pitch help</span></Link>
-            <Link href="#benefits" className="tile"><BenefitArt kind="orlando" dark /><b>Time with Orlando Bravo</b><span>He meets every Fellow</span></Link>
+          <div className="tiles" id="benefits">
+            <div className="tile"><BenefitArt kind="capital" dark /><b>$250,000 investment</b><span>A standard SAFE at the valuation cap of your most recent round, plus a small common-stock purchase.</span></div>
+            <div className="tile"><BenefitArt kind="mentorship" dark /><b>A Thoma Bravo advisor</b><span>Paired with you for the year as a thought partner on strategy, go-to-market, and organizational questions.</span></div>
+            <div className="tile"><BenefitArt kind="communications" dark /><b>PR and fundraising support</b><span>Dedicated public relations support, including media placements, and hands-on help with your pitch and your raise.</span></div>
+            <div className="tile"><BenefitArt kind="orlando" dark /><b>Time with Orlando Bravo</b><span>Orlando meets with each Fellow during the program to review their business and offer support.</span></div>
+            <div className="tile"><BenefitArt kind="community" dark /><b>A community of Puerto Rican founders</b><span>Fellowship alumni and founders from across the Foundation&apos;s programs, plus the Foundation&apos;s resources for entrepreneurs in Puerto Rico.</span></div>
           </div>
           <div className="fellows">
             <span className="eyebrow">Previous Fellows</span>
@@ -71,34 +72,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="benefits" className="section alt">
-        <div className="wrap" style={{ display: "flex", flexDirection: "column", gap: 32 }}>
-          <div className="section-head">
-            <div className="eyebrow">Program</div>
-            <h2>Fellowship Benefits</h2>
-          </div>
-          <div className="cards">
-            <div className="card">
-              <BenefitArt kind="capital" />
-              <h3>$250,000 Investment</h3>
-              <p>The Foundation invests $250,000 in each Fellow&apos;s company through a standard SAFE at the valuation cap of the company&apos;s most recent round, together with a small common-stock purchase.</p>
-            </div>
-            <div className="card">
-              <BenefitArt kind="mentorship" />
-              <h3>Mentorship and Network Access</h3>
-              <p>Each Fellow is paired with an advisor from Thoma Bravo for the duration of the program, serving as a thought partner on strategy, go-to-market, and organizational questions.</p>
-            </div>
-            <div className="card">
-              <BenefitArt kind="communications" />
-              <h3>Communications and Fundraising Support</h3>
-              <p>Fellows receive dedicated public relations support, including media placements, and hands-on preparation for fundraising, including pitch development and investor outreach.</p>
-            </div>
-            <div className="card">
-              <BenefitArt kind="orlando" />
-              <h3>Mentorship from Orlando Bravo</h3>
-              <p>Orlando Bravo meets with each Fellow during the program to review their business and offer support.</p>
-            </div>
-          </div>
+      <section className="section alt">
+        <div className="wrap">
           <div className="quote">
             <p>&ldquo;[Quote from a previous Fellow about their experience in the program.]&rdquo;</p>
             <span>[Name] · [Title], [Company] · [Year] Fellow</span>

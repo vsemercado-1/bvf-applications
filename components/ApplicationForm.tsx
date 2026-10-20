@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { SECTIONS, fill, ctxFrom, type Field } from "@/lib/schema";
+import { SECTIONS, fill, ctxFrom, isVisible, labelFor, type Field } from "@/lib/schema";
 import { Avatar } from "./Avatar";
 
 type Values = Record<string, string>;
@@ -125,7 +125,7 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
     const next: Record<string, string> = {};
     for (const f of fields) {
       const v = (values[f.key] || "").trim();
-      if (f.type === "image") continue;
+      if (f.type === "image" || !isVisible(f, values)) continue;
       if (f.required && !v) next[f.key] = "Required";
       else if (f.type === "email" && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) next[f.key] = "Enter a valid email address";
       else if (f.type === "url" && v && !/^https?:\/\//i.test(v) && !/^[\w.-]+\.[a-z]{2,}/i.test(v)) next[f.key] = "Enter a valid link";
@@ -141,7 +141,7 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
 
   function validateSilently(fields: Field[]): boolean {
     return fields.every((f) => {
-      if (f.type === "image") return true;
+      if (f.type === "image" || !isVisible(f, values)) return true;
       const v = (values[f.key] || "").trim();
       if (f.required && !v) return false;
       if (f.maxLength && v.length > f.maxLength) return false;
@@ -241,11 +241,11 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
           {section.intro && <p className="body">{fill(section.intro, ctx)}</p>}
         </div>
 
-        {section.fields.map((f) =>
+        {section.fields.filter((f) => isVisible(f, values)).map((f) =>
           f.type === "image" ? (
             <PhotoField key={f.key} field={f} src={avatarSrc} name={values["Name"]} onPick={onPhoto} onClear={() => setValues((p) => ({ ...p, Headshot: "", [PREVIEW_KEY]: "" }))} />
           ) : (
-            <FieldInput key={f.key} field={f} ctx={ctx} value={values[f.key] || ""} onChange={(v) => set(f.key, v)} error={errors[f.key]} />
+            <FieldInput key={f.key} field={f} ctx={ctx} values={values} value={values[f.key] || ""} onChange={(v) => set(f.key, v)} error={errors[f.key]} />
           ),
         )}
 
@@ -297,10 +297,11 @@ function PhotoField({ field, src, name, onPick, onClear }: { field: Field; src?:
   );
 }
 
-function FieldInput({ field, ctx, value, onChange, error }: { field: Field; ctx: { first: string; company: string }; value: string; onChange: (v: string) => void; error?: string }) {
+function FieldInput({ field, ctx, values, value, onChange, error }: { field: Field; ctx: { first: string; company: string }; values: Values; value: string; onChange: (v: string) => void; error?: string }) {
   const id = `f-${field.key}`;
-  const labelText = fill(field.label, ctx);
-  const help = field.help ? fill(field.help, ctx) : undefined;
+  const chosen = labelFor(field, values);
+  const labelText = fill(chosen.label, ctx);
+  const help = chosen.help ? fill(chosen.help, ctx) : undefined;
   const label = (
     <>
       {labelText}
@@ -342,12 +343,16 @@ function FieldInput({ field, ctx, value, onChange, error }: { field: Field; ctx:
           maxLength={field.maxLength ? field.maxLength + 40 : undefined}
         />
       )}
-      {field.maxLength && (
-        <span className="counter" style={{ color: value.length > field.maxLength ? "#b42318" : undefined }}>
-          {value.length} / {field.maxLength}
-        </span>
+      {(help || field.maxLength) && (
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "baseline" }}>
+          <span className="help">{help}</span>
+          {field.maxLength && (
+            <span className="counter" style={{ flex: "0 0 auto", color: value.length > field.maxLength ? "#b42318" : undefined }}>
+              {value.length} / {field.maxLength}
+            </span>
+          )}
+        </div>
       )}
-      {help && <span className="help">{help}</span>}
       {error && <span className="error">{error}</span>}
     </div>
   );

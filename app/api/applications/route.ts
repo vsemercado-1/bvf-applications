@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
 import { createRecord, listRecords, updateRecord, q, TABLES } from "@/lib/airtable";
-import { ALL_FIELDS, REGIONS } from "@/lib/schema";
+import { ALL_FIELDS, REGIONS, isVisible } from "@/lib/schema";
 import { siteUrl } from "@/lib/email";
 
 export const runtime = "nodejs";
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
 
   const submitting = body.status === "Submitted";
   if (submitting) {
-    const missing = ALL_FIELDS.filter((f) => f.required && !fields[f.key]).map((f) => f.label);
+    const missing = ALL_FIELDS.filter((f) => f.required && f.type !== "image" && isVisible(f, fields) && !fields[f.key]).map((f) => f.key);
     if (missing.length) return NextResponse.json({ error: `Missing: ${missing.join(", ")}` }, { status: 400 });
   }
 

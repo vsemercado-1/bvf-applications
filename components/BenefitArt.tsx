@@ -13,7 +13,7 @@ const common = {
   "aria-hidden": true,
 };
 
-export function BenefitArt({ kind, dark = false }: { kind: "capital" | "mentorship" | "communications" | "orlando"; dark?: boolean }) {
+export function BenefitArt({ kind, dark = false }: { kind: "capital" | "mentorship" | "communications" | "orlando" | "community"; dark?: boolean }) {
   const c = dark ? { ...common, stroke: "#4a9deb", width: 36, height: 36 } : common;
   return (
     <div className={dark ? "benefit-art-dark" : "benefit-art"}>
@@ -41,6 +41,17 @@ export function BenefitArt({ kind, dark = false }: { kind: "capital" | "mentorsh
           <path d="M36 20c2.5 2 4 5 4 8s-1.5 6-4 8" />
           <path d="M41 14c4 3.5 6.5 8.5 6.5 14s-2.5 10.5-6.5 14" />
           <path d="M16 35l2 9" />
+        </svg>
+      )}
+      {kind === "community" && (
+        <svg {...c}>
+          <circle cx="28" cy="14" r="5" />
+          <circle cx="14" cy="24" r="5" />
+          <circle cx="42" cy="24" r="5" />
+          <path d="M20 46c0-5 3.6-9 8-9s8 4 8 9" />
+          <path d="M4 40c0-5 4.5-9 10-9" />
+          <path d="M52 40c0-5-4.5-9-10-9" />
+          <path d="M28 19v6M18 28l6 4M38 28l-6 4" />
         </svg>
       )}
       {kind === "orlando" && (

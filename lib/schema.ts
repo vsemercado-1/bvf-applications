@@ -32,6 +32,10 @@ export type FieldType = "text" | "email" | "url" | "textarea" | "select" | "radi
 export interface Field {
   key: string; // Airtable field name
   label: string;
+  // Only show (and require) this field when another field has a given value.
+  showIf?: { key: string; equals: string };
+  // Alternative label/help when another field has a given value.
+  variant?: { key: string; equals: string; label: string; help?: string };
   type: FieldType;
   required?: boolean;
   placeholder?: string;
@@ -60,6 +64,15 @@ export function fill(template: string, ctx: Ctx): string {
     .replace(/\{First\}/g, ctx.first || "You")
     .replace(/\{company\}/g, ctx.company || "your company")
     .replace(/\{company's\}/g, ctx.company ? `${ctx.company}'s` : "your company's");
+}
+
+export function isVisible(f: Field, values: Record<string, string | undefined>): boolean {
+  return !f.showIf || values[f.showIf.key] === f.showIf.equals;
+}
+
+export function labelFor(f: Field, values: Record<string, string | undefined>): { label: string; help?: string } {
+  if (f.variant && values[f.variant.key] === f.variant.equals) return { label: f.variant.label, help: f.variant.help ?? f.help };
+  return { label: f.label, help: f.help };
 }
 
 export function ctxFrom(values: Record<string, string | undefined>): Ctx {
@@ -138,19 +151,29 @@ export const SECTIONS: Section[] = [
   {
     id: "financing",
     short: "Financing",
-    title: "{company's} financing.",
-    intro: "Approximate numbers are fine, {first}. This section helps the selection committee understand whether the Fellowship's $250,000 investment would make a real difference for {company}.",
+    title: "Tell us how {company} is funded.",
+    intro: "Approximate numbers are fine. This section helps the selection committee understand whether the Fellowship's $250,000 investment would make a real difference for {company}.",
     fields: [
       {
+        key: "Has Raised",
+        label: "Has {company} raised money from investors before?",
+        type: "radio",
+        required: true,
+        options: ["Yes", "No"],
+        help: "Count any outside investment: SAFEs, convertible notes, or priced rounds. Grants alone count as \"No\".",
+      },
+      {
         key: "Total Raised",
-        label: "How much money has {company} raised from investors so far, in total?",
+        label: "How much money has {company} raised so far, in total?",
         type: "text",
         required: true,
         placeholder: "$850K (grants + SAFEs)",
-        help: "Include all funding: grants, SAFEs, convertible notes, and priced rounds. If none, write $0.",
+        help: "Include all funding: grants, SAFEs, convertible notes, and priced rounds.",
+        showIf: { key: "Has Raised", equals: "Yes" },
       },
       {
         key: "Last Round",
+        showIf: { key: "Has Raised", equals: "Yes" },
         label: "Describe {company's} most recent funding round",
         type: "text",
         required: true,
@@ -181,7 +204,13 @@ export const SECTIONS: Section[] = [
       {
         key: "Terms OK",
         label:
-          "The Fellowship invests $250,000 using a standard SAFE, at the same valuation cap as {company's} most recent round, plus a small purchase of common stock. Would you accept an investment on those terms?",
+          "As part of the Fellowship, the Bravo Family Foundation will invest $250,000 using a standard SAFE, at the same valuation cap as {company's} most recent round, plus a small purchase of common stock. Would you accept an investment on those terms?",
+        variant: {
+          key: "Has Raised",
+          equals: "No",
+          label:
+            "As part of the Fellowship, the Bravo Family Foundation will invest $250,000 using a standard SAFE with no valuation cap and a discount on your next priced round, plus a small purchase of common stock. Would you accept an investment on those terms?",
+        },
         type: "radio",
         required: true,
         options: TERMS_OPTIONS,
@@ -192,7 +221,7 @@ export const SECTIONS: Section[] = [
   {
     id: "puerto-rico",
     short: "Puerto Rico",
-    title: "{company} and Puerto Rico.",
+    title: "Tell us how {company} connects to Puerto Rico.",
     fields: [
       {
         key: "PR Impact",
@@ -200,13 +229,6 @@ export const SECTIONS: Section[] = [
         type: "textarea",
         required: true,
         help: "For example: customers, jobs, suppliers, or operations on the island. Be specific about what exists now and what you plan to do.",
-      },
-      {
-        key: "Fellowship Goals",
-        label: "{First}, besides the $250,000 investment, what kind of help would be most useful to you from the Fellowship?",
-        type: "textarea",
-        required: true,
-        help: "For example: introductions to investors, help with fundraising, press and marketing, hiring, or advice on a specific problem.",
       },
       { key: "Deck URL", label: "Link to your pitch deck", type: "url", placeholder: "Google Drive, DocSend, Notion…", help: "Make sure the link can be opened by anyone who has it." },
       { key: "Demo URL", label: "Link to a demo video of your product", type: "url", placeholder: "Loom, YouTube…" },
