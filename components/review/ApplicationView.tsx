@@ -1,4 +1,4 @@
-import { SECTIONS } from "@/lib/schema";
+import { SECTIONS, fill, ctxFrom, isVisible } from "@/lib/schema";
 import type { AppFields } from "@/lib/review-data";
 
 function Link_({ href }: { href?: string }) {
@@ -9,6 +9,7 @@ function Link_({ href }: { href?: string }) {
 
 // Read-only rendering of a full application, section by section.
 export function ApplicationView({ f }: { f: AppFields }) {
+  const ctx = ctxFrom(f);
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
       <div className="box">
@@ -28,15 +29,16 @@ export function ApplicationView({ f }: { f: AppFields }) {
         </dl>
       </div>
 
-      {SECTIONS.map((s) => (
+      {SECTIONS.filter((s) => s.id !== "you").map((s) => (
         <div className="box" key={s.id}>
-          <h3>{s.title}</h3>
+          <h3>{fill(s.title, ctx)}</h3>
           <div className="answers">
             {s.fields
-              .filter((q) => !["Name", "Email", "LinkedIn", "Role", "PR Connection", "Website", "Deck URL", "Demo URL", "Heard From", "Raising", "Raise Details", "Terms OK", "Terms Notes"].includes(q.key))
+              .filter((q) => !["Name", "Email", "LinkedIn", "Role", "PR Connection", "Website", "Deck URL", "Demo URL", "Heard From", "Raising", "Raise Details", "Terms OK", "Terms Notes", "Headshot"].includes(q.key))
+              .filter((q) => isVisible(q, f))
               .map((q) => (
                 <div className="answer" key={q.key}>
-                  <span className="q">{q.label}</span>
+                  <span className="q">{fill(q.label, ctx)}</span>
                   <span className="a">{f[q.key] || <span className="muted">—</span>}</span>
                 </div>
               ))}

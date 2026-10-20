@@ -71,6 +71,7 @@ export function Scorecard({ appId, stage, mine, onSaved }: Props) {
           <div className="lbl">
             <span>{a.label}</span>
           </div>
+          <span className="small body">{a.question}</span>
           <div className="scale" role="radiogroup" aria-label={a.label}>
             {[1, 2, 3, 4, 5].map((n) => (
               <button
@@ -85,7 +86,9 @@ export function Scorecard({ appId, stage, mine, onSaved }: Props) {
               </button>
             ))}
           </div>
-          <span className="anchor">{a.anchor}</span>
+          <span className="anchor">
+            <b>1</b> {a.anchors[1]} <b>3</b> {a.anchors[3]} <b>5</b> {a.anchors[5]}
+          </span>
         </div>
       ))}
 

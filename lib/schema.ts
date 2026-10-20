@@ -258,32 +258,58 @@ export const ALL_FIELDS: Field[] = SECTIONS.flatMap((s) => s.fields);
 // Fields set by the eligibility gate before the form starts.
 export const GATE_FIELDS = ["Descent", "Region"] as const;
 
-// Scorecard axes — the same five for screening and interviews.
+// Scorecard axes — the same five for screening and interviews. Each is a
+// genuine 1–5 scale; eligibility (descent, region) is a gate, not a score.
 export const SCORE_AXES = [
   {
-    key: "PR Connection Score",
-    label: "Puerto Rican connection",
-    anchor: "5: specific, lived, unprompted · 1: thin or opportunistic",
-  },
-  {
     key: "Founder Fit Score",
-    label: "Founder-market fit",
-    anchor: "5: built this because they lived the problem · 1: saw a market report",
+    label: "Founder",
+    question: "How well does this founder's experience and track record match the problem they're solving?",
+    anchors: {
+      1: "No direct experience with the problem or the industry.",
+      3: "Relevant background, but limited evidence of execution.",
+      5: "Has lived the problem, has built and sold before, and has already shown they can execute.",
+    },
   },
   {
     key: "Demand Score",
-    label: "Demand",
-    anchor: "5: paying customers, growing · 3: signed LOIs or pilots · 1: idea",
+    label: "Traction",
+    question: "How much evidence is there that people want this?",
+    anchors: {
+      1: "Idea or prototype; no customers.",
+      3: "Pilots, signed LOIs, or a few early paying customers.",
+      5: "Repeatable paying customers, growing month over month, with retention.",
+    },
+  },
+  {
+    key: "Venture Scale Score",
+    label: "Venture scale",
+    question: "If this works, how big could it get?",
+    anchors: {
+      1: "A local or lifestyle business; hard to see institutional investors backing it.",
+      3: "A real market, but the path to a large outcome is unclear.",
+      5: "A large market and a credible path to raising institutional capital and scaling beyond Puerto Rico.",
+    },
   },
   {
     key: "Catalytic Score",
     label: "Catalytic capital",
-    anchor: "5: $250K unlocks a round or a milestone · 1: immaterial",
+    question: "How much difference would $250,000 make for this company right now?",
+    anchors: {
+      1: "Immaterial; the company is well funded and the check changes nothing.",
+      3: "Helpful, extends runway, but no specific milestone depends on it.",
+      5: "Unlocks a round, a key hire, or a milestone the company cannot reach without it.",
+    },
   },
   {
     key: "PR Impact Score",
-    label: "Puerto Rico impact within 12 months",
-    anchor: "5: customers, hires, or deployments on the island this year · 1: someday",
+    label: "Puerto Rico impact",
+    question: "How concrete is the benefit to Puerto Rico within the program year?",
+    anchors: {
+      1: "Aspirational; nothing on the island today and no near-term plan.",
+      3: "Some customers, suppliers, or team on the island, or a credible plan within the year.",
+      5: "Customers, jobs, or operations in Puerto Rico now, and the program year will add more.",
+    },
   },
 ] as const;
 
