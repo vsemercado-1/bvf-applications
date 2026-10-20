@@ -3,6 +3,7 @@ import { randomBytes } from "node:crypto";
 import { createRecord, listRecords, updateRecord, q, TABLES } from "@/lib/airtable";
 import { ALL_FIELDS, REGIONS, isVisible } from "@/lib/schema";
 import { siteUrl } from "@/lib/email";
+import { getSettings } from "@/lib/settings";
 
 export const runtime = "nodejs";
 
@@ -20,6 +21,9 @@ export async function POST(req: Request) {
     body = (await req.json()) as Body;
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+  if (!(await getSettings()).accepting) {
+    return NextResponse.json({ error: "Applications are closed." }, { status: 403 });
   }
   if (!body.region || !(REGIONS as readonly string[]).includes(body.region) || body.region === "Other") {
     return NextResponse.json({ error: "Invalid region" }, { status: 400 });

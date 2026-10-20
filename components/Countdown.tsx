@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 
 // Deadline is 11:59 PM Pacific on NEXT_PUBLIC_DEADLINE. Pacific is UTC-8 in January.
-function deadlineDate(): Date {
-  const raw = process.env.NEXT_PUBLIC_DEADLINE || "2027-01-15";
+function deadlineDate(raw: string): Date {
   return new Date(`${raw}T23:59:59-08:00`);
 }
 
@@ -29,15 +28,15 @@ function parts(now: Date, end: Date) {
 
 type Parts = { months: number; days: number; hours: number; minutes: number } | null;
 
-export function Countdown() {
+export function Countdown({ deadline }: { deadline: string }) {
   const [p, setP] = useState<Parts | undefined>(undefined);
 
   useEffect(() => {
-    const tick = () => setP(parts(new Date(), deadlineDate()));
+    const tick = () => setP(parts(new Date(), deadlineDate(deadline)));
     tick();
     const t = setInterval(tick, 30000);
     return () => clearInterval(t);
-  }, []);
+  }, [deadline]);
 
   if (p === undefined) return <span className="countdown" />;
   if (p === null) return <span className="countdown">Applications are closed</span>;

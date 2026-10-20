@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getSettings, deadlineLong } from "@/lib/settings";
 
 export function Brand({ variant = "dark" }: { variant?: "dark" | "light" }) {
   // logo-dark.png is the version for dark backgrounds (white mark and white "FELLOWSHIP").
@@ -29,14 +30,15 @@ export function SiteHeader({ nav = true }: { nav?: boolean }) {
   );
 }
 
-export function SiteFooter() {
+export async function SiteFooter() {
   const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "";
+  const settings = await getSettings();
   return (
     <footer className="site-footer">
       <div className="wrap">
         <div style={{ maxWidth: 520 }}>
           <b>Timeline</b>
-          Applications are reviewed on a rolling basis through {deadlineLong()}. Finalists are interviewed by the selection committee in late January. Fellows are announced in February, and the program runs through December.
+          Applications are reviewed on a rolling basis through {deadlineLong(settings.deadline)}. Finalists are interviewed by the selection committee in late January. Fellows are announced in February, and the program runs through December.
         </div>
         <div className="footer-brand">
           <a href="https://www.bravofamilyfoundation.org" aria-label="Bravo Family Foundation">
@@ -65,10 +67,4 @@ export function deadlineLabel(): string {
   const raw = process.env.NEXT_PUBLIC_DEADLINE || "2027-01-15";
   const d = new Date(raw + "T12:00:00Z");
   return d.toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" });
-}
-
-export function deadlineLong(): string {
-  const raw = process.env.NEXT_PUBLIC_DEADLINE || "2027-01-15";
-  const d = new Date(raw + "T12:00:00Z");
-  return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 }

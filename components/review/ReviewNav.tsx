@@ -19,13 +19,15 @@ export function ReviewNav({ reviewer }: { reviewer: Reviewer }) {
     <div className="rv-header">
       <div className="wrap">
         <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
-          <Link href="/review" style={{ color: "#fff", textDecoration: "none", fontWeight: 800, letterSpacing: "0.02em" }}>
-            BVF <span style={{ color: "var(--accent)" }}>2027</span>
+          <Link href={reviewer.screens ? "/review" : "/review/interviews"} aria-label="Bravo Venture Fellowship">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-dark.png" alt="Bravo Venture Fellowship" style={{ height: 30, width: "auto", display: "block" }} />
           </Link>
           <nav className="rv-nav" aria-label="Review">
             {reviewer.screens && <Link href="/review" className={on("/review")}>Applications</Link>}
             <Link href="/review/interviews" className={on("/review/interviews")}>Interviews</Link>
             <Link href="/review/nominations" className={on("/review/nominations")}>Nominations</Link>
+            <Link href="/review/settings" className={on("/review/settings")}>Settings</Link>
           </nav>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 13, color: "var(--on-dark-body)" }}>

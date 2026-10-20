@@ -2,9 +2,11 @@ import { redirect } from "next/navigation";
 import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
 import { ApplicationForm } from "@/components/ApplicationForm";
 import { REGIONS } from "@/lib/schema";
+import { getSettings } from "@/lib/settings";
 
 export default async function ApplyPage({ searchParams }: { searchParams: Promise<{ region?: string }> }) {
   const { region } = await searchParams;
+  if (!(await getSettings()).accepting) redirect("/#apply");
   const ok = region && (REGIONS as readonly string[]).includes(region) && region !== "Other";
   if (!ok) redirect("/#apply");
 

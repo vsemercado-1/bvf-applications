@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { SiteHeader, SiteFooter, deadlineLong } from "@/components/SiteChrome";
+import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
+import { getSettings, deadlineLong } from "@/lib/settings";
 import { Countdown } from "@/components/Countdown";
 import { BenefitArt } from "@/components/BenefitArt";
 import { EligibilityGate } from "@/components/EligibilityGate";
@@ -12,7 +13,10 @@ const Cross = () => (
   <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9a9a9a" strokeWidth="3" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
 );
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const settings = await getSettings();
   return (
     <>
       <SiteHeader />
@@ -20,14 +24,14 @@ export default function Home() {
       <section className="dark hero">
         <div className="hero-glow" aria-hidden="true" />
         <div className="wrap">
-          <div className="eyebrow">Applications close {deadlineLong()} · <Countdown /></div>
+          <div className="eyebrow">{settings.accepting ? <>Applications close {deadlineLong(settings.deadline)} · <Countdown deadline={settings.deadline} /></> : "Applications are closed"}</div>
           <h1>Bravo Venture Fellowship</h1>
           <p className="lede">$250,000 and a year of hands-on support for founders of Puerto Rican descent.</p>
           <p className="desc">
             A program of the <a href="https://www.bravofamilyfoundation.org">Bravo Family Foundation</a>. Open to founders building in Puerto Rico, New York City, Miami, or the San Francisco Bay Area.
           </p>
           <div className="hero-ctas">
-            <Link href="#apply" className="btn btn-accent">Apply · about 12 minutes</Link>
+            {settings.accepting && <Link href="#apply" className="btn btn-accent">Apply · about 12 minutes</Link>}
             <Link href="#nominate" style={{ fontWeight: 600, textDecoration: "none", padding: "0 8px" }}>Nominate a founder →</Link>
           </div>
           <div className="tiles" id="benefits">
@@ -85,11 +89,17 @@ export default function Home() {
         <div className="narrow" style={{ display: "flex", flexDirection: "column", gap: 28 }}>
           <div className="section-head">
             <div className="eyebrow">Apply</div>
-            <h2>Two questions, then the application.</h2>
-            <p className="body" style={{ fontSize: 17 }}>These are the only hard requirements. The rest is about you and your company, and takes about twelve minutes.</p>
+            <h2>{settings.accepting ? "Two questions, then the application." : "Applications are closed."}</h2>
+            {settings.accepting && <p className="body" style={{ fontSize: 17 }}>These are the only hard requirements. The rest is about you and your company, and takes about twelve minutes.</p>}
           </div>
-          <EligibilityGate />
-          <p className="small muted" style={{ textAlign: "center" }}>Already started? Come back on the same browser, or use the private link from your application.</p>
+          {settings.accepting ? (
+            <>
+              <EligibilityGate />
+              <p className="small muted" style={{ textAlign: "center" }}>Already started? Come back on the same browser, or use the private link from your application.</p>
+            </>
+          ) : (
+            <div className="notice" style={{ fontSize: 16 }}>{settings.closedMessage}</div>
+          )}
         </div>
       </section>
 

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { listRecords, q, TABLES } from "@/lib/airtable";
 import { ALL_FIELDS } from "@/lib/schema";
+import { getSettings } from "@/lib/settings";
 import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
 import { ApplicationForm } from "@/components/ApplicationForm";
 
@@ -8,6 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ResumePage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
+  if (!(await getSettings()).accepting) redirect("/#apply");
   const recs = await listRecords<Record<string, string | unknown>>(TABLES.applications, {
     filterByFormula: `{Resume Token} = ${q(token)}`,
     maxRecords: 1,
