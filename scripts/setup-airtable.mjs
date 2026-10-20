@@ -32,7 +32,7 @@ const applications = {
     url("LinkedIn"),
     text("Role"),
     select("Descent", ["Yes", "No"]),
-    select("Region", ["Puerto Rico", "New York City metro area", "Miami metro area", "San Francisco Bay Area", "Other"]),
+    select("Region", ["Puerto Rico", "New York City", "Miami", "San Francisco Bay Area", "Other"]),
     text("PR Connection"),
     text("Company"),
     url("Website"),

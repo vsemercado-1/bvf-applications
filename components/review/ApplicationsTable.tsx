@@ -76,7 +76,7 @@ export function ApplicationsTable({ rows }: { rows: Row[] }) {
                   <div className="muted small" style={{ maxWidth: 360 }}>{r.oneLiner}</div>
                 </td>
                 <td>{r.name}</td>
-                <td className="small">{r.region.replace(" metro area", "")}</td>
+                <td className="small">{r.region}</td>
                 <td className="small">{r.raising.replace("In the next 6 months", "≤6 mo").replace("Not right now", "No").replace("Raising now", "Now")}</td>
                 <td className="small">{r.termsOk}</td>
                 <td>

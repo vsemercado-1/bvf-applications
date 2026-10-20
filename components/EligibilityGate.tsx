@@ -55,6 +55,7 @@ export function EligibilityGate() {
             </label>
           ))}
         </div>
+        <span className="help">Surrounding metro areas count.</span>
       </fieldset>
 
       {err && <p className="error">{err}</p>}

@@ -3,8 +3,8 @@
 
 export const REGIONS = [
   "Puerto Rico",
-  "New York City metro area",
-  "Miami metro area",
+  "New York City",
+  "Miami",
   "San Francisco Bay Area",
   "Other",
 ] as const;
