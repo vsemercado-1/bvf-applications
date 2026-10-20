@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { SECTIONS, type Field } from "@/lib/schema";
+import { SECTIONS, fill, ctxFrom, type Field } from "@/lib/schema";
+import { Avatar } from "./Avatar";
 
 type Values = Record<string, string>;
 
@@ -13,6 +14,7 @@ interface Props {
 }
 
 const LS_KEY = "bvf-application-draft";
+const PREVIEW_KEY = "Headshot Preview"; // local-only data URL, never sent to the server
 
 export function ApplicationForm({ region, token: initialToken, initial }: Props) {
   const router = useRouter();
@@ -25,7 +27,6 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
   const [resumeLink, setResumeLink] = useState<string | null>(null);
   const dirty = useRef(false);
 
-  // Restore a local draft if we are not resuming from the server.
   useEffect(() => {
     if (initial) return;
     try {
@@ -41,7 +42,6 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Mirror to localStorage on every change.
   useEffect(() => {
     try {
       localStorage.setItem(LS_KEY, JSON.stringify({ token, values }));
@@ -52,15 +52,19 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
 
   const section = SECTIONS[step];
   const isLast = step === SECTIONS.length - 1;
+  const ctx = useMemo(() => ctxFrom(values), [values]);
+  const avatarSrc = values["Headshot"] || values[PREVIEW_KEY];
 
   const save = useCallback(
     async (status?: "Submitted") => {
       setSaving("saving");
       try {
+        const payload: Values = { ...values };
+        delete payload[PREVIEW_KEY];
         const res = await fetch("/api/applications", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token, region, values, status }),
+          body: JSON.stringify({ token, region, values: payload, status }),
         });
         if (!res.ok) throw new Error(await res.text());
         const data = (await res.json()) as { token: string; resumeUrl: string; emailed: boolean };
@@ -78,7 +82,6 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
     [token, region, values],
   );
 
-  // Debounced background save while typing.
   useEffect(() => {
     if (!dirty.current) return;
     const t = setTimeout(() => {
@@ -98,10 +101,30 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
     });
   }
 
+  async function onPhoto(file: File | null) {
+    if (!file) return;
+    // Local preview immediately (downscaled so it fits in localStorage).
+    const dataUrl = await downscale(file, 320);
+    setValues((prev) => ({ ...prev, [PREVIEW_KEY]: dataUrl }));
+    // Try to upload for the reviewers; silently keep the preview if uploads aren't configured.
+    try {
+      const fd = new FormData();
+      fd.append("file", await dataUrlToFile(dataUrl, file.name));
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      if (res.ok) {
+        const { url } = (await res.json()) as { url: string };
+        set("Headshot", url);
+      }
+    } catch {
+      /* preview only */
+    }
+  }
+
   function validate(fields: Field[]): boolean {
     const next: Record<string, string> = {};
     for (const f of fields) {
       const v = (values[f.key] || "").trim();
+      if (f.type === "image") continue;
       if (f.required && !v) next[f.key] = "Required";
       else if (f.type === "email" && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) next[f.key] = "Enter a valid email address";
       else if (f.type === "url" && v && !/^https?:\/\//i.test(v) && !/^[\w.-]+\.[a-z]{2,}/i.test(v)) next[f.key] = "Enter a valid link";
@@ -109,46 +132,15 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
     }
     setErrors(next);
     if (Object.keys(next).length) {
-      const first = document.getElementById(`f-${Object.keys(next)[0]}`);
-      first?.scrollIntoView({ behavior: "smooth", block: "center" });
+      document.getElementById(`f-${Object.keys(next)[0]}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
       return false;
     }
     return true;
   }
 
-  async function next() {
-    if (!validate(section.fields)) return;
-    try {
-      await save();
-    } catch {
-      /* continue anyway; local draft is kept */
-    }
-    setStep((s) => s + 1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  async function submit() {
-    // Validate every section, jump to the first one with a problem.
-    for (let i = 0; i < SECTIONS.length; i++) {
-      const ok = validateSilently(SECTIONS[i].fields);
-      if (!ok) {
-        setStep(i);
-        validate(SECTIONS[i].fields);
-        return;
-      }
-    }
-    setSubmitting(true);
-    try {
-      await save("Submitted");
-      localStorage.removeItem(LS_KEY);
-      router.push("/apply/thanks");
-    } catch {
-      setSubmitting(false);
-    }
-  }
-
   function validateSilently(fields: Field[]): boolean {
     return fields.every((f) => {
+      if (f.type === "image") return true;
       const v = (values[f.key] || "").trim();
       if (f.required && !v) return false;
       if (f.maxLength && v.length > f.maxLength) return false;
@@ -156,59 +148,105 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
     });
   }
 
-  const savingLabel = useMemo(() => {
-    if (saving === "saving") return "Saving…";
-    if (saving === "saved") return "Saved";
-    if (saving === "error") return "Could not save — your draft is kept in this browser";
-    return "";
-  }, [saving]);
+  async function next() {
+    if (!validate(section.fields)) return;
+    try {
+      await save();
+    } catch {
+      /* local draft is kept */
+    }
+    setStep((s) => s + 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function submit() {
+    for (let i = 0; i < SECTIONS.length; i++) {
+      if (!validateSilently(SECTIONS[i].fields)) {
+        setStep(i);
+        setTimeout(() => validate(SECTIONS[i].fields), 0);
+        return;
+      }
+    }
+    setSubmitting(true);
+    try {
+      await save("Submitted");
+      localStorage.removeItem(LS_KEY);
+      router.push(`/apply/thanks?first=${encodeURIComponent(ctx.first)}&company=${encodeURIComponent(ctx.company)}`);
+    } catch {
+      setSubmitting(false);
+    }
+  }
+
+  const savingLabel = saving === "saving" ? "Saving…" : saving === "saved" ? "Saved" : saving === "error" ? "Could not save — your draft is kept in this browser" : "";
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
-        <div className="steps" style={{ flex: 1, maxWidth: 320 }} aria-label={`Step ${step + 1} of ${SECTIONS.length}`}>
+      {/* Identity strip: who this application is for, once we know. */}
+      <div className="identity">
+        <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
+          <Avatar src={avatarSrc} name={values["Name"]} size={44} />
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontWeight: 700, fontSize: 15, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {values["Name"] || "Your application"}
+            </div>
+            <div className="small muted" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {[values["Company"], region].filter(Boolean).join(" · ")}
+              {!values["Company"] && (
+                <>
+                  {" "}
+                  <a href="/#apply">Change region</a>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="steps-labeled" aria-label={`Step ${step + 1} of ${SECTIONS.length}`}>
           {SECTIONS.map((s, i) => (
-            <span key={s.id} className={i <= step ? "on" : ""} />
+            <button
+              key={s.id}
+              type="button"
+              className={i < step ? "done" : i === step ? "on" : ""}
+              onClick={() => i < step && setStep(i)}
+              disabled={i > step}
+              aria-current={i === step ? "step" : undefined}
+            >
+              <span className="bar" />
+              <span className="lbl">{fill(s.short, ctx)}</span>
+            </button>
           ))}
         </div>
-        <span className="small muted">
-          Step {step + 1} of {SECTIONS.length} · {section.title}
-        </span>
       </div>
 
       {resumeLink && (
         <div className="notice">
-          Your draft is saved. To return to it later from any device, keep this link:{" "}
-          <a href={resumeLink}>{resumeLink}</a>
+          Your draft is saved. To return to it later from any device, keep this link: <a href={resumeLink}>{resumeLink}</a>
         </div>
       )}
 
       <div className="panel">
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          <h2 style={{ fontSize: 28 }}>{section.title}</h2>
-          {section.intro && <p className="body">{section.intro}</p>}
-          {step === 0 && (
-            <p className="small muted">
-              Region: {region}. {" "}
-              <a href="/#apply">Change</a>
-            </p>
-          )}
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <h2 style={{ fontSize: 30, lineHeight: 1.15 }}>{fill(section.title, ctx)}</h2>
+          {section.intro && <p className="body">{fill(section.intro, ctx)}</p>}
         </div>
 
-        {section.fields.map((f) => (
-          <FieldInput key={f.key} field={f} value={values[f.key] || ""} onChange={(v) => set(f.key, v)} error={errors[f.key]} />
-        ))}
+        {section.fields.map((f) =>
+          f.type === "image" ? (
+            <PhotoField key={f.key} field={f} src={avatarSrc} name={values["Name"]} onPick={onPhoto} onClear={() => setValues((p) => ({ ...p, Headshot: "", [PREVIEW_KEY]: "" }))} />
+          ) : (
+            <FieldInput key={f.key} field={f} ctx={ctx} value={values[f.key] || ""} onChange={(v) => set(f.key, v)} error={errors[f.key]} />
+          ),
+        )}
 
         <div className="form-footer">
           <div style={{ display: "flex", gap: 10 }}>
             {step > 0 && (
-              <button type="button" className="btn btn-ghost" onClick={() => setStep((s) => s - 1)}>
+              <button type="button" className="btn btn-ghost" onClick={() => { setStep((s) => s - 1); window.scrollTo({ top: 0 }); }}>
                 Back
               </button>
             )}
             {!isLast ? (
               <button type="button" className="btn btn-ink" onClick={next}>
-                Continue
+                {step === 0 ? "Continue" : `Next: ${fill(SECTIONS[step + 1].short, ctx)}`}
               </button>
             ) : (
               <button type="button" className="btn btn-ink" onClick={submit} disabled={submitting}>
@@ -223,11 +261,37 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
   );
 }
 
-function FieldInput({ field, value, onChange, error }: { field: Field; value: string; onChange: (v: string) => void; error?: string }) {
+function PhotoField({ field, src, name, onPick, onClear }: { field: Field; src?: string; name?: string; onPick: (f: File | null) => void; onClear: () => void }) {
   const id = `f-${field.key}`;
+  return (
+    <div className="field">
+      <label htmlFor={id}>
+        {field.label} <span className="muted" style={{ fontWeight: 400 }}>(optional)</span>
+      </label>
+      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <Avatar src={src} name={name} size={64} />
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <label className="btn btn-ghost btn-sm" style={{ cursor: "pointer" }}>
+            {src ? "Change photo" : "Upload a photo"}
+            <input id={id} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => onPick(e.target.files?.[0] || null)} />
+          </label>
+          {src && (
+            <button type="button" className="btn btn-ghost btn-sm" onClick={onClear}>Remove</button>
+          )}
+        </div>
+      </div>
+      {field.help && <span className="help">{field.help}</span>}
+    </div>
+  );
+}
+
+function FieldInput({ field, ctx, value, onChange, error }: { field: Field; ctx: { first: string; company: string }; value: string; onChange: (v: string) => void; error?: string }) {
+  const id = `f-${field.key}`;
+  const labelText = fill(field.label, ctx);
+  const help = field.help ? fill(field.help, ctx) : undefined;
   const label = (
     <>
-      {field.label}
+      {labelText}
       {field.required ? <span style={{ color: "var(--accent)" }}> *</span> : <span className="muted" style={{ fontWeight: 400 }}> (optional)</span>}
     </>
   );
@@ -244,7 +308,7 @@ function FieldInput({ field, value, onChange, error }: { field: Field; value: st
             </label>
           ))}
         </div>
-        {field.help && <span className="help">{field.help}</span>}
+        {help && <span className="help">{help}</span>}
         {error && <span className="error">{error}</span>}
       </fieldset>
     );
@@ -271,8 +335,35 @@ function FieldInput({ field, value, onChange, error }: { field: Field; value: st
           {value.length} / {field.maxLength}
         </span>
       )}
-      {field.help && <span className="help">{field.help}</span>}
+      {help && <span className="help">{help}</span>}
       {error && <span className="error">{error}</span>}
     </div>
   );
+}
+
+// Resize an image file to a square-ish JPEG data URL so previews stay small.
+function downscale(file: File, max: number): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const side = Math.min(img.width, img.height);
+      const sx = (img.width - side) / 2;
+      const sy = (img.height - side) / 2;
+      const canvas = document.createElement("canvas");
+      canvas.width = max;
+      canvas.height = max;
+      canvas.getContext("2d")!.drawImage(img, sx, sy, side, side, 0, 0, max, max);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL("image/jpeg", 0.85));
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+async function dataUrlToFile(dataUrl: string, name: string): Promise<File> {
+  const res = await fetch(dataUrl);
+  const blob = await res.blob();
+  return new File([blob], name.replace(/\.[^.]+$/, "") + ".jpg", { type: "image/jpeg" });
 }

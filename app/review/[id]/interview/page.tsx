@@ -7,6 +7,8 @@ import { LANES } from "@/lib/schema";
 import { ApplicationView } from "@/components/review/ApplicationView";
 import { LiveInterview } from "@/components/review/LiveInterview";
 import { StatusPill } from "@/components/review/StatusPill";
+import { Avatar } from "@/components/Avatar";
+import { headshotUrl } from "@/lib/review-data";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +32,7 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
       <div>
         <Link href="/review/interviews" className="small muted" style={{ textDecoration: "none" }}>← Interviews</Link>
         <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginTop: 8 }}>
+          <Avatar src={headshotUrl(f as Record<string, unknown>)} name={f["Name"]} size={44} />
           <h1 style={{ fontSize: 30, fontWeight: 800 }}>{f["Company"]}</h1>
           <StatusPill status={f["Status"]} />
           <Link href={`/review/${id}`} className="small" style={{ marginLeft: "auto" }}>Screening page</Link>

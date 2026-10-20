@@ -3,6 +3,16 @@ import { SCORE_AXES } from "./schema";
 
 export type AppFields = Record<string, string | undefined>;
 
+// Airtable returns attachments as arrays; pull the first thumbnail-able URL.
+export function headshotUrl(fields: Record<string, unknown>): string | undefined {
+  const v = fields["Headshot"];
+  if (Array.isArray(v) && v[0] && typeof v[0] === "object") {
+    const a = v[0] as { url?: string; thumbnails?: { large?: { url: string } } };
+    return a.thumbnails?.large?.url || a.url;
+  }
+  return undefined;
+}
+
 export interface Review {
   id: string;
   reviewer: string; // email

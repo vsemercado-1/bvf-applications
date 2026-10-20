@@ -129,6 +129,14 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .choice.on { border-color: var(--accent); background: var(--accent-tint); font-weight: 600; }
 .choice:focus-within { outline: 2px solid var(--accent); outline-offset: 1px; }
 .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.identity { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.steps-labeled { display: flex; gap: 10px; flex: 1 1 320px; max-width: 480px; }
+.steps-labeled button { flex: 1; background: none; border: 0; padding: 0; cursor: default; display: flex; flex-direction: column; gap: 6px; text-align: left; }
+.steps-labeled button.done { cursor: pointer; }
+.steps-labeled .bar { display: block; height: 4px; border-radius: 2px; background: #e4e4e4; }
+.steps-labeled .on .bar, .steps-labeled .done .bar { background: var(--accent); }
+.steps-labeled .lbl { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.steps-labeled .on .lbl { color: var(--ink); font-weight: 600; }
 .steps { display: flex; gap: 6px; }
 .steps span { flex: 1; height: 4px; border-radius: 2px; background: #e4e4e4; }
 .steps span.on { background: var(--accent); }
@@ -197,6 +205,7 @@ fieldset { border: 0; padding: 0; margin: 0; }
   .sticky { position: static; }
 }
 @media (max-width: 600px) {
+  .steps-labeled .lbl { display: none; }
   .brand-logo { height: 32px; }
   .wrap, .narrow { padding: 0 16px; }
   .cards, .lists, .grid-2, .choices { grid-template-columns: 1fr; }

@@ -9,6 +9,8 @@ import { Scorecard } from "@/components/review/Scorecard";
 import { OtherReviews } from "@/components/review/OtherReviews";
 import { StatusControl } from "@/components/review/StatusControl";
 import { StatusPill } from "@/components/review/StatusPill";
+import { Avatar } from "@/components/Avatar";
+import { headshotUrl } from "@/lib/review-data";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +33,7 @@ export default async function ApplicationPage({ params }: { params: Promise<{ id
       <div>
         <Link href="/review" className="small muted" style={{ textDecoration: "none" }}>← Applications</Link>
         <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginTop: 8 }}>
+          <Avatar src={headshotUrl(f as Record<string, unknown>)} name={f["Name"]} size={44} />
           <h1 style={{ fontSize: 30, fontWeight: 800 }}>{f["Company"]}</h1>
           <StatusPill status={f["Status"]} />
           {finalist && <Link href={`/review/${id}/interview`} className="btn btn-ink btn-sm">Interview page →</Link>}

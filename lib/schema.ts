@@ -25,8 +25,10 @@ export const STATUSES = [
 ] as const;
 export type Status = (typeof STATUSES)[number];
 
-export type FieldType = "text" | "email" | "url" | "textarea" | "select" | "radio";
+export type FieldType = "text" | "email" | "url" | "textarea" | "select" | "radio" | "image";
 
+// Labels, help text and section titles may contain {first} and {company},
+// which are filled in with the applicant's first name and company name.
 export interface Field {
   key: string; // Airtable field name
   label: string;
@@ -40,20 +42,44 @@ export interface Field {
 
 export interface Section {
   id: string;
+  short: string; // progress label
   title: string;
   intro?: string;
   fields: Field[];
 }
 
+export interface Ctx {
+  first: string;
+  company: string;
+}
+
+export function fill(template: string, ctx: Ctx): string {
+  return template
+    .replace(/\{first\}/g, ctx.first || "you")
+    .replace(/\{First\}/g, ctx.first || "You")
+    .replace(/\{company\}/g, ctx.company || "your company")
+    .replace(/\{company's\}/g, ctx.company ? `${ctx.company}'s` : "your company's");
+}
+
+export function ctxFrom(values: Record<string, string | undefined>): Ctx {
+  const name = (values["Name"] || "").trim();
+  return { first: name.split(/\s+/)[0] || "", company: (values["Company"] || "").trim() };
+}
+
 export const SECTIONS: Section[] = [
   {
-    id: "applicant",
-    title: "Applicant",
+    id: "you",
+    short: "You",
+    title: "Let's start with you.",
+    intro: "A few basics so the rest of the application can be about your company.",
     fields: [
-      { key: "Name", label: "Full name", type: "text", required: true },
+      { key: "Name", label: "Full name", type: "text", required: true, placeholder: "First and last" },
       { key: "Email", label: "Email", type: "email", required: true },
-      { key: "LinkedIn", label: "LinkedIn profile", type: "url", placeholder: "https://linkedin.com/in/…" },
-      { key: "Role", label: "Your role at your company", type: "text", placeholder: "Founder & CEO", required: true },
+      { key: "LinkedIn", label: "LinkedIn profile", type: "url", required: true, placeholder: "https://linkedin.com/in/…" },
+      { key: "Headshot", label: "A photo of you", type: "image", help: "Optional, but it helps the committee put a face to the application." },
+      { key: "Company", label: "Company name", type: "text", required: true },
+      { key: "Website", label: "Website", type: "url", placeholder: "https://" },
+      { key: "Role", label: "Your role at {company}", type: "text", placeholder: "Founder & CEO", required: true },
       {
         key: "PR Connection",
         label: "Your connection to Puerto Rico",
@@ -66,13 +92,12 @@ export const SECTIONS: Section[] = [
   },
   {
     id: "company",
-    title: "Company",
+    short: "{company}",
+    title: "{First}, tell us about {company}.",
     fields: [
-      { key: "Company", label: "Company name", type: "text", required: true },
-      { key: "Website", label: "Website", type: "url", placeholder: "https://" },
       {
         key: "One-liner",
-        label: "What does your company do?",
+        label: "What does {company} do?",
         type: "text",
         required: true,
         maxLength: 160,
@@ -80,48 +105,49 @@ export const SECTIONS: Section[] = [
       },
       {
         key: "Why You",
-        label: "Why you, and why this company?",
+        label: "Why you, and why {company}?",
         type: "textarea",
         required: true,
         help: "What do you know about this problem that most people don't, and what have you already done about it?",
       },
       {
         key: "Traction",
-        label: "Traction",
+        label: "Where is {company} today?",
         type: "textarea",
         required: true,
         help: "Revenue, customers, pilots, LOIs, waitlist — whatever is true. Numbers are more useful than adjectives.",
       },
       {
         key: "Team",
-        label: "Team",
+        label: "Who is on the {company} team?",
         type: "text",
         required: true,
         placeholder: "2 full-time (CEO, CTO) + 1 contractor; based in San Juan and Miami",
-        help: "How many people work on your company full time, and where are they?",
+        help: "How many people work on {company} full time, and where are they?",
       },
       {
         key: "Competition",
-        label: "Who else is solving this, and why do you win?",
+        label: "Who else is solving this, and why does {company} win?",
         type: "text",
       },
     ],
   },
   {
     id: "financing",
-    title: "Financing",
-    intro: "Estimates are fine. This section helps the selection committee understand whether the Fellowship's investment would be meaningful for your company.",
+    short: "Financing",
+    title: "{company's} financing.",
+    intro: "Estimates are fine, {first}. This section helps the selection committee understand whether the Fellowship's investment would be meaningful for {company}.",
     fields: [
       {
         key: "Total Raised",
-        label: "Total capital raised to date",
+        label: "How much has {company} raised to date?",
         type: "text",
         required: true,
         placeholder: "$850K (grants + SAFEs)",
       },
       {
         key: "Last Round",
-        label: "Most recent round",
+        label: "{company's} most recent round",
         type: "text",
         required: true,
         placeholder: "$500K SAFE at $6M post-money cap, led by X, closed March 2026",
@@ -136,7 +162,7 @@ export const SECTIONS: Section[] = [
       },
       {
         key: "Raising",
-        label: "Are you raising right now?",
+        label: "Is {company} raising right now?",
         type: "radio",
         required: true,
         options: RAISING_OPTIONS,
@@ -150,7 +176,7 @@ export const SECTIONS: Section[] = [
       {
         key: "Terms OK",
         label:
-          "The Fellowship invests $250,000 on a standard SAFE at the valuation cap of your most recent round, plus a small common-stock purchase. Would that work for you?",
+          "The Fellowship invests $250,000 on a standard SAFE at the valuation cap of {company's} most recent round, plus a small common-stock purchase. Would that work for you?",
         type: "radio",
         required: true,
         options: TERMS_OPTIONS,
@@ -159,22 +185,23 @@ export const SECTIONS: Section[] = [
   },
   {
     id: "puerto-rico",
-    title: "Puerto Rico",
+    short: "Puerto Rico",
+    title: "{company} and Puerto Rico.",
     fields: [
       {
         key: "PR Impact",
-        label: "What does your company do for Puerto Rico today, and what could it do over the next three years?",
+        label: "What does {company} do for Puerto Rico today, and what could it do over the next three years?",
         type: "textarea",
         required: true,
       },
       {
         key: "Fellowship Goals",
-        label: "What would you want from the Fellowship beyond the investment?",
+        label: "{First}, what would you want from the Fellowship beyond the investment?",
         type: "textarea",
         required: true,
       },
-      { key: "Deck URL", label: "Pitch deck (link)", type: "url", placeholder: "Google Drive, DocSend, Notion…" },
-      { key: "Demo URL", label: "Demo video (link)", type: "url", placeholder: "Loom, YouTube…" },
+      { key: "Deck URL", label: "Pitch deck", type: "url", placeholder: "Google Drive, DocSend, Notion…" },
+      { key: "Demo URL", label: "Demo video", type: "url", placeholder: "Loom, YouTube…" },
       {
         key: "Heard From",
         label: "How did you hear about the Fellowship?",

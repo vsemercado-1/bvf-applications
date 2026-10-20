@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { StatusPill, fmt, daysAgo } from "./StatusPill";
+import { Avatar } from "@/components/Avatar";
 
 export interface Row {
   id: string;
   name: string;
+  photo?: string;
   company: string;
   oneLiner: string;
   region: string;
@@ -75,7 +77,7 @@ export function ApplicationsTable({ rows }: { rows: Row[] }) {
                   <Link href={`/review/${r.id}`}>{r.company || "(no company)"}</Link>
                   <div className="muted small" style={{ maxWidth: 360 }}>{r.oneLiner}</div>
                 </td>
-                <td>{r.name}</td>
+                <td><span style={{ display: "flex", alignItems: "center", gap: 8 }}><Avatar src={r.photo} name={r.name} size={28} />{r.name}</span></td>
                 <td className="small">{r.region}</td>
                 <td className="small">{r.raising.replace("In the next 6 months", "≤6 mo").replace("Not right now", "No").replace("Raising now", "Now")}</td>
                 <td className="small">{r.termsOk}</td>

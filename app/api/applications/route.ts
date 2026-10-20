@@ -28,9 +28,13 @@ export async function POST(req: Request) {
   // Only accept known fields, trimmed, bounded.
   const fields: Record<string, string> = {};
   for (const f of ALL_FIELDS) {
+    if (f.type === "image") continue;
     const v = body.values?.[f.key];
     if (typeof v === "string" && v.trim()) fields[f.key] = v.trim().slice(0, 5000);
   }
+  const headshot = body.values?.["Headshot"];
+  const attachments: Record<string, unknown> = {};
+  if (typeof headshot === "string" && /^https:\/\//.test(headshot)) attachments["Headshot"] = [{ url: headshot }];
   fields["Region"] = body.region;
   fields["Descent"] = "Yes";
 
@@ -63,6 +67,7 @@ export async function POST(req: Request) {
     wasNew = true;
     const rec = await createRecord(TABLES.applications, {
       ...fields,
+      ...attachments,
       "Resume Token": token,
       Status: submitting ? "Submitted" : "Draft",
       ...(submitting ? { "Submitted At": new Date().toISOString() } : {}),
@@ -71,6 +76,7 @@ export async function POST(req: Request) {
   } else {
     await updateRecord(TABLES.applications, recordId, {
       ...fields,
+      ...attachments,
       ...(submitting ? { Status: "Submitted", "Submitted At": new Date().toISOString() } : {}),
     });
   }

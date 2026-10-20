@@ -1,4 +1,4 @@
-import { listApplications, listAllReviews, summarize, reviewAverage } from "@/lib/review-data";
+import { listApplications, listAllReviews, summarize, reviewAverage, headshotUrl } from "@/lib/review-data";
 import { currentReviewer } from "@/lib/session";
 import { ApplicationsTable, type Row } from "@/components/review/ApplicationsTable";
 import { DataError } from "@/components/review/DataError";
@@ -20,6 +20,7 @@ export default async function ReviewHome() {
     return {
       id: a.id,
       name: a.fields["Name"] || "",
+      photo: headshotUrl(a.fields as Record<string, unknown>),
       company: a.fields["Company"] || "",
       oneLiner: a.fields["One-liner"] || "",
       region: a.fields["Region"] || "",
