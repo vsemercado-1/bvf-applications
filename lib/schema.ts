@@ -55,6 +55,7 @@ export interface Ctx {
 
 export function fill(template: string, ctx: Ctx): string {
   return template
+    .replace(/\{CompanyLabel\}/g, ctx.company || "Company")
     .replace(/\{first\}/g, ctx.first || "you")
     .replace(/\{First\}/g, ctx.first || "You")
     .replace(/\{company\}/g, ctx.company || "your company")
@@ -92,7 +93,7 @@ export const SECTIONS: Section[] = [
   },
   {
     id: "company",
-    short: "{company}",
+    short: "{CompanyLabel}",
     title: "{First}, tell us about {company}.",
     fields: [
       {

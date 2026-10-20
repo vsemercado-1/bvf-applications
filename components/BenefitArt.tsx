@@ -13,11 +13,12 @@ const common = {
   "aria-hidden": true,
 };
 
-export function BenefitArt({ kind }: { kind: "capital" | "mentorship" | "communications" | "orlando" }) {
+export function BenefitArt({ kind, dark = false }: { kind: "capital" | "mentorship" | "communications" | "orlando"; dark?: boolean }) {
+  const c = dark ? { ...common, stroke: "#4a9deb", width: 36, height: 36 } : common;
   return (
-    <div className="benefit-art">
+    <div className={dark ? "benefit-art-dark" : "benefit-art"}>
       {kind === "capital" && (
-        <svg {...common}>
+        <svg {...c}>
           <ellipse cx="28" cy="16" rx="16" ry="6" />
           <path d="M12 16v8c0 3.3 7.2 6 16 6s16-2.7 16-6v-8" />
           <path d="M12 24v8c0 3.3 7.2 6 16 6s16-2.7 16-6v-8" />
@@ -25,7 +26,7 @@ export function BenefitArt({ kind }: { kind: "capital" | "mentorship" | "communi
         </svg>
       )}
       {kind === "mentorship" && (
-        <svg {...common}>
+        <svg {...c}>
           <circle cx="20" cy="18" r="6" />
           <circle cx="38" cy="22" r="5" />
           <path d="M8 44c0-7 5.4-12 12-12s12 5 12 12" />
@@ -35,7 +36,7 @@ export function BenefitArt({ kind }: { kind: "capital" | "mentorship" | "communi
         </svg>
       )}
       {kind === "communications" && (
-        <svg {...common}>
+        <svg {...c}>
           <path d="M10 24v8a3 3 0 0 0 3 3h5l12 8V13l-12 8h-5a3 3 0 0 0-3 3z" />
           <path d="M36 20c2.5 2 4 5 4 8s-1.5 6-4 8" />
           <path d="M41 14c4 3.5 6.5 8.5 6.5 14s-2.5 10.5-6.5 14" />
@@ -43,7 +44,7 @@ export function BenefitArt({ kind }: { kind: "capital" | "mentorship" | "communi
         </svg>
       )}
       {kind === "orlando" && (
-        <svg {...common}>
+        <svg {...c}>
           <path d="M10 14h26a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H22l-8 7v-7h-4a4 4 0 0 1-4-4V18a4 4 0 0 1 4-4z" />
           <path d="M46 24h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2v5l-6-5h-4" />
           <path d="M17 26h14" />

@@ -20,21 +20,21 @@ export default function Home() {
       <section className="dark hero">
         <div className="hero-glow" aria-hidden="true" />
         <div className="wrap">
-          <div className="eyebrow">Applications open through 11:59 PM PT {deadlineLong()} · <Countdown /></div>
+          <div className="eyebrow">2027 Cohort · Applications close {deadlineLong()} · <Countdown /></div>
           <h1>Bravo Venture Fellowship</h1>
-          <p className="lede">$250,000 in early-stage funding and a one-year fellowship for founders of Puerto Rican descent.</p>
+          <p className="lede">$250,000 and a year of hands-on support for founders of Puerto Rican descent.</p>
           <p className="desc">
-            An initiative of the <a href="https://www.bravofamilyfoundation.org">Bravo Family Foundation</a>, the Fellowship supports Puerto Rican entrepreneurs building ambitious companies in Puerto Rico, New York City, Miami, or the San Francisco Bay Area as they prepare to raise institutional capital.
+            A program of the <a href="https://www.bravofamilyfoundation.org">Bravo Family Foundation</a>. Open to founders building in Puerto Rico, New York City, Miami, or the San Francisco Bay Area.
           </p>
           <div className="hero-ctas">
-            <Link href="#apply" className="btn btn-accent">Check Your Eligibility</Link>
-            <Link href="#nominate" style={{ fontWeight: 600, textDecoration: "none", padding: "0 8px" }}>Nominate a Founder →</Link>
+            <Link href="#apply" className="btn btn-accent">Apply · about 12 minutes</Link>
+            <Link href="#nominate" style={{ fontWeight: 600, textDecoration: "none", padding: "0 8px" }}>Nominate a founder →</Link>
           </div>
-          <div className="stats">
-            <div className="stat"><b>$250,000</b><span>Investment in each Fellow&apos;s company</span></div>
-            <div className="stat"><b>One year</b><span>Program duration, February through December</span></div>
-            <div className="stat"><b>2–3</b><span>Fellows selected per cohort</span></div>
-            <div className="stat"><b>4</b><span>Eligible regions, including the Bay Area for the first time</span></div>
+          <div className="tiles">
+            <Link href="#benefits" className="tile"><BenefitArt kind="capital" dark /><b>$250,000 investment</b><span>Standard SAFE at your last round&apos;s cap</span></Link>
+            <Link href="#benefits" className="tile"><BenefitArt kind="mentorship" dark /><b>Thoma Bravo advisor</b><span>One to one, for the year</span></Link>
+            <Link href="#benefits" className="tile"><BenefitArt kind="communications" dark /><b>PR and fundraising support</b><span>Media placements and pitch help</span></Link>
+            <Link href="#benefits" className="tile"><BenefitArt kind="orlando" dark /><b>Time with Orlando Bravo</b><span>He meets every Fellow</span></Link>
           </div>
           <div className="fellows">
             <span className="eyebrow">Previous Fellows</span>
@@ -109,9 +109,9 @@ export default function Home() {
       <section id="apply" className="section">
         <div className="narrow" style={{ display: "flex", flexDirection: "column", gap: 28 }}>
           <div className="section-head">
-            <div className="eyebrow">Application</div>
-            <h2>Check Your Eligibility</h2>
-            <p className="body" style={{ fontSize: 17 }}>You&apos;ll need to meet the two requirements below. The rest of the application is about you and your company, and takes about twelve minutes. Your answers are saved automatically.</p>
+            <div className="eyebrow">Apply</div>
+            <h2>Two questions, then the application.</h2>
+            <p className="body" style={{ fontSize: 17 }}>These are the only hard requirements. The rest is about you and your company, and takes about twelve minutes.</p>
           </div>
           <EligibilityGate />
           <p className="small muted" style={{ textAlign: "center" }}>Already started? Come back on the same browser, or use the private link from your application.</p>
