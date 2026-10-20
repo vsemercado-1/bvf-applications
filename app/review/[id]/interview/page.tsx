@@ -53,12 +53,12 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
               <dt>Last round</dt><dd>{f["Last Round"] || "—"}</dd>
               <dt>Cash &amp; burn</dt><dd>{f["Cash and Burn"]}</dd>
               <dt>Raising</dt><dd>{f["Raising"]}{f["Raise Details"] ? ` — ${f["Raise Details"]}` : ""}</dd>
-              <dt>Standard terms</dt><dd>{f["Terms OK"]}</dd>
+              <dt>Standard terms</dt><dd>{f["Terms OK"]}{f["Terms Notes"] ? ` — ${f["Terms Notes"]}` : ""}</dd>
               <dt>Materials</dt>
               <dd>
                 {f["Packet Submitted At"] ? (
                   <span>
-                    <Ext href={f["Packet Deck"]}>Deck</Ext> · <Ext href={f["Packet Financials"]}>Financials</Ext> · <Ext href={f["Packet Cap Table"]}>Cap table</Ext>
+                    <Ext href={f["Packet Deck"]}>Deck</Ext> · <Ext href={f["Packet Financials"]}>Financials</Ext> · <Ext href={f["Packet Cap Table"]}>Cap table</Ext>{f["Packet 409A"] && <> · <Ext href={f["Packet 409A"]}>409A</Ext></>}
                   </span>
                 ) : (
                   <span className="muted">Not yet received</span>

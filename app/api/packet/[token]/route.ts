@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 
 export async function POST(req: Request, ctx: { params: Promise<{ token: string }> }) {
   const { token } = await ctx.params;
-  const body = (await req.json()) as { deck?: string; financials?: string; capTable?: string; notes?: string };
+  const body = (await req.json()) as { deck?: string; financials?: string; capTable?: string; valuation?: string; notes?: string };
   const recs = await listRecords(TABLES.applications, {
     filterByFormula: `{Resume Token} = ${q(token)}`,
     maxRecords: 1,
@@ -20,6 +20,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ token: string 
     "Packet Deck": clean(body.deck),
     "Packet Financials": clean(body.financials),
     "Packet Cap Table": clean(body.capTable),
+    "Packet 409A": clean(body.valuation),
     "Packet Notes": clean(body.notes).slice(0, 5000),
     "Packet Submitted At": new Date().toISOString(),
   });

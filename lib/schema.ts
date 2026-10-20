@@ -33,7 +33,7 @@ export interface Field {
   key: string; // Airtable field name
   label: string;
   // Only show (and require) this field when another field has a given value.
-  showIf?: { key: string; equals: string };
+  showIf?: { key: string; equals?: string; in?: readonly string[] };
   // Alternative label/help when another field has a given value.
   variant?: { key: string; equals: string; label: string; help?: string };
   type: FieldType;
@@ -67,7 +67,10 @@ export function fill(template: string, ctx: Ctx): string {
 }
 
 export function isVisible(f: Field, values: Record<string, string | undefined>): boolean {
-  return !f.showIf || values[f.showIf.key] === f.showIf.equals;
+  if (!f.showIf) return true;
+  const v = values[f.showIf.key];
+  if (f.showIf.in) return !!v && f.showIf.in.includes(v);
+  return v === f.showIf.equals;
 }
 
 export function labelFor(f: Field, values: Record<string, string | undefined>): { label: string; help?: string } {
@@ -174,11 +177,11 @@ export const SECTIONS: Section[] = [
       {
         key: "Last Round",
         showIf: { key: "Has Raised", equals: "Yes" },
-        label: "Describe {company's} most recent funding round",
+        label: "Describe {company's} most recent or current funding round",
         type: "text",
         required: true,
         placeholder: "$500K SAFE at $6M post-money cap, led by X, closed March 2026",
-        help: "The type of investment (SAFE, note, or priced round), the amount, the valuation or cap, the lead investor, and when it closed. If you have not raised yet, write \"none\".",
+        help: "The type of investment (SAFE, note, or priced round), the amount, the valuation or cap, the lead investor, and when it closed or is expected to close.",
       },
       {
         key: "Cash and Burn",
@@ -215,6 +218,14 @@ export const SECTIONS: Section[] = [
         required: true,
         options: TERMS_OPTIONS,
         help: "\"Let's discuss\" is a fine answer. We ask now so there are no surprises later.",
+      },
+      {
+        key: "Terms Notes",
+        label: "Tell us more about the terms you have in mind",
+        type: "textarea",
+        required: true,
+        showIf: { key: "Terms OK", in: ["Let's discuss", "No"] },
+        help: "For example: your last valuation cap no longer reflects the company, a new round is about to price, or there is another structure you would prefer.",
       },
     ],
   },

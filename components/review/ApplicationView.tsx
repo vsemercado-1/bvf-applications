@@ -23,7 +23,7 @@ export function ApplicationView({ f }: { f: AppFields }) {
           <dt>Deck</dt><dd><Link_ href={f["Packet Deck"] || f["Deck URL"]} /></dd>
           <dt>Demo</dt><dd><Link_ href={f["Demo URL"]} /></dd>
           <dt>Raising</dt><dd>{f["Raising"]}{f["Raise Details"] ? ` — ${f["Raise Details"]}` : ""}</dd>
-          <dt>Standard terms</dt><dd>{f["Terms OK"]}</dd>
+          <dt>Standard terms</dt><dd>{f["Terms OK"]}{f["Terms Notes"] ? ` — ${f["Terms Notes"]}` : ""}</dd>
           <dt>Heard from</dt><dd>{f["Heard From"] || "—"}</dd>
         </dl>
       </div>
@@ -33,7 +33,7 @@ export function ApplicationView({ f }: { f: AppFields }) {
           <h3>{s.title}</h3>
           <div className="answers">
             {s.fields
-              .filter((q) => !["Name", "Email", "LinkedIn", "Role", "PR Connection", "Website", "Deck URL", "Demo URL", "Heard From", "Raising", "Raise Details", "Terms OK"].includes(q.key))
+              .filter((q) => !["Name", "Email", "LinkedIn", "Role", "PR Connection", "Website", "Deck URL", "Demo URL", "Heard From", "Raising", "Raise Details", "Terms OK", "Terms Notes"].includes(q.key))
               .map((q) => (
                 <div className="answer" key={q.key}>
                   <span className="q">{q.label}</span>
@@ -51,6 +51,7 @@ export function ApplicationView({ f }: { f: AppFields }) {
             <dt>Deck</dt><dd><Link_ href={f["Packet Deck"]} /></dd>
             <dt>Financials</dt><dd><Link_ href={f["Packet Financials"]} /></dd>
             <dt>Cap table</dt><dd><Link_ href={f["Packet Cap Table"]} /></dd>
+            <dt>409A / FMV</dt><dd><Link_ href={f["Packet 409A"]} /></dd>
             {f["Packet Notes"] && (<><dt>Founder notes</dt><dd>{f["Packet Notes"]}</dd></>)}
           </dl>
         </div>

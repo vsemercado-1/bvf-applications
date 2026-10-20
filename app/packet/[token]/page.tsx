@@ -31,6 +31,7 @@ export default async function PacketPage({ params }: { params: Promise<{ token: 
             deck: rec.fields["Packet Deck"] || rec.fields["Deck URL"] || "",
             financials: rec.fields["Packet Financials"] || "",
             capTable: rec.fields["Packet Cap Table"] || "",
+            valuation: rec.fields["Packet 409A"] || "",
             notes: rec.fields["Packet Notes"] || "",
           }}
           submittedAt={rec.fields["Packet Submitted At"]}
