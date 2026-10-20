@@ -41,7 +41,7 @@ export function EligibilityGate() {
           ))}
         </div>
         <span className="help">
-          Includes founders born in Puerto Rico, founders with Puerto Rican parents or grandparents, and founders raised in the diaspora.
+          Puerto Rican by birth or ancestry, whether you grew up on the island or in the diaspora.
         </span>
       </fieldset>
 
