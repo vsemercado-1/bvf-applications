@@ -14,7 +14,7 @@ export default async function NotEligible({ searchParams }: { searchParams: Prom
         </h1>
         <p className="body" style={{ fontSize: 17, lineHeight: 1.6 }}>
           {isRegion
-            ? "The 2027 cohort is open to founders living in Puerto Rico or the New York City, Miami, and San Francisco metro areas. We hope to expand further in future years."
+            ? "The 2027 cohort is open to founders living in Puerto Rico, New York City, Miami, or the San Francisco Bay Area. We hope to expand further in future years."
             : "The Fellowship was created to support Puerto Rican entrepreneurs specifically, and that requirement applies to every cohort."}{" "}
           Thank you for your interest in the program.
         </p>

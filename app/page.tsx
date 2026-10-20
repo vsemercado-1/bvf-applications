@@ -24,7 +24,7 @@ export default function Home() {
           <h1>Bravo Venture Fellowship</h1>
           <p className="lede">$250,000 in early-stage funding and a one-year fellowship for founders of Puerto Rican descent.</p>
           <p className="desc">
-            An initiative of the <a href="https://www.bravofamilyfoundation.org">Bravo Family Foundation</a>, the Fellowship supports Puerto Rican entrepreneurs building ambitious companies in Puerto Rico or the New York City, Miami, and San Francisco metro areas as they prepare to raise institutional capital.
+            An initiative of the <a href="https://www.bravofamilyfoundation.org">Bravo Family Foundation</a>, the Fellowship supports Puerto Rican entrepreneurs building ambitious companies in Puerto Rico, New York City, Miami, or the San Francisco Bay Area as they prepare to raise institutional capital.
           </p>
           <div className="hero-ctas">
             <Link href="#apply" className="btn btn-accent">Check Your Eligibility</Link>
@@ -56,7 +56,7 @@ export default function Home() {
             <div className="list">
               <div className="list-title">Signs you&apos;re a good fit</div>
               <div className="list-item"><Check />You&apos;re a founder of Puerto Rican descent.</div>
-              <div className="list-item"><Check />You&apos;re a resident of Puerto Rico, or live in one of these metro areas: NYC, San Francisco, Miami.</div>
+              <div className="list-item"><Check />You live in Puerto Rico, New York City, Miami, or the San Francisco Bay Area.</div>
               <div className="list-item"><Check />You&apos;re building a venture-stage company with paying customers, pilots, or signed commitments.</div>
               <div className="list-item"><Check />You&apos;re planning to raise capital in the next 12 months.</div>
             </div>
