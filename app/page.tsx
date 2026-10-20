@@ -66,7 +66,6 @@ export default function Home() {
               <div className="list-item body"><Cross />Your company has already raised a priced Series A, or $250,000 would not be material to your business.</div>
               <div className="list-item body"><Cross />You&apos;re based in Puerto Rico but are not of Puerto Rican descent.</div>
               <div className="list-item body"><Cross />You don&apos;t intend to scale your business significantly.</div>
-              <p className="small muted" style={{ marginTop: 4 }}>Founders who do not yet meet these criteria are welcome to apply and will be considered for future cohorts.</p>
             </div>
           </div>
         </div>
