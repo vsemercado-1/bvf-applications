@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useSort, Th } from "./sortable";
 import { Avatar } from "@/components/Avatar";
 import { fmt } from "./StatusPill";
 
@@ -27,7 +28,15 @@ export function DecideTable({ rows: initial, reviewerNames, alreadyAdvanced }: {
   const [confirm, setConfirm] = useState(false);
   const [open, setOpen] = useState<string | null>(null);
 
-  const sorted = [...rows].sort((a, b) => (b.avg ?? -1) - (a.avg ?? -1));
+  const get = useCallback((r: DecideRow, k: string): string | number | null => {
+    if (k === "company") return r.company || null;
+    if (k === "name") return r.name || null;
+    if (k === "avg") return r.avg;
+    if (k === "shortlist") return r.shortlist ? 1 : 0;
+    if (k.startsWith("rv:")) return r.per.find((p) => p.name === k.slice(3))?.avg ?? null;
+    return null;
+  }, []);
+  const { sorted, key, dir, toggle: sortBy } = useSort(rows, "avg", "desc", get);
   const chosen = rows.filter((r) => r.shortlist);
   const everyoneScored = rows.every((r) => r.scoredBy === reviewerNames.length);
 
@@ -82,11 +91,11 @@ export function DecideTable({ rows: initial, reviewerNames, alreadyAdvanced }: {
         <table className="table">
           <thead>
             <tr>
-              <th style={{ width: 40 }}></th>
-              <th>Company</th>
-              <th>Founder</th>
-              {reviewerNames.map((n) => <th key={n}>{n}</th>)}
-              <th>Average</th>
+              <Th id="shortlist" label="✓" sortKey={key} dir={dir} onSort={sortBy} numeric style={{ width: 40 }} />
+              <Th id="company" label="Company" sortKey={key} dir={dir} onSort={sortBy} />
+              <Th id="name" label="Founder" sortKey={key} dir={dir} onSort={sortBy} />
+              {reviewerNames.map((n) => <Th key={n} id={`rv:${n}`} label={n} sortKey={key} dir={dir} onSort={sortBy} numeric />)}
+              <Th id="avg" label="Average" sortKey={key} dir={dir} onSort={sortBy} numeric />
               <th></th>
             </tr>
           </thead>

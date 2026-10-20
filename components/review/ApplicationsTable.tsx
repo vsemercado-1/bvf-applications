@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { useSort, Th } from "./sortable";
 import { fmt, daysAgo } from "./StatusPill";
 import { Avatar } from "@/components/Avatar";
 
@@ -23,7 +24,20 @@ export interface Row {
 // reviewers' scores are deliberately not shown here; they appear on Decide.
 export function ApplicationsTable({ rows }: { rows: Row[] }) {
   const [hideScored, setHideScored] = useState(false);
-  const shown = useMemo(() => (hideScored ? rows.filter((r) => r.myScore === null) : rows), [rows, hideScored]);
+  const filtered = useMemo(() => (hideScored ? rows.filter((r) => r.myScore === null) : rows), [rows, hideScored]);
+  const get = useCallback((r: Row, k: string): string | number | null => {
+    switch (k) {
+      case "company": return r.company || null;
+      case "name": return r.name || null;
+      case "region": return r.region || null;
+      case "investors": return r.investors || null;
+      case "raising": return r.raising || null;
+      case "myScore": return r.myScore;
+      case "submitted": return r.submittedAt || null;
+      default: return null;
+    }
+  }, []);
+  const { sorted: shown, key, dir, toggle } = useSort(filtered, "submitted", "desc", get);
   const unscored = rows.filter((r) => r.myScore === null).length;
 
   return (
@@ -42,13 +56,13 @@ export function ApplicationsTable({ rows }: { rows: Row[] }) {
         <table className="table">
           <thead>
             <tr>
-              <th>Company</th>
-              <th>Founder</th>
-              <th>Region</th>
-              <th>Investors</th>
-              <th>Raising</th>
-              <th>My score</th>
-              <th>Submitted</th>
+              <Th id="company" label="Company" sortKey={key} dir={dir} onSort={toggle} />
+              <Th id="name" label="Founder" sortKey={key} dir={dir} onSort={toggle} />
+              <Th id="region" label="Region" sortKey={key} dir={dir} onSort={toggle} />
+              <Th id="investors" label="Investors" sortKey={key} dir={dir} onSort={toggle} />
+              <Th id="raising" label="Raising" sortKey={key} dir={dir} onSort={toggle} />
+              <Th id="myScore" label="My score" sortKey={key} dir={dir} onSort={toggle} numeric />
+              <Th id="submitted" label="Submitted" sortKey={key} dir={dir} onSort={toggle} numeric />
             </tr>
           </thead>
           <tbody>
