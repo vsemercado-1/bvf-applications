@@ -7,6 +7,8 @@ import { LANES } from "@/lib/schema";
 import { ApplicationView } from "@/components/review/ApplicationView";
 import { LiveInterview } from "@/components/review/LiveInterview";
 import { StatusPill } from "@/components/review/StatusPill";
+import { StatusControl } from "@/components/review/StatusControl";
+import { siteUrl } from "@/lib/email";
 import { Avatar } from "@/components/Avatar";
 import { headshotUrl } from "@/lib/review-data";
 
@@ -106,7 +108,8 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
           </details>
         </div>
 
-        <aside className="sticky">
+        <aside className="sticky" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <StatusControl appId={id} status={f["Status"] || "Finalist"} packetUrl={siteUrl(`/packet/${f["Resume Token"]}`)} />
           <LiveInterview
             appId={id}
             me={me}

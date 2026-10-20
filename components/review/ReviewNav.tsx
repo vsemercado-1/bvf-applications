@@ -24,7 +24,8 @@ export function ReviewNav({ reviewer }: { reviewer: Reviewer }) {
             <img src="/logo-dark.png" alt="Bravo Venture Fellowship" style={{ height: 30, width: "auto", display: "block" }} />
           </Link>
           <nav className="rv-nav" aria-label="Review">
-            {reviewer.screens && <Link href="/review" className={on("/review")}>Applications</Link>}
+            {reviewer.screens && <Link href="/review" className={on("/review")}>Screening</Link>}
+            {reviewer.screens && <Link href="/review/decide" className={on("/review/decide")}>Decide</Link>}
             <Link href="/review/interviews" className={on("/review/interviews")}>Interviews</Link>
             <Link href="/review/nominations" className={on("/review/nominations")}>Nominations</Link>
             <Link href="/review/settings" className={on("/review/settings")}>Settings</Link>

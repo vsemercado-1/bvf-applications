@@ -175,7 +175,7 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .pill.submitted { background: var(--accent-tint); border-color: #cfe0f7; color: var(--accent-ink); }
 .pill.finalist, .pill.interviewed { background: #fff4e5; border-color: #fdd9a8; color: #9a5b00; }
 .pill.selected { background: #e6f7ea; border-color: #b7e4c3; color: #116b2b; }
-.pill.declined, .pill.screened-out { background: #f3f3f3; color: var(--muted); }
+.pill.declined, .pill.not-selected { background: #f3f3f3; color: var(--muted); }
 .pill.not-yet { background: #f3f0ff; border-color: #ddd4ff; color: #4b3bb0; }
 .filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 20px; }
 .filters button { border: 1px solid var(--line-2); background: #fff; border-radius: 999px; padding: 6px 14px; font-size: 13px; cursor: pointer; }

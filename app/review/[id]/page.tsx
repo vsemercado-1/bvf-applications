@@ -1,13 +1,9 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { getApplication, listReviewsFor } from "@/lib/review-data";
+import { notFound, redirect } from "next/navigation";
+import { getApplication, listReviewsFor, listApplications, listAllReviews } from "@/lib/review-data";
 import { currentReviewer } from "@/lib/session";
-import { screeningReviewers } from "@/lib/auth";
-import { siteUrl } from "@/lib/email";
 import { ApplicationView } from "@/components/review/ApplicationView";
 import { Scorecard } from "@/components/review/Scorecard";
-import { OtherReviews } from "@/components/review/OtherReviews";
-import { StatusControl } from "@/components/review/StatusControl";
 import { StatusPill } from "@/components/review/StatusPill";
 import { Avatar } from "@/components/Avatar";
 import { headshotUrl } from "@/lib/review-data";
@@ -17,21 +13,32 @@ export const dynamic = "force-dynamic";
 export default async function ApplicationPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const me = await currentReviewer();
+  if (!me) notFound();
   let app;
   try {
     app = await getApplication(id);
   } catch {
     notFound();
   }
-  const reviews = await listReviewsFor(id);
   const f = app.fields;
-  const mine = reviews.find((r) => r.stage === "Screen" && r.reviewer === me?.email);
-  const finalist = ["Finalist", "Interviewed", "Selected"].includes(f["Status"] || "");
+  const finalist = ["Finalist", "Interviewed", "Selected", "Declined"].includes(f["Status"] || "");
+  if (!me.screens && !finalist) redirect("/review/interviews");
+
+  const reviews = await listReviewsFor(id);
+  const mine = reviews.find((r) => r.stage === "Screen" && r.reviewer === me.email);
+
+  // Find the next application this reviewer hasn't scored, for a "next" link.
+  let nextId: string | null = null;
+  if (me.screens && f["Status"] === "Submitted") {
+    const [apps, byApp] = await Promise.all([listApplications(), listAllReviews()]);
+    const pending = apps.filter((a) => a.id !== id && a.fields["Status"] === "Submitted" && !(byApp[a.id] || []).some((r) => r.stage === "Screen" && r.reviewer === me.email));
+    nextId = pending[0]?.id || null;
+  }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
       <div>
-        <Link href="/review" className="small muted" style={{ textDecoration: "none" }}>← Applications</Link>
+        <Link href={finalist ? "/review/interviews" : "/review"} className="small muted" style={{ textDecoration: "none" }}>← {finalist ? "Interviews" : "Screening"}</Link>
         <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginTop: 8 }}>
           <Avatar src={headshotUrl(f as Record<string, unknown>)} name={f["Name"]} size={44} />
           <h1 style={{ fontSize: 30, fontWeight: 800 }}>{f["Company"]}</h1>
@@ -43,11 +50,18 @@ export default async function ApplicationPage({ params }: { params: Promise<{ id
 
       <div className="rv-layout">
         <ApplicationView f={f} />
-        <aside className="sticky" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {me?.screens && <Scorecard appId={id} stage="Screen" mine={mine} />}
-          <OtherReviews reviews={reviews} stage="Screen" reviewerNames={screeningReviewers().map((r) => r.name)} />
-          <StatusControl appId={id} status={f["Status"] || "Submitted"} packetUrl={siteUrl(`/packet/${f["Resume Token"]}`)} />
-        </aside>
+        {me.screens && f["Status"] === "Submitted" && (
+          <aside className="sticky" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <Scorecard appId={id} stage="Screen" mine={mine} />
+            <div style={{ display: "flex", gap: 10 }}>
+              {nextId ? (
+                <Link href={`/review/${nextId}`} className="btn btn-ink btn-sm">Next unscored →</Link>
+              ) : (
+                <Link href="/review/decide" className="btn btn-ink btn-sm">All scored · go to Decide →</Link>
+              )}
+            </div>
+          </aside>
+        )}
       </div>
     </div>
   );

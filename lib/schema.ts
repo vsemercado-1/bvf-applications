@@ -16,8 +16,7 @@ export const TERMS_OPTIONS = ["Yes", "Let's discuss", "No"] as const;
 export const STATUSES = [
   "Draft",
   "Submitted",
-  "Screened out",
-  "Not yet",
+  "Not selected",
   "Finalist",
   "Interviewed",
   "Selected",
@@ -332,7 +331,7 @@ export const SCORE_AXES = [
   },
 ] as const;
 
-export const RECOMMENDATIONS = ["Interview", "Not yet", "Pass"] as const;
+export const RECOMMENDATIONS = ["Interview", "Maybe", "Pass"] as const;
 export const DECISIONS = ["Select", "Decline", "Undecided"] as const;
 
 export const LANES: Record<string, { title: string; goal: string; prompts: string[] }> = {

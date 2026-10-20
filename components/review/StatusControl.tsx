@@ -22,19 +22,17 @@ export function StatusControl({ appId, status, packetUrl }: { appId: string; sta
     router.refresh();
   }
 
-  const finalist = ["Finalist", "Interviewed", "Selected"].includes(value);
+  const finalist = ["Finalist", "Interviewed", "Selected", "Declined"].includes(value);
 
   return (
     <div className="box">
       <h3>Stage</h3>
       <select value={value} onChange={(e) => change(e.target.value)} disabled={busy} aria-label="Application status">
-        {STATUSES.filter((s) => s !== "Draft").map((s) => (
+        {STATUSES.filter((s) => ["Finalist", "Interviewed", "Selected", "Declined", "Not selected"].includes(s)).map((s) => (
           <option key={s} value={s}>{s}</option>
         ))}
       </select>
-      <p className="small muted">
-        Submitted → Finalist invites them to interview and unlocks their materials page. Not yet keeps them for next year. Screened out closes it.
-      </p>
+      <p className="small muted">Set Interviewed after the conversation, then Selected or Declined once the committee decides.</p>
       {finalist && (
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           <span className="small" style={{ fontWeight: 600 }}>Materials request link (send to the founder)</span>

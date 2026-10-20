@@ -16,15 +16,16 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
 export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
   await requireReviewer();
   const { id } = await ctx.params;
-  const body = (await req.json()) as Record<string, string>;
+  const body = (await req.json()) as Record<string, string | boolean>;
   const allowed = ["Status", "Prep Notes", "Interview Time", "Decision Notes"];
-  const fields: Record<string, string> = {};
+  const fields: Record<string, string | boolean> = {};
   for (const k of allowed) {
     if (typeof body[k] === "string") fields[k] = body[k];
   }
-  if (fields["Status"] && !(STATUSES as readonly string[]).includes(fields["Status"])) {
+  if (typeof body["Shortlist"] === "boolean") fields["Shortlist"] = body["Shortlist"];
+  if (typeof fields["Status"] === "string" && !(STATUSES as readonly string[]).includes(fields["Status"])) {
     return NextResponse.json({ error: "Invalid status" }, { status: 400 });
   }
-  const rec = await updateApplication(id, fields);
+  const rec = await updateApplication(id, fields as Record<string, string | undefined>);
   return NextResponse.json({ ok: true, fields: rec.fields });
 }

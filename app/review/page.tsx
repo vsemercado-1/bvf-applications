@@ -1,13 +1,13 @@
-import { listApplications, listAllReviews, summarize, reviewAverage, headshotUrl } from "@/lib/review-data";
-import { currentReviewer } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { screeningReviewers } from "@/lib/auth";
+import Link from "next/link";
+import { listApplications, listAllReviews, reviewAverage, headshotUrl } from "@/lib/review-data";
+import { currentReviewer } from "@/lib/session";
 import { ApplicationsTable, type Row } from "@/components/review/ApplicationsTable";
 import { DataError } from "@/components/review/DataError";
 
 export const dynamic = "force-dynamic";
 
-export default async function ReviewHome() {
+export default async function ScreeningPage() {
   const me = await currentReviewer();
   if (me && !me.screens) redirect("/review/interviews");
   let apps, reviewsByApp;
@@ -17,9 +17,11 @@ export default async function ReviewHome() {
     return <DataError error={e} />;
   }
 
-  const rows: Row[] = apps.map((a) => {
-    const summary = summarize(reviewsByApp[a.id] || []);
-    const mine = summary.reviews.find((r) => r.stage === "Screen" && r.reviewer === me?.email);
+  const submitted = apps.filter((a) => a.fields["Status"] === "Submitted");
+  const advanced = apps.filter((a) => ["Finalist", "Interviewed", "Selected", "Declined"].includes(a.fields["Status"] || "")).length;
+
+  const rows: Row[] = submitted.map((a) => {
+    const mine = (reviewsByApp[a.id] || []).find((r) => r.stage === "Screen" && r.reviewer === me?.email);
     return {
       id: a.id,
       name: a.fields["Name"] || "",
@@ -27,26 +29,28 @@ export default async function ReviewHome() {
       company: a.fields["Company"] || "",
       oneLiner: a.fields["One-liner"] || "",
       region: a.fields["Region"] || "",
-      status: a.fields["Status"] || "",
       submittedAt: a.fields["Submitted At"],
+      investors: a.fields["Has Raised"] === "No" ? "" : a.fields["Investors"] || "",
       raising: a.fields["Raising"] || "",
-      termsOk: a.fields["Terms OK"] || "",
       myScore: mine ? reviewAverage(mine) : null,
       myRec: mine?.recommendation,
-      avg: summary.avg,
-      reviewerCount: summary.reviews.filter((r) => r.stage === "Screen").length,
     };
   });
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <h1 style={{ fontSize: 28, fontWeight: 800 }}>Applications</h1>
-      <p className="muted small">
-        {rows.length} received · {rows.filter((r) => r.status === "Submitted").length} awaiting a decision ·{" "}
-        {rows.filter((r) => ["Finalist", "Interviewed"].includes(r.status)).length} finalists ·{" "}
-        {rows.filter((r) => r.status === "Selected").length} selected
-      </p>
-      <ApplicationsTable rows={rows} screenerCount={screeningReviewers().length} />
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 16, flexWrap: "wrap" }}>
+        <div>
+          <h1 style={{ fontSize: 28, fontWeight: 800 }}>Screening</h1>
+          <p className="muted small">Score each application on your own. Other reviewers’ scores stay hidden until Decide, where you compare and pick finalists together.</p>
+        </div>
+        <Link href="/review/decide" className="btn btn-ghost btn-sm">Decide →</Link>
+      </div>
+      {advanced > 0 && submitted.length === 0 ? (
+        <p className="notice">Screening is complete. {advanced} finalists were advanced to <Link href="/review/interviews">Interviews</Link>.</p>
+      ) : (
+        <ApplicationsTable rows={rows} />
+      )}
     </div>
   );
 }
