@@ -1,5 +1,7 @@
 import { listApplications, listAllReviews, summarize, reviewAverage, headshotUrl } from "@/lib/review-data";
 import { currentReviewer } from "@/lib/session";
+import { redirect } from "next/navigation";
+import { screeningReviewers } from "@/lib/auth";
 import { ApplicationsTable, type Row } from "@/components/review/ApplicationsTable";
 import { DataError } from "@/components/review/DataError";
 
@@ -7,6 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ReviewHome() {
   const me = await currentReviewer();
+  if (me && !me.screens) redirect("/review/interviews");
   let apps, reviewsByApp;
   try {
     [apps, reviewsByApp] = await Promise.all([listApplications(), listAllReviews()]);
@@ -43,7 +46,7 @@ export default async function ReviewHome() {
         {rows.filter((r) => ["Finalist", "Interviewed"].includes(r.status)).length} finalists ·{" "}
         {rows.filter((r) => r.status === "Selected").length} selected
       </p>
-      <ApplicationsTable rows={rows} />
+      <ApplicationsTable rows={rows} screenerCount={screeningReviewers().length} />
     </div>
   );
 }

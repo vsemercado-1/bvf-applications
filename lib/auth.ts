@@ -6,10 +6,12 @@ export interface Reviewer {
   name: string;
   email: string;
   lane: "strategy" | "impact" | "finance";
+  screens: boolean; // takes part in the screening stage (false = interviews only)
 }
 
-interface ReviewerWithPassword extends Reviewer {
+interface ReviewerWithPassword extends Omit<Reviewer, "screens"> {
   password: string;
+  screens?: boolean;
 }
 
 export const SESSION_COOKIE = "bvf_review";
@@ -25,14 +27,19 @@ function reviewers(): ReviewerWithPassword[] {
   }
 }
 
+const pub = (r: ReviewerWithPassword): Reviewer => ({ name: r.name, email: r.email, lane: r.lane, screens: r.screens !== false });
+
 export function publicReviewers(): Reviewer[] {
-  return reviewers().map(({ name, email, lane }) => ({ name, email, lane }));
+  return reviewers().map(pub);
+}
+
+export function screeningReviewers(): Reviewer[] {
+  return publicReviewers().filter((r) => r.screens);
 }
 
 export function findReviewer(email: string, password: string): Reviewer | null {
   const r = reviewers().find((x) => x.email.toLowerCase() === email.toLowerCase() && x.password === password);
-  if (!r) return null;
-  return { name: r.name, email: r.email, lane: r.lane };
+  return r ? pub(r) : null;
 }
 
 const enc = new TextEncoder();
@@ -74,7 +81,7 @@ export async function verifySession(token: string | undefined): Promise<Reviewer
     if (!ok) return null;
     const payload = JSON.parse(new TextDecoder().decode(fromB64url(body))) as Reviewer & { exp: number };
     if (payload.exp < Math.floor(Date.now() / 1000)) return null;
-    return { name: payload.name, email: payload.email, lane: payload.lane };
+    return { name: payload.name, email: payload.email, lane: payload.lane, screens: payload.screens !== false };
   } catch {
     return null;
   }

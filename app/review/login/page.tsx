@@ -26,7 +26,8 @@ function LoginForm() {
       setErr((await res.json()).error || "Could not sign in");
       return;
     }
-    router.push(params.get("next") || "/review");
+    const { reviewer } = (await res.json()) as { reviewer: { screens: boolean } };
+    router.push(params.get("next") || (reviewer.screens ? "/review" : "/review/interviews"));
     router.refresh();
   }
 

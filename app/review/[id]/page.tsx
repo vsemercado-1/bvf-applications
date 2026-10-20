@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getApplication, listReviewsFor } from "@/lib/review-data";
 import { currentReviewer } from "@/lib/session";
-import { publicReviewers } from "@/lib/auth";
+import { screeningReviewers } from "@/lib/auth";
 import { siteUrl } from "@/lib/email";
 import { ApplicationView } from "@/components/review/ApplicationView";
 import { Scorecard } from "@/components/review/Scorecard";
@@ -44,8 +44,8 @@ export default async function ApplicationPage({ params }: { params: Promise<{ id
       <div className="rv-layout">
         <ApplicationView f={f} />
         <aside className="sticky" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <Scorecard appId={id} stage="Screen" mine={mine} />
-          <OtherReviews reviews={reviews} stage="Screen" reviewerNames={publicReviewers().map((r) => r.name)} />
+          {me?.screens && <Scorecard appId={id} stage="Screen" mine={mine} />}
+          <OtherReviews reviews={reviews} stage="Screen" reviewerNames={screeningReviewers().map((r) => r.name)} />
           <StatusControl appId={id} status={f["Status"] || "Submitted"} packetUrl={siteUrl(`/packet/${f["Resume Token"]}`)} />
         </aside>
       </div>

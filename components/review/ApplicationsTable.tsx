@@ -24,7 +24,7 @@ export interface Row {
 
 const FILTERS = ["To review", "Submitted", "Finalist", "Not yet", "Screened out", "Selected", "All"] as const;
 
-export function ApplicationsTable({ rows }: { rows: Row[] }) {
+export function ApplicationsTable({ rows, screenerCount }: { rows: Row[]; screenerCount: number }) {
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("To review");
   const [sort, setSort] = useState<"newest" | "score">("newest");
 
@@ -87,7 +87,7 @@ export function ApplicationsTable({ rows }: { rows: Row[] }) {
                 </td>
                 <td>
                   {fmt(r.avg)}
-                  {r.reviewerCount > 0 && <div className="muted small">{r.reviewerCount} of 3</div>}
+                  {r.reviewerCount > 0 && <div className="muted small">{r.reviewerCount} of {screenerCount}</div>}
                 </td>
                 <td><StatusPill status={r.status} /></td>
                 <td className="small muted">{daysAgo(r.submittedAt)}</td>

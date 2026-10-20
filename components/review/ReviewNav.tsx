@@ -23,7 +23,7 @@ export function ReviewNav({ reviewer }: { reviewer: Reviewer }) {
             BVF <span style={{ color: "var(--accent)" }}>2027</span>
           </Link>
           <nav className="rv-nav" aria-label="Review">
-            <Link href="/review" className={on("/review")}>Applications</Link>
+            {reviewer.screens && <Link href="/review" className={on("/review")}>Applications</Link>}
             <Link href="/review/interviews" className={on("/review/interviews")}>Interviews</Link>
             <Link href="/review/nominations" className={on("/review/nominations")}>Nominations</Link>
           </nav>

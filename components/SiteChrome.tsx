@@ -19,7 +19,7 @@ export function SiteHeader({ nav = true }: { nav?: boolean }) {
         {nav && (
           <nav className="site-nav" aria-label="Primary">
             <Link href="/#eligibility">Who Can Apply</Link>
-            <Link href="/#benefits">Benefits</Link>
+            <Link href="/#benefits">What You Get</Link>
             <Link href="/#nominate">Nominate a Founder</Link>
             <Link href="/#apply" className="btn btn-accent">Apply</Link>
           </nav>
@@ -44,13 +44,17 @@ export function SiteFooter() {
             <img src="/bff-wordmark.png" alt="Bravo Family Foundation" className="bff-wordmark" width={900} height={251} />
           </a>
           <b>A program of the Bravo Family Foundation</b>
-          <a href="https://www.bravofamilyfoundation.org">bravofamilyfoundation.org</a>
-          {email && (
-            <>
-              {" · Questions? "}
-              <a href={`mailto:${email}`}>{email}</a>
-            </>
-          )}
+          <span>
+            <a href="https://www.bravofamilyfoundation.org">bravofamilyfoundation.org</a>
+            {email && (
+              <>
+                {" · Questions? "}
+                <a href={`mailto:${email}`}>{email}</a>
+              </>
+            )}
+            {" · "}
+            <Link href="/review" style={{ color: "var(--muted)" }}>Selection committee</Link>
+          </span>
         </div>
       </div>
     </footer>
