@@ -29,7 +29,7 @@ export default async function ResumePage({ params }: { params: Promise<{ token: 
         <div className="section-head">
           <div className="eyebrow">2027 Cohort</div>
           <h1 style={{ fontSize: 36, fontWeight: 800 }}>Welcome back</h1>
-          <p className="body">Your draft has been restored. Responses continue to save automatically.</p>
+          <p className="body">Your draft has been restored. Your answers continue to save automatically.</p>
         </div>
         <ApplicationForm region={rec.fields["Region"]} token={token} initial={values} />
       </main>

@@ -111,7 +111,7 @@ export default function Home() {
           <div className="section-head">
             <div className="eyebrow">Application</div>
             <h2>Check Your Eligibility</h2>
-            <p className="body" style={{ fontSize: 17 }}>Applicants must meet the two requirements below. The remaining questions concern the applicant and the company, and take approximately twelve minutes. Responses are saved automatically.</p>
+            <p className="body" style={{ fontSize: 17 }}>You&apos;ll need to meet the two requirements below. The rest of the application is about you and your company, and takes about twelve minutes. Your answers are saved automatically.</p>
           </div>
           <EligibilityGate />
         </div>

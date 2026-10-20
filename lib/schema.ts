@@ -53,7 +53,7 @@ export const SECTIONS: Section[] = [
       { key: "Name", label: "Full name", type: "text", required: true },
       { key: "Email", label: "Email", type: "email", required: true },
       { key: "LinkedIn", label: "LinkedIn profile", type: "url", placeholder: "https://linkedin.com/in/…" },
-      { key: "Role", label: "Your role at the company", type: "text", placeholder: "Founder & CEO", required: true },
+      { key: "Role", label: "Your role at your company", type: "text", placeholder: "Founder & CEO", required: true },
       {
         key: "PR Connection",
         label: "Your connection to Puerto Rico",
@@ -72,7 +72,7 @@ export const SECTIONS: Section[] = [
       { key: "Website", label: "Website", type: "url", placeholder: "https://" },
       {
         key: "One-liner",
-        label: "What does the company do?",
+        label: "What does your company do?",
         type: "text",
         required: true,
         maxLength: 160,
@@ -98,7 +98,7 @@ export const SECTIONS: Section[] = [
         type: "text",
         required: true,
         placeholder: "2 full-time (CEO, CTO) + 1 contractor; based in San Juan and Miami",
-        help: "How many people work on the company full time, and where are they?",
+        help: "How many people work on your company full time, and where are they?",
       },
       {
         key: "Competition",
@@ -110,7 +110,7 @@ export const SECTIONS: Section[] = [
   {
     id: "financing",
     title: "Financing",
-    intro: "Estimates are fine. This section helps the selection committee understand whether the Fellowship's investment would be meaningful for the company.",
+    intro: "Estimates are fine. This section helps the selection committee understand whether the Fellowship's investment would be meaningful for your company.",
     fields: [
       {
         key: "Total Raised",
@@ -163,7 +163,7 @@ export const SECTIONS: Section[] = [
     fields: [
       {
         key: "PR Impact",
-        label: "What does the company do for Puerto Rico today, and what could it do over the next three years?",
+        label: "What does your company do for Puerto Rico today, and what could it do over the next three years?",
         type: "textarea",
         required: true,
       },

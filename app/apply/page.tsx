@@ -15,7 +15,7 @@ export default async function ApplyPage({ searchParams }: { searchParams: Promis
         <div className="section-head">
           <div className="eyebrow">2027 Cohort</div>
           <h1 style={{ fontSize: 36, fontWeight: 800 }}>Application</h1>
-          <p className="body">Four short sections. Responses are saved automatically as you go.</p>
+          <p className="body">Four short sections. Your answers are saved automatically as you go.</p>
         </div>
         <ApplicationForm region={region!} />
       </main>
