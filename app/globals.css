@@ -48,6 +48,9 @@ input::placeholder, textarea::placeholder { color: #8a8a8a; }
 .dark a { color: #fff; }
 .eyebrow { font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-ink); }
 .dark .eyebrow { color: var(--accent-on-dark); }
+.countdown { letter-spacing: 0.02em; }
+.countdown b { font-weight: 700; color: #fff; }
+.countdown .unit { font-weight: 400; text-transform: none; letter-spacing: 0.02em; color: var(--on-dark-muted); margin-left: 3px; }
 .muted { color: var(--muted); }
 .body { color: var(--body); }
 .small { font-size: 13px; }

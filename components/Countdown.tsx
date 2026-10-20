@@ -27,24 +27,35 @@ function parts(now: Date, end: Date) {
   return { months, days, hours, minutes };
 }
 
-const plural = (n: number, w: string) => `${n} ${w}${n === 1 ? "" : "s"}`;
+type Parts = { months: number; days: number; hours: number; minutes: number } | null;
 
 export function Countdown() {
-  const [text, setText] = useState<string>("");
+  const [p, setP] = useState<Parts | undefined>(undefined);
 
   useEffect(() => {
-    const tick = () => {
-      const p = parts(new Date(), deadlineDate());
-      if (!p) return setText("Applications are closed");
-      const bits = [];
-      if (p.months) bits.push(plural(p.months, "month"));
-      bits.push(plural(p.days, "day"), plural(p.hours, "hour"), plural(p.minutes, "minute"));
-      setText(`${bits.join(" ")} left`);
-    };
+    const tick = () => setP(parts(new Date(), deadlineDate()));
     tick();
     const t = setInterval(tick, 30000);
     return () => clearInterval(t);
   }, []);
 
-  return <span>{text}</span>;
+  if (p === undefined) return <span className="countdown" />;
+  if (p === null) return <span className="countdown">Applications are closed</span>;
+
+  const units: [number, string][] = [];
+  if (p.months) units.push([p.months, "month"]);
+  units.push([p.days, "day"], [p.hours, "hour"], [p.minutes, "minute"]);
+
+  return (
+    <span className="countdown">
+      {units.map(([n, w], i) => (
+        <span key={w}>
+          {i > 0 && " "}
+          <b>{n}</b>
+          <span className="unit">{w}{n === 1 ? "" : "s"}</span>
+        </span>
+      ))}
+      <span className="unit"> left</span>
+    </span>
+  );
 }

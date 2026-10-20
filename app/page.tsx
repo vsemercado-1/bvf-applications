@@ -20,7 +20,7 @@ export default function Home() {
       <section className="dark hero">
         <div className="hero-glow" aria-hidden="true" />
         <div className="wrap">
-          <div className="eyebrow">2027 Cohort · Applications close {deadlineLong()} · <Countdown /></div>
+          <div className="eyebrow">Applications close {deadlineLong()} · <Countdown /></div>
           <h1>Bravo Venture Fellowship</h1>
           <p className="lede">$250,000 and a year of hands-on support for founders of Puerto Rican descent.</p>
           <p className="desc">
