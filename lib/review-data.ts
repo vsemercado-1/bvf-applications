@@ -132,6 +132,6 @@ export async function upsertReview(input: {
   return toReview(rec as Record_<Record<string, unknown>>);
 }
 
-export async function updateApplication(id: string, fields: Partial<AppFields>) {
-  return updateRecord<AppFields>(TABLES.applications, id, fields);
+export async function updateApplication(id: string, fields: Record<string, string | boolean | null | undefined>) {
+  return updateRecord<Record<string, unknown>>(TABLES.applications, id, fields);
 }

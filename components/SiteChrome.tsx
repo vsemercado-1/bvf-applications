@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { getSettings, deadlineLong } from "@/lib/settings";
 
 export function Brand({ variant = "dark" }: { variant?: "dark" | "light" }) {
   // logo-dark.png is the version for dark backgrounds (white mark and white "FELLOWSHIP").
@@ -32,15 +31,10 @@ export function SiteHeader({ nav = true }: { nav?: boolean }) {
 
 export async function SiteFooter() {
   const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "";
-  const settings = await getSettings();
   return (
     <footer className="site-footer">
-      <div className="wrap">
-        <div style={{ maxWidth: 520 }}>
-          <b>Timeline</b>
-          Applications are reviewed on a rolling basis through {deadlineLong(settings.deadline)}. Finalists are interviewed by the selection committee in late January. Fellows are announced in February, and the program runs through December.
-        </div>
-        <div className="footer-brand">
+      <div className="wrap" style={{ justifyContent: "flex-end" }}>
+        <div className="footer-brand" style={{ alignItems: "flex-end", textAlign: "right" }}>
           <a href="https://www.bravofamilyfoundation.org" aria-label="Bravo Family Foundation">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/bff-wordmark.png" alt="Bravo Family Foundation" className="bff-wordmark" width={900} height={251} />
@@ -54,8 +48,6 @@ export async function SiteFooter() {
                 <a href={`mailto:${email}`}>{email}</a>
               </>
             )}
-            {" · "}
-            <Link href="/review" style={{ color: "var(--muted)" }}>Selection committee</Link>
           </span>
         </div>
       </div>

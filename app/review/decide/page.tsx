@@ -17,10 +17,8 @@ export default async function DecidePage() {
     return <DataError error={e} />;
   }
   const reviewers = screeningReviewers();
-  const submitted = apps.filter((a) => a.fields["Status"] === "Submitted");
-  const alreadyAdvanced = apps.filter((a) => ["Finalist", "Interviewed", "Selected", "Declined"].includes(a.fields["Status"] || "")).length;
 
-  const rows: DecideRow[] = submitted.map((a) => {
+  const toRow = (a: (typeof apps)[number]): DecideRow => {
     const screen = (reviewsByApp[a.id] || []).filter((r) => r.stage === "Screen");
     const per = reviewers.map((rv) => {
       const r = screen.find((x) => x.reviewer === rv.email);
@@ -33,12 +31,16 @@ export default async function DecidePage() {
       name: a.fields["Name"] || "",
       photo: headshotUrl(a.fields as Record<string, unknown>),
       region: a.fields["Region"] || "",
+      status: a.fields["Status"] || "",
       shortlist: Boolean((a.fields as Record<string, unknown>)["Shortlist"]),
       per,
       avg: avgs.length ? avgs.reduce((x, y) => x + y, 0) / avgs.length : null,
       scoredBy: avgs.length,
     };
-  });
+  };
 
-  return <DecideTable rows={rows} reviewerNames={reviewers.map((r) => r.name.split(" ")[0])} alreadyAdvanced={alreadyAdvanced} />;
+  const pending = apps.filter((a) => a.fields["Status"] === "Submitted").map(toRow);
+  const advanced = apps.filter((a) => ["Finalist", "Interviewed", "Selected", "Declined"].includes(a.fields["Status"] || "")).map(toRow);
+
+  return <DecideTable pending={pending} advanced={advanced} reviewerNames={reviewers.map((r) => r.name.split(" ")[0])} />;
 }

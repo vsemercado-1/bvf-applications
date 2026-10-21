@@ -26,6 +26,6 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
   if (typeof fields["Status"] === "string" && !(STATUSES as readonly string[]).includes(fields["Status"])) {
     return NextResponse.json({ error: "Invalid status" }, { status: 400 });
   }
-  const rec = await updateApplication(id, fields as Record<string, string | undefined>);
+  const rec = await updateApplication(id, fields);
   return NextResponse.json({ ok: true, fields: rec.fields });
 }

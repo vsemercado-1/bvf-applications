@@ -72,10 +72,15 @@ export function ApplicationsTable({ rows }: { rows: Row[] }) {
             {shown.map((r) => (
               <tr key={r.id}>
                 <td>
-                  <Link href={`/review/${r.id}`}>{r.company || "(no company)"}</Link>
-                  <div className="muted small" style={{ maxWidth: 360 }}>{r.oneLiner}</div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <Avatar src={r.photo} name={r.name} size={40} />
+                    <div>
+                      <Link href={`/review/${r.id}`}>{r.company || "(no company)"}</Link>
+                      <div className="muted small" style={{ maxWidth: 340 }}>{r.oneLiner}</div>
+                    </div>
+                  </div>
                 </td>
-                <td><span style={{ display: "flex", alignItems: "center", gap: 8 }}><Avatar src={r.photo} name={r.name} size={28} />{r.name}</span></td>
+                <td>{r.name}</td>
                 <td className="small">{r.region}</td>
                 <td className="small" style={{ maxWidth: 220 }}>{r.investors || <span className="muted">None yet</span>}</td>
                 <td className="small">{r.raising.replace("In the next 6 months", "≤6 mo").replace("Not right now", "No").replace("Raising now", "Now")}</td>
