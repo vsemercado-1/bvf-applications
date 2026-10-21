@@ -125,6 +125,7 @@ export function Scorecard({ appId, stage, mine, onSaved }: Props) {
 
       <span className="saving">
         {state === "saving" ? "Saving…" : state === "saved" ? "Saved" : state === "error" ? "Could not save — check your connection" : "Saves automatically"}
+        {stage === "Screen" ? " · private until Decide" : " · visible to the committee live"}
       </span>
     </div>
   );

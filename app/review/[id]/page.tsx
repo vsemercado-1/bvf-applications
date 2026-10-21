@@ -38,7 +38,7 @@ export default async function ApplicationPage({ params }: { params: Promise<{ id
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
       <div>
-        <Link href={finalist ? "/review/interviews" : "/review"} className="small muted" style={{ textDecoration: "none" }}>← {finalist ? "Interviews" : "Screening"}</Link>
+        <Link href={finalist ? "/review/interviews" : "/review"} className="small muted" style={{ textDecoration: "none" }}>← {finalist ? "Interviews" : "Home"}</Link>
         <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginTop: 8 }}>
           <Avatar src={headshotUrl(f as Record<string, unknown>)} name={f["Name"]} size={44} />
           <h1 style={{ fontSize: 30, fontWeight: 800 }}>{f["Company"]}</h1>
@@ -57,7 +57,7 @@ export default async function ApplicationPage({ params }: { params: Promise<{ id
               {nextId ? (
                 <Link href={`/review/${nextId}`} className="btn btn-ink btn-sm">Next unscored →</Link>
               ) : (
-                <Link href="/review/decide" className="btn btn-ink btn-sm">All scored · go to Decide →</Link>
+                <Link href="/review" className="btn btn-ink btn-sm">All scored · back to Home →</Link>
               )}
             </div>
           </aside>

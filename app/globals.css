@@ -160,6 +160,21 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .site-footer b { color: var(--ink); display: block; margin-bottom: 6px; }
 
 /* Reviewer app */
+.stagebar { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.stagebar-track { position: absolute; left: calc(100% / 12); right: calc(100% / 12); top: 14px; height: 3px; background: #e4e4e4; }
+.stagebar-fill { position: absolute; left: calc(100% / 12); top: 14px; height: 3px; background: var(--accent); max-width: calc(100% - 100% / 6); }
+.stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.stage-dot { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; background: #fff; border: 2px solid var(--line-2); color: var(--muted); }
+.stage.done .stage-dot { background: var(--accent); border-color: var(--accent); color: #fff; }
+.stage.on .stage-dot { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 0 5px var(--accent-tint); }
+.stage-label { font-size: 13px; font-weight: 600; color: var(--muted); }
+.stage.on .stage-label { color: var(--accent-ink); font-weight: 700; }
+.stage.done .stage-label { color: var(--ink); font-weight: 700; }
+.stage-count { font-size: 12px; color: var(--muted); }
+.next-step { background: var(--ink); color: #fff; border-radius: 16px; padding: 22px 26px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.toast { position: sticky; top: 12px; z-index: 5; background: var(--ink); color: #fff; border-radius: 12px; padding: 12px 18px; display: flex; justify-content: space-between; gap: 16px; align-items: center; font-size: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
+.table td .btn.btn-sm { padding: 0 14px; }
+
 .rv-header { background: var(--ink); color: #fff; }
 .rv-header .wrap { height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .rv-nav { display: flex; gap: 20px; font-size: 14px; }
@@ -213,6 +228,8 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .login { max-width: 400px; margin: 80px auto; display: flex; flex-direction: column; gap: 20px; }
 
 @media (max-width: 900px) {
+  .stagebar { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 18px; }
+  .stagebar-track, .stagebar-fill { display: none; }
   .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tiles { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }

@@ -3,7 +3,7 @@
 A Next.js site with three parts:
 
 1. **Public application** (`/`) — landing page, eligibility check, four-step application with autosave and a private resume link, nomination form, and a finalist materials page.
-2. **Screening and Decide** (`/review`, `/review/decide`) — the screening reviewers score each application privately, then compare scores, shortlist, and advance finalists in one step.
+2. **Home: Screen, then Decide** (`/review`) — the screening reviewers score each application privately. Once both have finished, the same page becomes Decide: scores side by side, and a per-row **Invite to interview** button (immediate, undoable). **Finish deciding** marks the rest Not selected and closes applications.
 3. **Interviews** (`/review/interviews`) — one page per finalist with a quick summary, their materials, the three question lanes, shared prep notes, and live scoring that all three reviewers see as it is entered.
 
 All data lives in Airtable. The site has no database of its own.
@@ -62,9 +62,11 @@ Every later change: commit in GitHub Desktop, push, and Vercel redeploys automat
 
 **Applicants** answer the two gate questions (descent, region). An ineligible answer goes to a polite page with the nomination form. Eligible applicants go through four sections — Applicant, Company, Financing, Puerto Rico — with autosave every few seconds. Answers are kept in their browser, and after step 1 they get a private link they can copy to finish on another device. No emails are sent.
 
-**Screening** (`/review`). Each screening reviewer scores every submitted application on six axes (1–5) with written anchors, picks Interview / Maybe / Pass, and leaves notes. Other reviewers' scores are hidden at this stage. A "Next unscored" button walks through the pile.
+**Home** (`/review`). A six-stage bar (Open → Screen → Decide → Interview → Select → Announce) and a black "Your next step" strip tell each reviewer exactly what to do now. During Screen, the full list is shown grouped into "To score" and "Scored by you"; other reviewers' scores are hidden, only a ✓ shows whether they have scored. Each reviewer scores on six axes (1–5) with written anchors, picks Interview / Maybe / Pass, and leaves notes; scores autosave and stay editable until Decide.
 
-**Decide** (`/review/decide`). Everyone's screening scores side by side, sorted by committee average, with notes on demand. Tick the shortlist checkbox on the ones to interview; a running count sits at the top. "Advance N to interviews" marks them Finalist, marks the rest Not selected, and closes applications. Individual statuses can still be changed afterwards from each interview page.
+**Decide** (Home, once everyone has scored). Everyone's screening scores side by side, sorted by committee average, with notes on demand. **Invite to interview** on a row makes that founder a Finalist immediately (with Undo); you can keep inviting. **Finish deciding** marks whatever is left Not selected and closes applications; it can be reopened from Round settings.
+
+**Select** (`/review/select`). After interviews: screening and interview averages, each reviewer's Select / Decline call from live scoring, terms notes from the finalist packet, and **Select** / **Decline** buttons that record the committee's decision (status Selected / Declined). Nothing on the reviewer side ever emails an applicant.
 
 **Finalists.** Moving to Finalist unlocks a materials page for that founder. Copy the link from the Stage box and email it; they submit links to deck, financials, and cap table. Those appear on the interview page.
 
