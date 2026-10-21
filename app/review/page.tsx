@@ -39,7 +39,7 @@ export default async function Home() {
     step = {
       title: `Score your ${toScore.length} remaining application${toScore.length === 1 ? "" : "s"}`,
       body: `${others.map((o) => `${o.name.split(" ")[0]} has scored ${st.perScreener[o.email].done} of ${st.perScreener[o.email].total}.`).join(" ")} Your scores stay private until ${waitingOn.length ? "you both finish" : "you finish"}; then Decide opens with everything side by side.`,
-      cta: { label: `Score next: ${toScore[0].company} →`, href: `/review/${toScore[0].id}` },
+      cta: { label: `Score next: ${toScore[0].name.split(" ")[0]} (${toScore[0].company}) →`, href: `/review/${toScore[0].id}` },
     };
   } else if (!st.allScreened && st.submitted.length > 0) {
     const waitingOn = others.filter((o) => st.perScreener[o.email].done < st.perScreener[o.email].total);
@@ -51,14 +51,14 @@ export default async function Home() {
     const invited = st.finalists.length + st.decided.length;
     step = {
       title: invited ? `${invited} invited so far · ${st.submitted.length} still to decide` : "Decide who to interview",
-      body: "Both sets of scores are below, sorted by committee average. Click Invite to interview on anyone you want to meet; you can keep inviting. When you're done, Finish deciding tells the rest and closes applications.",
+      body: "Both sets of scores are below, sorted by committee average. Invite anyone you want to meet; you can keep inviting, undo, or revisit your own score on any application. When you're done, Finish deciding marks the rest Not selected and closes applications.",
     };
   } else if (st.current === "interview") {
     const next = [...st.finalists].filter((f) => f.status === "Finalist").sort((a, b) => (a.interviewTime || "9").localeCompare(b.interviewTime || "9"))[0];
     step = {
       title: `${st.finalists.length} finalist${st.finalists.length === 1 ? "" : "s"} to interview`,
       body: "Send each finalist their materials link, set the interview time, and open the prep page before the conversation.",
-      cta: next ? { label: `Prep: ${next.company} →`, href: `/review/${next.id}/interview` } : undefined,
+      cta: next ? { label: `Prep: ${next.name.split(" ")[0]} (${next.company}) →`, href: `/review/${next.id}/interview` } : undefined,
     };
   } else if (st.current === "select") {
     step = { title: "All interviews are done", body: "Compare interview scores and record the committee's decision for each finalist.", cta: { label: "Go to Select →", href: "/review/select" } };

@@ -39,7 +39,7 @@ export function SelectList({ rows: initial, reviewers, canDecide }: Props) {
         <table className="table">
           <thead>
             <tr>
-              <th>Company</th>
+              <th>Founder</th>
               <th>Screen avg</th>
               {reviewers.map((rv) => <th key={rv.email}>{rv.first}</th>)}
               <th>Interview avg</th>
@@ -57,8 +57,8 @@ export function SelectList({ rows: initial, reviewers, canDecide }: Props) {
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                       <Avatar src={r.photo} name={r.name} size={36} />
                       <div>
-                        <Link href={`/review/${r.id}/interview`}>{r.company}</Link>
-                        <div className="muted small">{r.name} · {r.region}</div>
+                        <Link href={`/review/${r.id}/interview`} style={{ fontWeight: 700 }}>{r.name}</Link>
+                        <div className="muted small">{r.company} · {r.region}</div>
                       </div>
                     </div>
                   </td>

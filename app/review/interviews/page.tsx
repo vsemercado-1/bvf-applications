@@ -25,18 +25,18 @@ export default async function InterviewsPage() {
       </p>
       <table className="table">
         <thead>
-          <tr><th>When</th><th>Company</th><th>Founder</th><th>Materials</th><th>Screen avg</th><th>Interview avg</th><th>Decisions</th><th>Status</th></tr>
+          <tr><th>When</th><th>Founder</th><th>Company</th><th>Materials</th><th>Screen avg</th><th>Interview avg</th><th>Decisions</th><th>Status</th></tr>
         </thead>
         <tbody>
-          {finalists.length === 0 && <tr><td colSpan={8} className="muted" style={{ textAlign: "center", padding: 32 }}>No finalists yet. Move applications to Finalist from their page.</td></tr>}
+          {finalists.length === 0 && <tr><td colSpan={8} className="muted" style={{ textAlign: "center", padding: 32 }}>No finalists yet. Invite founders from Home once screening is done.</td></tr>}
           {finalists.map(({ a, s }) => {
             const f = a.fields;
             const decisions = s.reviews.filter((r) => r.stage === "Interview" && r.decision).map((r) => r.decision);
             return (
               <tr key={a.id}>
                 <td className="small">{f["Interview Time"] ? formatTime(f["Interview Time"]) : <span className="muted">not set</span>}</td>
-                <td><Link href={`/review/${a.id}/interview`}>{f["Company"]}</Link></td>
-                <td>{f["Name"]}</td>
+                <td><Link href={`/review/${a.id}/interview`} style={{ fontWeight: 700 }}>{f["Name"]}</Link></td>
+                <td>{f["Company"]}</td>
                 <td className="small">{f["Packet Submitted At"] ? "Received" : <span className="muted">Waiting</span>}</td>
                 <td>{fmt(s.avg)}</td>
                 <td>{fmt(s.interviewAvg)}</td>

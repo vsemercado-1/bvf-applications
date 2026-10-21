@@ -41,8 +41,8 @@ export function HomeList({ toScore, scored, me, others, total, mineDone }: Props
 
   const head = (
     <tr>
-      <Th id="company" label="Company" sortKey={key} dir={dir} onSort={toggle} />
       <Th id="name" label="Founder" sortKey={key} dir={dir} onSort={toggle} />
+      <Th id="company" label="Company" sortKey={key} dir={dir} onSort={toggle} />
       <Th id="investors" label="Investors" sortKey={key} dir={dir} onSort={toggle} />
       <Th id="raising" label="Raising" sortKey={key} dir={dir} onSort={toggle} />
       {others.map((o) => <th key={o.email}>{o.first}</th>)}
@@ -58,12 +58,12 @@ export function HomeList({ toScore, scored, me, others, total, mineDone }: Props
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <Avatar src={r.photo} name={r.name} size={36} />
             <div>
-              <Link href={`/review/${r.id}`}>{r.company || "(no company)"}</Link>
+              <Link href={`/review/${r.id}`} style={{ fontWeight: 700 }}>{r.name || "(no name)"}</Link>
               <div className="muted small">{r.region}</div>
             </div>
           </div>
         </td>
-        <td>{r.name}</td>
+        <td>{r.company || <span className="muted">—</span>}</td>
         <td className="small" style={{ maxWidth: 220 }}>{r.investors || <span className="muted">None yet</span>}</td>
         <td className="small">{shortRaising(r.raising)}</td>
         {others.map((o) => (

@@ -52,7 +52,7 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
     const ok = await setStatus(r.id, "Finalist");
     if (!ok) return router.refresh();
     setToast({
-      text: `${r.company} invited to interview.`,
+      text: `${r.name} (${r.company}) invited to interview.`,
       undo: async () => {
         setToast(null);
         setInvited((inv) => inv.filter((x) => x.id !== r.id));
@@ -60,7 +60,7 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
         await setStatus(r.id, "Submitted");
       },
     });
-    setTimeout(() => setToast((t) => (t?.text.startsWith(r.company) ? null : t)), 8000);
+    setTimeout(() => setToast((t) => (t?.text.startsWith(r.name) ? null : t)), 8000);
   }
 
   async function uninvite(r: AppRow) {
@@ -81,8 +81,8 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
 
   const head = (
     <tr>
-      <Th id="company" label="Company" sortKey={key} dir={dir} onSort={toggle} />
       <Th id="name" label="Founder" sortKey={key} dir={dir} onSort={toggle} />
+      <Th id="company" label="Company" sortKey={key} dir={dir} onSort={toggle} />
       {screeners.map((s) => <Th key={s.email} id={`rv:${s.email}`} label={s.first} sortKey={key} dir={dir} onSort={toggle} numeric />)}
       <Th id="avg" label="Average" sortKey={key} dir={dir} onSort={toggle} numeric />
       <th></th>
@@ -101,10 +101,11 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
         );
       })}
       <td style={{ fontSize: 18, fontWeight: 800 }}>{fmt(r.screenAvg)}</td>
-      <td className="small">
+      <td className="small" style={{ whiteSpace: "nowrap" }}>
         {screeners.some((s) => r.screen[s.email]?.notes) && (
           <button type="button" className="link-btn" onClick={() => setOpen(open === r.id ? null : r.id)}>{open === r.id ? "Hide notes" : "Notes"}</button>
         )}
+        <Link href={`/review/${r.id}`} className="muted" style={{ marginLeft: 12 }}>Edit my score</Link>
       </td>
     </>
   );
@@ -128,10 +129,10 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
       <td>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <Avatar src={r.photo} name={r.name} size={36} />
-          <div><Link href={href}>{r.company}</Link><div className="muted small">{r.region}</div></div>
+          <div><Link href={href} style={{ fontWeight: 700 }}>{r.name}</Link><div className="muted small">{r.region}</div></div>
         </div>
       </td>
-      <td>{r.name}</td>
+      <td>{r.company}</td>
     </>
   );
 
@@ -147,7 +148,7 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
       <div className="box" style={{ gap: 16 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
           <div style={{ fontSize: 16, fontWeight: 800 }}>Still to decide · {rows.length}</div>
-          <span className="small muted">Sorted by committee average. Inviting is immediate and can be undone.</span>
+          <span className="small muted">Sorted by committee average. Inviting is immediate and can be undone; your own scores stay editable.</span>
         </div>
         <div style={{ overflowX: "auto" }}>
           <table className="table">
@@ -181,7 +182,7 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
           <div className="box" style={{ borderColor: "var(--ink)" }}>
             <h3>Finish deciding?</h3>
             <p className="small body">
-              The {rows.length} remaining application{rows.length === 1 ? "" : "s"} ({rows.map((r) => r.company).join(", ")}) will be marked <b>Not selected</b>, and the public site will stop accepting applications. The {invited.length} you invited are unaffected. You can reopen from Round settings.
+              The {rows.length} remaining application{rows.length === 1 ? "" : "s"} ({rows.map((r) => `${r.name}, ${r.company}`).join("; ")}) will be marked <b>Not selected</b>, and the public site will stop accepting applications. The {invited.length} you invited are unaffected. You can reopen from Round settings.
             </p>
             <div style={{ display: "flex", gap: 10 }}>
               <button type="button" className="btn btn-ink btn-sm" onClick={finish} disabled={finishing}>{finishing ? "Finishing…" : "Yes, finish"}</button>
@@ -204,7 +205,7 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
               {[...invited].sort((a, b) => (b.screenAvg ?? -1) - (a.screenAvg ?? -1)).map((r) => (
                 <FragmentRows key={r.id}>
                   <tr style={{ background: "var(--accent-tint)" }}>
-                    {who(r, `/review/${r.id}/interview`)}
+                    {who(r, `/review/${r.id}`)}
                     {scoreCells(r)}
                     <td style={{ textAlign: "right" }}>
                       {r.status === "Finalist" ? (
