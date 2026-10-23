@@ -2,13 +2,15 @@ import Link from "next/link";
 import { listApplications, listAllReviews, summarize } from "@/lib/review-data";
 import { StatusPill, fmt } from "@/components/review/StatusPill";
 import { DataError } from "@/components/review/DataError";
+import { StageBar } from "@/components/review/StageBar";
+import { getRoundState } from "@/lib/stage";
 
 export const dynamic = "force-dynamic";
 
 export default async function InterviewsPage() {
-  let apps, reviewsByApp;
+  let apps, reviewsByApp, st;
   try {
-    [apps, reviewsByApp] = await Promise.all([listApplications(), listAllReviews()]);
+    [apps, reviewsByApp, st] = await Promise.all([listApplications(), listAllReviews(), getRoundState()]);
   } catch (e) {
     return <DataError error={e} />;
   }
@@ -19,6 +21,9 @@ export default async function InterviewsPage() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <div className="box" style={{ padding: "22px 24px", marginBottom: 12 }}>
+        <StageBar current={st.current} counts={st.counts} viewing="interview" />
+      </div>
       <h1 style={{ fontSize: 28, fontWeight: 800 }}>Interviews</h1>
       <p className="muted small">
         Each finalist has a prep page with the application, their materials, the three question lanes, and live scoring for the committee. Open it on the day.

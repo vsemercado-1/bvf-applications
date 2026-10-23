@@ -11,7 +11,8 @@ import { DataError } from "@/components/review/DataError";
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
+  const { view } = await searchParams;
   const me = await currentReviewer();
   if (!me) redirect("/review/login");
   if (!me.screens) redirect("/review/interviews");
@@ -28,7 +29,10 @@ export default async function Home() {
   const toScore = st.submitted.filter((r) => r.screen[me.email]?.avg == null);
   const scored = st.submitted.filter((r) => r.screen[me.email]?.avg != null);
   const received = st.rows.filter((r) => r.status !== "Draft").length;
-  const inDecide = st.current === "decide" || (st.current === "interview" && st.submitted.length > 0);
+  // Which view: the stage bar lets you revisit Screen even after Decide has
+  // opened, or peek at Decide early (it says if scoring isn't finished).
+  const decideOpen = st.allScreened && st.submitted.length + st.finalists.length + st.decided.length > 0;
+  const inDecide = view === "decide" ? true : view === "screen" ? false : decideOpen;
 
   // The one sentence + one button for this reviewer right now.
   let step: { title: string; body: string; cta?: { label: string; href: string } };
@@ -46,6 +50,13 @@ export default async function Home() {
     step = {
       title: "You're done scoring",
       body: `Waiting on ${waitingOn.map((o) => `${o.name.split(" ")[0]} (${st.perScreener[o.email].total - st.perScreener[o.email].done} left)`).join(", ")}. Decide opens when everyone has finished. You can still edit your scores below.`,
+    };
+  } else if (inDecide && !decideOpen) {
+    const waitingOn = st.screeners.filter((o) => st.perScreener[o.email].done < st.perScreener[o.email].total);
+    step = {
+      title: "Decide isn't open yet",
+      body: `Scores stay private until everyone has finished. Still scoring: ${waitingOn.map((o) => `${o.name.split(" ")[0]} (${st.perScreener[o.email].total - st.perScreener[o.email].done} left)`).join(", ")}.`,
+      cta: { label: "Back to scoring →", href: "/review?view=screen" },
     };
   } else if (inDecide) {
     const invited = st.finalists.length + st.decided.length;
@@ -83,7 +94,7 @@ export default async function Home() {
       </div>
 
       <div className="box" style={{ padding: "22px 24px" }}>
-        <StageBar current={st.current} counts={st.counts} />
+        <StageBar current={st.current} counts={st.counts} viewing={inDecide ? "decide" : "screen"} />
       </div>
 
       <div className="next-step">
@@ -95,7 +106,9 @@ export default async function Home() {
         {step.cta && <Link href={step.cta.href} className="btn btn-accent" style={{ whiteSpace: "nowrap" }}>{step.cta.label}</Link>}
       </div>
 
-      {inDecide ? (
+      {inDecide && !decideOpen ? (
+        <HomeList toScore={toScore} scored={scored} me={me.email} others={others.map((o) => ({ email: o.email, first: o.name.split(" ")[0] }))} total={st.submitted.length} mineDone={mine.done} />
+      ) : inDecide ? (
         <DecideList rows={st.submitted} invited={[...st.finalists, ...st.decided]} screeners={st.screeners.map((r) => ({ email: r.email, first: r.name.split(" ")[0] }))} />
       ) : (
         <HomeList toScore={toScore} scored={scored} me={me.email} others={others.map((o) => ({ email: o.email, first: o.name.split(" ")[0] }))} total={st.submitted.length} mineDone={mine.done} />

@@ -164,7 +164,10 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .stagebar { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .stagebar-track { position: absolute; left: calc(100% / 12); right: calc(100% / 12); top: 14px; height: 3px; background: #e4e4e4; }
 .stagebar-fill { position: absolute; left: calc(100% / 12); top: 14px; height: 3px; background: var(--accent); max-width: calc(100% - 100% / 6); }
-.stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; text-decoration: none; color: inherit; padding: 6px 4px 8px; border-radius: 12px; transition: background 0.15s; }
+.stage:hover { background: var(--surface-2, #f5f7fa); text-decoration: none; }
+.stage:hover .stage-label { text-decoration: underline; text-underline-offset: 3px; }
+.stage.here::after { content: ""; position: absolute; left: 20%; right: 20%; bottom: 0; height: 3px; border-radius: 3px; background: var(--accent-ink); }
 .stage-dot { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; background: #fff; border: 2px solid var(--line-2); color: var(--muted); }
 .stage.done .stage-dot { background: var(--accent); border-color: var(--accent); color: #fff; }
 .stage.on .stage-dot { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 0 5px var(--accent-tint); }

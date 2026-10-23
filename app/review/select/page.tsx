@@ -32,7 +32,7 @@ export default async function SelectPage() {
         <Link href="/review/interviews" className="small" style={{ fontWeight: 600 }}>← Interviews</Link>
       </div>
       <div className="box" style={{ padding: "22px 24px" }}>
-        <StageBar current={st.current} counts={st.counts} />
+        <StageBar current={st.current} counts={st.counts} viewing="select" />
       </div>
       <div className="next-step">
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
