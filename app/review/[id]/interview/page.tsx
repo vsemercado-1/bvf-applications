@@ -2,12 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getApplication, listReviewsFor, summarize } from "@/lib/review-data";
 import { currentReviewer } from "@/lib/session";
-import { publicReviewers } from "@/lib/auth";
 import { formatUSD } from "@/lib/schema";
 import { ApplicationView } from "@/components/review/ApplicationView";
 import { LiveInterview } from "@/components/review/LiveInterview";
 import { InterviewAgenda } from "@/components/review/InterviewAgenda";
 import { StatusControl } from "@/components/review/StatusControl";
+import { CopyLink } from "@/components/review/CopyLink";
 import { fmt } from "@/components/review/StatusPill";
 import { siteUrl } from "@/lib/email";
 import { Avatar } from "@/components/Avatar";
@@ -29,10 +29,10 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
   const f = app.fields;
   const sum = summarize(reviews);
   const screening = reviews.filter((r) => r.stage === "Screen" && (r.notes || r.recommendation));
-  const reviewers = publicReviewers();
   const when = f["Interview Time"] ? new Date(f["Interview Time"]) : null;
   const packet = Boolean(f["Packet Submitted At"]);
   const raised = f["Has Raised"] === "No" ? "None" : formatUSD(f["Total Raised"]);
+  const first = (f["Name"] || "").split(" ")[0];
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
@@ -57,7 +57,7 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
               <Chip href={f["Packet Financials"]}>Financials</Chip>
               <Chip href={f["Packet Cap Table"]}>Cap table</Chip>
               {f["Packet 409A"] && <Chip href={f["Packet 409A"]}>409A</Chip>}
-              {!packet && <span className="chip muted-chip">Materials not yet received</span>}
+              {!packet && <CopyLink url={siteUrl(`/packet/${f["Resume Token"]}`)} label="Materials not received · copy request link for the founder" className="chip muted-chip" />}
             </div>
           </div>
         </div>
@@ -72,12 +72,15 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
       <div className="rv-layout iv-layout">
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           <div className="box" style={{ gap: 16 }}>
-            <h3 style={{ margin: 0 }}>The 45 minutes</h3>
-            <InterviewAgenda reviewers={reviewers.map((r) => ({ email: r.email, name: r.name, lane: r.lane, isMe: r.email === me.email }))} />
+            <div>
+              <h3 style={{ margin: 0 }}>Areas to cover</h3>
+              <p className="small muted" style={{ margin: "4px 0 0" }}>What the committee usually gets to in 45 minutes. Sample questions, not a script; pick up whatever is most useful for {first}.</p>
+            </div>
+            <InterviewAgenda />
           </div>
 
           <div className="box" style={{ gap: 14 }}>
-            <h3 style={{ margin: 0 }}>Worth knowing going in</h3>
+            <h3 style={{ margin: 0 }}>Highlights of {first}&apos;s application</h3>
             <dl className="kv">
               <dt>Traction</dt><dd>{f["Traction"]}</dd>
               <dt>Team</dt><dd>{f["Team"]}</dd>
@@ -102,7 +105,7 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
           </div>
 
           <details className="box" style={{ gap: 0 }}>
-            <summary style={{ cursor: "pointer", fontWeight: 700, fontSize: 15 }}>Full application</summary>
+            <summary style={{ cursor: "pointer", fontWeight: 700, fontSize: 15 }}>{first}&apos;s full application</summary>
             <div style={{ marginTop: 16 }}><ApplicationView f={f} /></div>
           </details>
         </div>
@@ -111,13 +114,12 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
           <LiveInterview
             appId={id}
             me={me}
-            reviewers={reviewers.map((r) => ({ email: r.email, name: r.name }))}
             initialReviews={reviews}
             initialPrepNotes={f["Prep Notes"] || ""}
             initialInterviewTime={f["Interview Time"] || ""}
             initialDecisionNotes={f["Decision Notes"] || ""}
           />
-          <StatusControl appId={id} status={f["Status"] || "Finalist"} packetUrl={siteUrl(`/packet/${f["Resume Token"]}`)} />
+          <StatusControl appId={id} status={f["Status"] || "Finalist"} />
         </aside>
       </div>
     </div>

@@ -93,7 +93,7 @@ export function Scorecard({ appId, stage, mine, onSaved, firstName, frameless }:
     <>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
         <div>
-          <h3 style={{ margin: 0 }}>{live ? "Your live score" : "Your screening score"}</h3>
+          <h3 style={{ margin: 0 }}>{live ? "Your interview score" : "Your screening score"}</h3>
           <span className="small muted">{done} of {axes.length} answered</span>
         </div>
         <span className={`avg-badge ${avg === null ? "empty" : ""}`}>{avg === null ? "—" : avg.toFixed(1)}</span>
@@ -159,7 +159,7 @@ export function Scorecard({ appId, stage, mine, onSaved, firstName, frameless }:
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
         <span className="saving">
           {state === "saving" ? "Saving…" : state === "saved" ? "Saved" : state === "error" ? "Could not save — check your connection" : "Saves automatically"}
-          {stage === "Screen" ? " · private until Decide" : " · the committee sees this live"}
+          {stage === "Screen" ? " · private until Decide" : " · compared on the Select page"}
         </span>
         {anything && !confirmReset && (
           <button type="button" className="link-btn small muted" onClick={() => setConfirmReset(true)}>Reset my inputs</button>
