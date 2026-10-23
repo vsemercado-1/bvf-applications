@@ -1,4 +1,4 @@
-import { SECTIONS, fill, ctxFrom, isVisible } from "@/lib/schema";
+import { SECTIONS, fill, ctxFrom, isVisible, formatUSD } from "@/lib/schema";
 import type { AppFields } from "@/lib/review-data";
 
 function Link_({ href }: { href?: string }) {
@@ -24,7 +24,7 @@ export function ApplicationView({ f }: { f: AppFields }) {
           <dt>Website</dt><dd><Link_ href={f["Website"]} /></dd>
           <dt>Deck</dt><dd><Link_ href={f["Packet Deck"] || f["Deck URL"]} /></dd>
           <dt>Demo</dt><dd><Link_ href={f["Demo URL"]} /></dd>
-          <dt>Raised to date</dt><dd>{f["Has Raised"] === "No" ? "None" : f["Total Raised"] || "—"}</dd>
+          <dt>Raised to date</dt><dd>{f["Has Raised"] === "No" ? "None" : formatUSD(f["Total Raised"])}</dd>
           <dt>Investors</dt><dd>{f["Has Raised"] === "No" ? "None yet" : f["Investors"] || "—"}</dd>
           <dt>Raising</dt><dd>{f["Raising"]}{f["Raise Details"] ? ` — ${f["Raise Details"]}` : ""}</dd>
           <dt>Standard terms</dt><dd>{f["Terms OK"]}{f["Terms Notes"] ? ` — ${f["Terms Notes"]}` : ""}</dd>

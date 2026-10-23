@@ -31,10 +31,15 @@ export async function POST(req: Request) {
 
   // Only accept known fields, trimmed, bounded.
   const fields: Record<string, string> = {};
+  const numbers: Record<string, number> = {};
   for (const f of ALL_FIELDS) {
     if (f.type === "image") continue;
     const v = body.values?.[f.key];
-    if (typeof v === "string" && v.trim()) fields[f.key] = v.trim().slice(0, 5000);
+    if (typeof v !== "string" || !v.trim()) continue;
+    if (f.type === "money") {
+      const n = Number(v.replace(/\D/g, ""));
+      if (Number.isFinite(n)) { numbers[f.key] = n; fields[f.key] = String(n); } // fields[] copy only for the required-field check
+    } else fields[f.key] = v.trim().slice(0, 5000);
   }
   const headshot = body.values?.["Headshot"];
   const attachments: Record<string, unknown> = {};
@@ -71,6 +76,7 @@ export async function POST(req: Request) {
     wasNew = true;
     const rec = await createRecord(TABLES.applications, {
       ...fields,
+      ...numbers,
       ...attachments,
       "Resume Token": token,
       Status: submitting ? "Submitted" : "Draft",
@@ -80,6 +86,7 @@ export async function POST(req: Request) {
   } else {
     await updateRecord(TABLES.applications, recordId, {
       ...fields,
+      ...numbers,
       ...attachments,
       ...(submitting ? { Status: "Submitted", "Submitted At": new Date().toISOString() } : {}),
     });

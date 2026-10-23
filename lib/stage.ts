@@ -81,8 +81,8 @@ export async function getRoundState(): Promise<RoundState> {
       region: s("Region"),
       status: s("Status"),
       investors: s("Has Raised") === "No" ? "" : s("Investors"),
-      raised: s("Has Raised") === "No" ? "" : s("Total Raised"),
-      raisedNum: s("Has Raised") === "No" ? 0 : parseMoney(s("Total Raised")),
+      raised: s("Has Raised") === "No" ? "" : f["Total Raised"] == null ? "" : String(f["Total Raised"]),
+      raisedNum: s("Has Raised") === "No" ? 0 : moneyNum(f["Total Raised"]),
       raising: s("Raising"),
       submittedAt: s("Submitted At") || undefined,
       interviewTime: s("Interview Time") || undefined,
@@ -134,18 +134,10 @@ export function stageIndex(id: StageId): number {
   return STAGES.findIndex((s) => s.id === id);
 }
 
-// "$850K (grants + SAFEs)" → 850000; "1.2m" → 1200000; "$2,500,000" → 2500000.
-// Takes the first money-looking figure. Returns null when nothing parses.
-export function parseMoney(text: string): number | null {
-  if (!text) return null;
-  const m = text.replace(/,/g, "").match(/\$?\s*(\d+(?:\.\d+)?)\s*(k|m|mm|b|thousand|million|billion)?/i);
-  if (!m) return null;
-  let n = parseFloat(m[1]);
-  const u = (m[2] || "").toLowerCase();
-  if (u === "k" || u === "thousand") n *= 1e3;
-  else if (u === "m" || u === "mm" || u === "million") n *= 1e6;
-  else if (u === "b" || u === "billion") n *= 1e9;
-  return Number.isFinite(n) ? n : null;
+function moneyNum(v: unknown): number | null {
+  if (typeof v === "number") return v;
+  if (typeof v === "string" && v.trim()) { const n = Number(v.replace(/[^\d.]/g, "")); return Number.isFinite(n) ? n : null; }
+  return null;
 }
 
 export function shortMoney(n: number | null, raw: string): string {

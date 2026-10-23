@@ -22,6 +22,7 @@ export default async function ResumePage({ params }: { params: Promise<{ token: 
   for (const f of ALL_FIELDS) {
     const v = rec.fields[f.key];
     if (typeof v === "string") values[f.key] = v;
+    else if (typeof v === "number") values[f.key] = String(v);
   }
   const shot = (rec.fields as Record<string, unknown>)["Headshot"];
   if (Array.isArray(shot) && shot[0] && typeof shot[0] === "object" && "url" in shot[0]) values["Headshot"] = String((shot[0] as { url: string }).url);

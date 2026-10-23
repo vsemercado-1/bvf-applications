@@ -24,7 +24,7 @@ export const STATUSES = [
 ] as const;
 export type Status = (typeof STATUSES)[number];
 
-export type FieldType = "text" | "email" | "url" | "textarea" | "select" | "radio" | "image";
+export type FieldType = "text" | "email" | "url" | "textarea" | "select" | "radio" | "image" | "money";
 
 // Labels, help text and section titles may contain {first} and {company},
 // which are filled in with the applicant's first name and company name.
@@ -167,10 +167,10 @@ export const SECTIONS: Section[] = [
       {
         key: "Total Raised",
         label: "How much money has {company} raised so far, in total?",
-        type: "text",
+        type: "money",
         required: true,
-        placeholder: "$850K (grants + SAFEs)",
-        help: "Include all funding: grants, SAFEs, convertible notes, and priced rounds.",
+        placeholder: "850,000",
+        help: "In US dollars. Include all funding: grants, SAFEs, convertible notes, and priced rounds. Approximate is fine.",
         showIf: { key: "Has Raised", equals: "Yes" },
       },
       {
@@ -366,3 +366,15 @@ export const LANES: Record<string, { title: string; goal: string; prompts: strin
     ],
   },
 };
+
+// Money fields are kept in form state as a plain digit string ("850000").
+export function formatMoneyInput(digits: string): string {
+  const d = digits.replace(/\D/g, "");
+  return d ? Number(d).toLocaleString("en-US") : "";
+}
+export function formatUSD(n: number | string | undefined | null): string {
+  if (n === undefined || n === null || n === "") return "—";
+  const v = typeof n === "number" ? n : Number(String(n).replace(/\D/g, ""));
+  if (!Number.isFinite(v)) return String(n);
+  return "$" + v.toLocaleString("en-US");
+}

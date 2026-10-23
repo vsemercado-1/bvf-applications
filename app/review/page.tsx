@@ -81,8 +81,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ v
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
         <div>
-          <div className="eyebrow">2027 Cohort</div>
-          <h1 style={{ fontSize: 30, fontWeight: 800, marginTop: 6 }}>Selection Committee</h1>
+          <div className="eyebrow">2027 Cohort · Selection Committee</div>
+          <h1 style={{ fontSize: 30, fontWeight: 800, marginTop: 6 }}>{inDecide ? "Decide: who to interview" : "Screen: score every application"}</h1>
           <p className="body" style={{ marginTop: 6, fontSize: 15 }}>
             {received} application{received === 1 ? "" : "s"} received · close {deadlineLong(st.settings.deadline)}
             {st.settings.accepting && <> · <Countdown deadline={st.settings.deadline} /></>}

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { SECTIONS, fill, ctxFrom, isVisible, labelFor, type Field } from "@/lib/schema";
+import { SECTIONS, fill, ctxFrom, isVisible, labelFor, type Field, formatMoneyInput } from "@/lib/schema";
 import { Avatar } from "./Avatar";
 
 type Values = Record<string, string>;
@@ -129,6 +129,7 @@ export function ApplicationForm({ region, token: initialToken, initial }: Props)
       if (f.required && !v) next[f.key] = "Required";
       else if (f.type === "email" && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) next[f.key] = "Enter a valid email address";
       else if (f.type === "url" && v && !/^https?:\/\//i.test(v) && !/^[\w.-]+\.[a-z]{2,}/i.test(v)) next[f.key] = "Enter a valid link";
+      else if (f.type === "money" && v && !/^\d+$/.test(v)) next[f.key] = "Enter a dollar amount, numbers only";
       else if (f.maxLength && v.length > f.maxLength) next[f.key] = `Keep this under ${f.maxLength} characters`;
     }
     setErrors(next);
@@ -332,6 +333,18 @@ function FieldInput({ field, ctx, values, value, onChange, error }: { field: Fie
       <label htmlFor={id}>{label}</label>
       {field.type === "textarea" ? (
         <textarea id={id} value={value} onChange={(e) => onChange(e.target.value)} placeholder={field.placeholder} rows={4} />
+      ) : field.type === "money" ? (
+        <div className="money">
+          <span className="money-prefix">$</span>
+          <input
+            id={id}
+            type="text"
+            inputMode="numeric"
+            value={formatMoneyInput(value)}
+            onChange={(e) => onChange(e.target.value.replace(/\D/g, "").slice(0, 12))}
+            placeholder={field.placeholder}
+          />
+        </div>
       ) : (
         <input
           id={id}

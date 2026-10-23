@@ -24,7 +24,7 @@ export default async function InterviewsPage() {
       <div className="box" style={{ padding: "22px 24px", marginBottom: 12 }}>
         <StageBar current={st.current} counts={st.counts} viewing="interview" />
       </div>
-      <h1 style={{ fontSize: 28, fontWeight: 800 }}>Interviews</h1>
+      <h1 style={{ fontSize: 30, fontWeight: 800 }}>Interview: 45 minutes with each finalist</h1>
       <p className="muted small">
         Each finalist has a prep page with the application, their materials, the three question lanes, and live scoring for the committee. Open it on the day.
       </p>

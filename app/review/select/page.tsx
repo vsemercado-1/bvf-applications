@@ -25,14 +25,14 @@ export default async function SelectPage() {
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
         <div>
-          <div className="eyebrow">2027 Cohort</div>
-          <h1 style={{ fontSize: 30, fontWeight: 800, marginTop: 6 }}>Select the Fellows</h1>
+          <div className="eyebrow">2027 Cohort · Selection Committee</div>
+          <h1 style={{ fontSize: 30, fontWeight: 800, marginTop: 6 }}>{st.current === "announce" ? "Announce: the 2027 Fellows" : "Select: choose the Fellows"}</h1>
           <p className="body" style={{ marginTop: 6, fontSize: 15 }}>{candidates.length} finalists · {selected} selected · target 2–3</p>
         </div>
         <Link href="/review/interviews" className="small" style={{ fontWeight: 600 }}>← Interviews</Link>
       </div>
       <div className="box" style={{ padding: "22px 24px" }}>
-        <StageBar current={st.current} counts={st.counts} viewing="select" />
+        <StageBar current={st.current} counts={st.counts} viewing={st.current === "announce" ? "announce" : "select"} />
       </div>
       <div className="next-step">
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
