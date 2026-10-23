@@ -18,7 +18,7 @@ interface Props {
 
 // Screening mode of Home: every application, grouped into "to score" and
 // "scored by you". Only this reviewer's scores are shown.
-export function HomeList({ toScore, scored, me, others, total, mineDone }: Props) {
+export function HomeList({ toScore, scored, me, total, mineDone }: Props) {
   const [showAll, setShowAll] = useState(false);
   const all = [...toScore, ...scored];
 
@@ -30,6 +30,7 @@ export function HomeList({ toScore, scored, me, others, total, mineDone }: Props
       if (k === "investors") return r.investors || null;
       if (k === "raising") return r.raising || null;
       if (k === "mine") return r.screen[me]?.avg ?? null;
+      if (k === "rec") return r.screen[me]?.rec || null;
       if (k === "submitted") return r.submittedAt || null;
       return null;
     },
@@ -47,8 +48,9 @@ export function HomeList({ toScore, scored, me, others, total, mineDone }: Props
       <Th id="raised" label="Raised to date" sortKey={key} dir={dir} onSort={toggle} numeric />
       <Th id="investors" label="Investors" sortKey={key} dir={dir} onSort={toggle} />
       <Th id="raising" label="Raising" sortKey={key} dir={dir} onSort={toggle} />
-      {others.map((o) => <th key={o.email}>{o.first}</th>)}
-      <Th id="mine" label="My score" sortKey={key} dir={dir} onSort={toggle} numeric style={{ textAlign: "right" }} />
+      <Th id="mine" label="My score" sortKey={key} dir={dir} onSort={toggle} numeric />
+      <Th id="rec" label="My call" sortKey={key} dir={dir} onSort={toggle} />
+      <th style={{ textAlign: "right" }}></th>
     </tr>
   );
 
@@ -69,18 +71,13 @@ export function HomeList({ toScore, scored, me, others, total, mineDone }: Props
         <td className="small" title={r.raised} style={{ whiteSpace: "nowrap" }}>{shortMoney(r.raisedNum, r.raised)}</td>
         <td className="small" style={{ maxWidth: 220 }}>{r.investors || <span className="muted">None yet</span>}</td>
         <td className="small">{shortRaising(r.raising)}</td>
-        {others.map((o) => (
-          <td key={o.email} className="small muted">{r.screen[o.email]?.avg != null ? "✓" : "—"}</td>
-        ))}
-        <td style={{ textAlign: "right" }}>
+        <td style={{ fontSize: 17, fontWeight: 800, whiteSpace: "nowrap" }}>{mine?.avg == null ? <span className="muted" style={{ fontWeight: 400 }}>—</span> : fmt(mine.avg)}</td>
+        <td className="small" style={{ fontWeight: 700, color: recColor(mine?.rec), whiteSpace: "nowrap" }}>{mine?.rec || <span className="muted" style={{ fontWeight: 400 }}>—</span>}</td>
+        <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
           {mine?.avg == null ? (
             <Link href={`/review/${r.id}`} className="btn btn-ink btn-sm" style={{ height: 36 }}>Score →</Link>
           ) : (
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
-              <b style={{ fontSize: 16 }}>{fmt(mine.avg)}</b>
-              <span className="small" style={{ fontWeight: 600, color: recColor(mine.rec) }}>{mine.rec || ""}</span>
-              <Link href={`/review/${r.id}`} className="small muted">Edit</Link>
-            </span>
+            <Link href={`/review/${r.id}`} className="btn btn-ghost btn-sm" style={{ height: 36 }}>Edit</Link>
           )}
         </td>
       </tr>

@@ -1,4 +1,4 @@
-import { SCORE_AXES } from "@/lib/schema";
+import { axesFor } from "@/lib/schema";
 import type { Review } from "@/lib/review-data";
 import { reviewAverage } from "@/lib/review-data";
 import { fmt } from "./StatusPill";
@@ -18,7 +18,7 @@ export function OtherReviews({ reviews, stage, reviewerNames }: { reviews: Revie
         {cols.map((c) => (
           <span key={c} className="h">{firstName(c)}</span>
         ))}
-        {SCORE_AXES.map((a) => (
+        {axesFor(stage).map((a) => (
           <Fragment key={a.key}>
             <span className="small">{a.label}</span>
             {cols.map((c) => {

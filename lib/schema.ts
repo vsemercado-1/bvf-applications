@@ -331,6 +331,67 @@ export const SCORE_AXES = [
   },
 ] as const;
 
+// Interview axes are about the person in the room, not the business on
+// paper (that was screening). Five questions, 1–5, same anchors style.
+export const INTERVIEW_AXES = [
+  {
+    key: "Clarity Score",
+    label: "Clarity",
+    question: "Can they explain the business, the plan, and the numbers simply, and answer the question that was actually asked?",
+    anchors: {
+      1: "Vague or jargon-heavy; answers drift away from the question.",
+      3: "Clear on what the company does; fuzzy on the plan or the numbers.",
+      5: "Crisp on all three. You could repeat their plan back after one hearing.",
+    },
+  },
+  {
+    key: "Candor Score",
+    label: "Candor",
+    question: "How honest are they about what is broken, what they got wrong, and what they don't know?",
+    anchors: {
+      1: "Everything is going great; no mistakes, no unknowns.",
+      3: "Admits problems when pressed.",
+      5: "Volunteers the hard parts and what they changed because of them.",
+    },
+  },
+  {
+    key: "Numbers Score",
+    label: "Command of the numbers",
+    question: "Did they know burn, runway, unit economics, and their cap table cold?",
+    anchors: {
+      1: "Had to guess or look things up; numbers didn't match the materials.",
+      3: "Knew the headline numbers; thin on what drives them.",
+      5: "Fluent, consistent with the financials, and knows which lever matters most.",
+    },
+  },
+  {
+    key: "Fellowship Fit Score",
+    label: "Fellowship fit",
+    question: "Would they make full use of a year of hands-on help and the network, and would we enjoy working with them?",
+    anchors: {
+      1: "Mostly wants the check; little interest in the program.",
+      3: "Open to help in general terms.",
+      5: "Specific about what they'd use the year for and who they'd want to meet.",
+    },
+  },
+  {
+    key: "Conviction Score",
+    label: "Conviction",
+    question: "Setting the scorecard aside: would you personally back this founder with $250,000?",
+    anchors: {
+      1: "No.",
+      3: "Maybe, with reservations I can name.",
+      5: "Yes, and I'd want to be the one to tell them.",
+    },
+  },
+] as const;
+
+export type Axis = { key: string; label: string; question: string; anchors: { 1: string; 3: string; 5: string } };
+export const ALL_AXES: readonly Axis[] = [...SCORE_AXES, ...INTERVIEW_AXES];
+export function axesFor(stage: "Screen" | "Interview"): readonly Axis[] {
+  return stage === "Screen" ? SCORE_AXES : INTERVIEW_AXES;
+}
+
 export const RECOMMENDATIONS = ["Interview", "Maybe", "Pass"] as const;
 export const DECISIONS = ["Select", "Decline", "Undecided"] as const;
 

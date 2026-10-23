@@ -2,28 +2,31 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Review } from "@/lib/review-data";
+import { reviewAverage } from "@/lib/review-data";
 import type { Reviewer } from "@/lib/auth";
 import { Scorecard } from "./Scorecard";
-import { OtherReviews } from "./OtherReviews";
+import { fmt } from "./StatusPill";
 
 interface Props {
   appId: string;
   me: Reviewer;
-  reviewerNames: string[];
+  reviewers: { email: string; name: string }[];
   initialReviews: Review[];
   initialPrepNotes: string;
   initialInterviewTime: string;
   initialDecisionNotes: string;
 }
 
-// The right-hand column of the interview page. Polls the server every few
-// seconds so all three reviewers see each other's scores as they are entered.
-export function LiveInterview({ appId, me, reviewerNames, initialReviews, initialPrepNotes, initialInterviewTime, initialDecisionNotes }: Props) {
+// Right-hand column of the interview page: the committee strip (everyone's
+// running average and call, refreshed every few seconds), this reviewer's
+// live scorecard, and shared notes/logistics.
+export function LiveInterview({ appId, me, reviewers, initialReviews, initialPrepNotes, initialInterviewTime, initialDecisionNotes }: Props) {
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
   const [prep, setPrep] = useState(initialPrepNotes);
   const [when, setWhen] = useState(initialInterviewTime ? toLocalInput(initialInterviewTime) : "");
   const [decisionNotes, setDecisionNotes] = useState(initialDecisionNotes);
   const [live, setLive] = useState(true);
+  const [tab, setTab] = useState<"score" | "notes">("score");
   const prepTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const decTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -44,13 +47,8 @@ export function LiveInterview({ appId, me, reviewerNames, initialReviews, initia
   }, [appId, live]);
 
   function patch(fields: Record<string, string>) {
-    return fetch(`/api/review/applications/${appId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(fields),
-    });
+    return fetch(`/api/review/applications/${appId}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(fields) });
   }
-
   function onPrep(v: string) {
     setPrep(v);
     if (prepTimer.current) clearTimeout(prepTimer.current);
@@ -62,47 +60,88 @@ export function LiveInterview({ appId, me, reviewerNames, initialReviews, initia
     decTimer.current = setTimeout(() => patch({ "Decision Notes": v }), 1000);
   }
 
-  const mine = reviews.find((r) => r.stage === "Interview" && r.reviewer === me.email);
+  const interviewReviews = reviews.filter((r) => r.stage === "Interview");
+  const mine = interviewReviews.find((r) => r.reviewer === me.email);
+  const avgs = interviewReviews.map(reviewAverage).filter((v): v is number => v !== null);
+  const committeeAvg = avgs.length ? avgs.reduce((a, b) => a + b, 0) / avgs.length : null;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <Scorecard
-        key={mine?.id || "new"}
-        appId={appId}
-        stage="Interview"
-        mine={mine}
-        firstName={me.name.split(" ")[0]}
-        onSaved={(r) => setReviews((prev) => [...prev.filter((x) => x.id !== r.id), r])}
-      />
-      <OtherReviews reviews={reviews} stage="Interview" reviewerNames={reviewerNames} />
-      <div className="box">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h3>Committee decision notes</h3>
-          <label className="small muted" style={{ display: "flex", gap: 6, alignItems: "center" }}>
+    <div className="live-panel">
+      <div className="committee-strip">
+        <div className="committee-head">
+          <span className="eyebrow" style={{ color: "var(--accent-on-dark)" }}>Committee · live</span>
+          <label className="small" style={{ display: "flex", gap: 6, alignItems: "center", color: "var(--on-dark-muted)" }}>
             <input type="checkbox" checked={live} onChange={(e) => setLive(e.target.checked)} style={{ width: "auto", height: "auto" }} />
-            Live updates
+            auto-refresh
           </label>
         </div>
-        <textarea value={decisionNotes} onChange={(e) => onDecisionNotes(e.target.value)} rows={4} placeholder="Shared notes for the committee: terms to propose, open questions, next steps." />
-        <div className="field">
-          <label htmlFor="when">Interview time</label>
-          <input
-            id="when"
-            type="datetime-local"
-            value={when}
-            onChange={(e) => {
-              setWhen(e.target.value);
-              if (e.target.value) patch({ "Interview Time": new Date(e.target.value).toISOString() });
-            }}
-            style={{ height: 40 }}
-          />
+        <div className="committee-row">
+          {reviewers.map((rv) => {
+            const r = interviewReviews.find((x) => x.reviewer === rv.email);
+            const avg = r ? reviewAverage(r) : null;
+            const first = rv.name.split(" ")[0];
+            return (
+              <div key={rv.email} className={`committee-person ${rv.email === me.email ? "me" : ""}`}>
+                <span className="committee-avatar">{first[0]}</span>
+                <span className="committee-name">{first}{rv.email === me.email ? " (you)" : ""}</span>
+                <span className={`committee-avg ${avg === null ? "empty" : ""}`}>{fmt(avg)}</span>
+                <span className={`committee-call ${(r?.decision || "").toLowerCase()}`}>{r?.decision || "—"}</span>
+              </div>
+            );
+          })}
+          <div className="committee-person total">
+            <span className="committee-name">Average</span>
+            <span className={`committee-avg ${committeeAvg === null ? "empty" : ""}`} style={{ fontSize: 30 }}>{fmt(committeeAvg)}</span>
+          </div>
         </div>
       </div>
-      <div className="box">
-        <h3>Prep notes (shared)</h3>
-        <textarea value={prep} onChange={(e) => onPrep(e.target.value)} rows={8} placeholder="Anything the committee should have in front of them: what the financials showed, cap-table notes, specific questions to ask." />
-        <span className="saving">Saves automatically; visible to all three reviewers.</span>
+
+      <div className="box" style={{ gap: 16 }}>
+        <div className="seg-tabs" role="tablist">
+          <button type="button" role="tab" aria-selected={tab === "score"} className={tab === "score" ? "on" : ""} onClick={() => setTab("score")}>Score</button>
+          <button type="button" role="tab" aria-selected={tab === "notes"} className={tab === "notes" ? "on" : ""} onClick={() => setTab("notes")}>Committee notes</button>
+        </div>
+
+        {tab === "score" ? (
+          <Scorecard
+            key={mine?.id || "new"}
+            appId={appId}
+            stage="Interview"
+            mine={mine}
+            firstName={me.name.split(" ")[0]}
+            frameless
+            onSaved={(r) => setReviews((prev) => [...prev.filter((x) => x.id !== r.id), r])}
+          />
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div className="field">
+              <label htmlFor="when">Interview time</label>
+              <input id="when" type="datetime-local" value={when} onChange={(e) => { setWhen(e.target.value); if (e.target.value) patch({ "Interview Time": new Date(e.target.value).toISOString() }); }} style={{ height: 40 }} />
+            </div>
+            <div className="field">
+              <label htmlFor="prep">Prep notes (shared)</label>
+              <textarea id="prep" value={prep} onChange={(e) => onPrep(e.target.value)} rows={6} placeholder="What the financials showed, cap-table notes, specific questions to ask this founder." />
+            </div>
+            <div className="field">
+              <label htmlFor="dnotes">Decision notes (shared)</label>
+              <textarea id="dnotes" value={decisionNotes} onChange={(e) => onDecisionNotes(e.target.value)} rows={4} placeholder="Terms to propose, open questions, next steps." />
+            </div>
+            <span className="saving">Saves automatically; visible to all three reviewers.</span>
+          </div>
+        )}
       </div>
+
+      {interviewReviews.some((r) => r.notes && r.reviewer !== me.email) && (
+        <div className="box" style={{ gap: 10 }}>
+          <h3 style={{ margin: 0 }}>What the others are hearing</h3>
+          {interviewReviews.filter((r) => r.notes && r.reviewer !== me.email).map((r) => (
+            <div key={r.id} className="answer">
+              <span className="q">{r.reviewerName.split(" ")[0]}&apos;s notes</span>
+              <span className="a small">{r.notes}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

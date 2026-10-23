@@ -1,5 +1,5 @@
 import { createRecord, getRecord, listRecords, updateRecord, q, TABLES, type Record_ } from "./airtable";
-import { SCORE_AXES } from "./schema";
+import { ALL_AXES } from "./schema";
 
 export type AppFields = Record<string, string | undefined>;
 
@@ -66,7 +66,7 @@ export async function listReviewsFor(appId: string): Promise<Review[]> {
 function toReview(r: Record_<Record<string, unknown>>): Review {
   const f = r.fields;
   const scores: Record<string, number | undefined> = {};
-  for (const a of SCORE_AXES) {
+  for (const a of ALL_AXES) {
     const v = f[a.key];
     scores[a.key] = typeof v === "number" ? v : undefined;
   }
@@ -117,7 +117,7 @@ export async function upsertReview(input: {
     Stage: input.stage,
     "Updated At": new Date().toISOString(),
   };
-  for (const a of SCORE_AXES) {
+  for (const a of ALL_AXES) {
     const v = input.scores[a.key];
     if (v === null) fields[a.key] = null;
     else if (typeof v === "number") fields[a.key] = v;

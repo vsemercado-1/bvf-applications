@@ -25,17 +25,17 @@ export function StatusControl({ appId, status, packetUrl }: { appId: string; sta
   const finalist = ["Finalist", "Interviewed", "Selected", "Declined"].includes(value);
 
   return (
-    <div className="box">
-      <h3>Stage</h3>
+    <div className="box" style={{ gap: 12 }}>
+      <h3 style={{ margin: 0 }}>Status &amp; materials</h3>
       <select value={value} onChange={(e) => change(e.target.value)} disabled={busy} aria-label="Application status">
         {STATUSES.filter((s) => ["Finalist", "Interviewed", "Selected", "Declined", "Not selected"].includes(s)).map((s) => (
           <option key={s} value={s}>{s}</option>
         ))}
       </select>
-      <p className="small muted">Set Interviewed after the conversation, then Selected or Declined once the committee decides.</p>
+      <p className="small muted" style={{ margin: 0 }}>Mark <b>Interviewed</b> after the call. Selected / Declined happen on the Select page.</p>
       {finalist && (
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span className="small" style={{ fontWeight: 600 }}>Materials request link (send to the founder)</span>
+          <span className="small" style={{ fontWeight: 600 }}>Materials link to send the founder</span>
           <div style={{ display: "flex", gap: 8 }}>
             <input readOnly value={packetUrl} style={{ height: 40, fontSize: 13 }} onFocus={(e) => e.target.select()} />
             <button

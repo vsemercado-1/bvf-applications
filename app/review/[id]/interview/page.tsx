@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getApplication, listReviewsFor } from "@/lib/review-data";
+import { getApplication, listReviewsFor, summarize } from "@/lib/review-data";
 import { currentReviewer } from "@/lib/session";
 import { publicReviewers } from "@/lib/auth";
-import { LANES } from "@/lib/schema";
+import { formatUSD } from "@/lib/schema";
 import { ApplicationView } from "@/components/review/ApplicationView";
 import { LiveInterview } from "@/components/review/LiveInterview";
-import { StatusPill } from "@/components/review/StatusPill";
+import { InterviewAgenda } from "@/components/review/InterviewAgenda";
 import { StatusControl } from "@/components/review/StatusControl";
+import { fmt } from "@/components/review/StatusPill";
 import { siteUrl } from "@/lib/email";
 import { Avatar } from "@/components/Avatar";
 import { headshotUrl } from "@/lib/review-data";
@@ -26,107 +27,115 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
   }
   const reviews = await listReviewsFor(id);
   const f = app.fields;
-  const screening = reviews.filter((r) => r.stage === "Screen" && r.notes);
+  const sum = summarize(reviews);
+  const screening = reviews.filter((r) => r.stage === "Screen" && (r.notes || r.recommendation));
   const reviewers = publicReviewers();
+  const when = f["Interview Time"] ? new Date(f["Interview Time"]) : null;
+  const packet = Boolean(f["Packet Submitted At"]);
+  const raised = f["Has Raised"] === "No" ? "None" : formatUSD(f["Total Raised"]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-      <div>
+    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
         <Link href="/review/interviews" className="small muted" style={{ textDecoration: "none" }}>← Interviews</Link>
-        <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginTop: 8 }}>
-          <Avatar src={headshotUrl(f as Record<string, unknown>)} name={f["Name"]} size={44} />
-          <h1 style={{ fontSize: 30, fontWeight: 800 }}>{f["Name"]}</h1>
-          <StatusPill status={f["Status"]} />
-          <Link href={`/review/${id}`} className="small" style={{ marginLeft: "auto" }}>Screening page</Link>
-        </div>
-        <p className="body" style={{ marginTop: 6, fontSize: 17 }}><b>{f["Company"]}</b>{f["Role"] ? ` · ${f["Role"]}` : ""} · {f["Region"]}</p>
+        <Link href={`/review/${id}`} className="small muted" style={{ textDecoration: "none" }}>Screening page →</Link>
       </div>
 
-      <div className="rv-layout">
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div className="box">
-            <h3>Quick summary</h3>
+      {/* Hero: who we're meeting */}
+      <section className="iv-hero">
+        <div className="iv-hero-left">
+          <Avatar src={headshotUrl(f as Record<string, unknown>)} name={f["Name"]} size={96} />
+          <div style={{ minWidth: 0 }}>
+            <div className="eyebrow" style={{ color: "var(--accent-on-dark)" }}>Interview{when ? ` · ${when.toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}` : " · time not set"}</div>
+            <h1 style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-0.02em", lineHeight: 1.1, marginTop: 6 }}>{f["Name"]}</h1>
+            <p style={{ fontSize: 17, marginTop: 6, color: "var(--on-dark-body)" }}><b style={{ color: "#fff" }}>{f["Company"]}</b>{f["Role"] ? ` · ${f["Role"]}` : ""} · {f["Region"]}</p>
+            <p style={{ fontSize: 15, marginTop: 8, color: "var(--on-dark-muted)", maxWidth: 560 }}>{f["One-liner"]}</p>
+            <div className="chip-row">
+              <Chip href={f["LinkedIn"]}>LinkedIn</Chip>
+              <Chip href={f["Website"]}>Website</Chip>
+              <Chip href={f["Packet Deck"] || f["Deck URL"]}>Deck</Chip>
+              <Chip href={f["Packet Financials"]}>Financials</Chip>
+              <Chip href={f["Packet Cap Table"]}>Cap table</Chip>
+              {f["Packet 409A"] && <Chip href={f["Packet 409A"]}>409A</Chip>}
+              {!packet && <span className="chip muted-chip">Materials not yet received</span>}
+            </div>
+          </div>
+        </div>
+        <div className="stat-grid">
+          <Stat label="Screening avg" value={fmt(sum.avg)} sub={screening.map((r) => `${r.reviewerName.split(" ")[0]}: ${r.recommendation || "—"}`).join(" · ")} />
+          <Stat label="Raised to date" value={raised} sub={f["Last Round"] || (f["Has Raised"] === "No" ? "No outside investment" : "")} />
+          <Stat label="Raising" value={f["Raising"] || "—"} sub={f["Raise Details"] || ""} />
+          <Stat label="Standard terms" value={f["Terms OK"] || "—"} sub={f["Terms Notes"] || ""} />
+        </div>
+      </section>
+
+      <div className="rv-layout iv-layout">
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <div className="box" style={{ gap: 16 }}>
+            <h3 style={{ margin: 0 }}>The 45 minutes</h3>
+            <InterviewAgenda reviewers={reviewers.map((r) => ({ email: r.email, name: r.name, lane: r.lane, isMe: r.email === me.email }))} />
+          </div>
+
+          <div className="box" style={{ gap: 14 }}>
+            <h3 style={{ margin: 0 }}>Worth knowing going in</h3>
             <dl className="kv">
-              <dt>Company</dt><dd>{f["One-liner"]}</dd>
-              <dt>Puerto Rico</dt><dd>{f["PR Connection"]}</dd>
               <dt>Traction</dt><dd>{f["Traction"]}</dd>
               <dt>Team</dt><dd>{f["Team"]}</dd>
-              <dt>Raised to date</dt><dd>{f["Has Raised"] === "No" ? "None (no outside investment)" : f["Total Raised"]}</dd>
-              <dt>Last round</dt><dd>{f["Last Round"] || "—"}</dd>
+              <dt>Puerto Rico</dt><dd>{f["PR Connection"]}</dd>
               <dt>Investors</dt><dd>{f["Has Raised"] === "No" ? "None yet" : f["Investors"] || "—"}</dd>
               <dt>Cash &amp; burn</dt><dd>{f["Cash and Burn"]}</dd>
-              <dt>Raising</dt><dd>{f["Raising"]}{f["Raise Details"] ? ` — ${f["Raise Details"]}` : ""}</dd>
-              <dt>Standard terms</dt><dd>{f["Terms OK"]}{f["Terms Notes"] ? ` — ${f["Terms Notes"]}` : ""}</dd>
-              <dt>Materials</dt>
-              <dd>
-                {f["Packet Submitted At"] ? (
-                  <span>
-                    <Ext href={f["Packet Deck"]}>Deck</Ext> · <Ext href={f["Packet Financials"]}>Financials</Ext> · <Ext href={f["Packet Cap Table"]}>Cap table</Ext>{f["Packet 409A"] && <> · <Ext href={f["Packet 409A"]}>409A</Ext></>}
-                  </span>
-                ) : (
-                  <span className="muted">Not yet received</span>
-                )}
-              </dd>
+              {f["Packet Notes"] && <><dt>From the founder</dt><dd>{f["Packet Notes"]}</dd></>}
             </dl>
-            {f["Packet Notes"] && (
-              <div className="answer"><span className="q">From the founder</span><span className="a">{f["Packet Notes"]}</span></div>
+            {screening.length > 0 && (
+              <div className="screen-notes">
+                {screening.map((r) => (
+                  <div key={r.id} className="screen-note">
+                    <span className="lane-avatar" style={{ background: "var(--ink)" }}>{r.reviewerName[0]}</span>
+                    <div>
+                      <div className="small" style={{ fontWeight: 700 }}>{r.reviewerName.split(" ")[0]}&apos;s screening notes{r.recommendation ? ` · ${r.recommendation}` : ""}</div>
+                      <div className="small body">{r.notes || <span className="muted">No notes</span>}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
 
-          <div className="box">
-            <h3>Question lanes</h3>
-            <p className="small muted">Each reviewer leads one lane. The prompts are starting points; the prep notes on the right are where the specific questions for this founder go.</p>
-            {reviewers.map((r) => {
-              const lane = LANES[r.lane];
-              return (
-                <div className="lane" key={r.email} style={{ borderColor: r.email === me.email ? "var(--accent)" : "var(--line-2)" }}>
-                  <b>{lane.title} — {r.name.split(" ")[0]}{r.email === me.email ? " (you)" : ""}</b>
-                  <span className="small muted">{lane.goal}</span>
-                  <ul>
-                    {lane.prompts.map((p) => <li key={p}>{p}</li>)}
-                  </ul>
-                </div>
-              );
-            })}
-          </div>
-
-          {screening.length > 0 && (
-            <div className="box">
-              <h3>From screening</h3>
-              {screening.map((r) => (
-                <div key={r.id} className="answer">
-                  <span className="q">{r.reviewerName.split(" ")[0]}&apos;s notes{r.recommendation ? ` · ${r.recommendation}` : ""}</span>
-                  <span className="a small">{r.notes}</span>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <details>
-            <summary style={{ cursor: "pointer", fontWeight: 600, padding: "8px 0" }}>Full application</summary>
-            <div style={{ marginTop: 12 }}><ApplicationView f={f} /></div>
+          <details className="box" style={{ gap: 0 }}>
+            <summary style={{ cursor: "pointer", fontWeight: 700, fontSize: 15 }}>Full application</summary>
+            <div style={{ marginTop: 16 }}><ApplicationView f={f} /></div>
           </details>
         </div>
 
         <aside className="sticky" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <StatusControl appId={id} status={f["Status"] || "Finalist"} packetUrl={siteUrl(`/packet/${f["Resume Token"]}`)} />
           <LiveInterview
             appId={id}
             me={me}
-            reviewerNames={reviewers.map((r) => r.name)}
+            reviewers={reviewers.map((r) => ({ email: r.email, name: r.name }))}
             initialReviews={reviews}
             initialPrepNotes={f["Prep Notes"] || ""}
             initialInterviewTime={f["Interview Time"] || ""}
             initialDecisionNotes={f["Decision Notes"] || ""}
           />
+          <StatusControl appId={id} status={f["Status"] || "Finalist"} packetUrl={siteUrl(`/packet/${f["Resume Token"]}`)} />
         </aside>
       </div>
     </div>
   );
 }
 
-function Ext({ href, children }: { href?: string; children: React.ReactNode }) {
-  if (!href) return <span className="muted">{children}</span>;
+function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
+  return (
+    <div className="stat-tile">
+      <span className="stat-label">{label}</span>
+      <span className="stat-value">{value}</span>
+      {sub && <span className="stat-sub" title={sub}>{sub}</span>}
+    </div>
+  );
+}
+
+function Chip({ href, children }: { href?: string; children: React.ReactNode }) {
+  if (!href) return null;
   const url = /^https?:\/\//i.test(href) ? href : `https://${href}`;
-  return <a href={url} target="_blank" rel="noreferrer">{children}</a>;
+  return <a className="chip" href={url} target="_blank" rel="noreferrer">{children} ↗</a>;
 }
