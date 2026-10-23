@@ -24,6 +24,8 @@ export interface AppRow {
   region: string;
   status: string;
   investors: string; // "" when none
+  raised: string; // free text as entered, "" when never raised
+  raisedNum: number | null; // parsed dollars for sorting
   raising: string;
   submittedAt?: string;
   interviewTime?: string;
@@ -79,6 +81,8 @@ export async function getRoundState(): Promise<RoundState> {
       region: s("Region"),
       status: s("Status"),
       investors: s("Has Raised") === "No" ? "" : s("Investors"),
+      raised: s("Has Raised") === "No" ? "" : s("Total Raised"),
+      raisedNum: s("Has Raised") === "No" ? 0 : parseMoney(s("Total Raised")),
       raising: s("Raising"),
       submittedAt: s("Submitted At") || undefined,
       interviewTime: s("Interview Time") || undefined,
@@ -128,4 +132,27 @@ export async function getRoundState(): Promise<RoundState> {
 
 export function stageIndex(id: StageId): number {
   return STAGES.findIndex((s) => s.id === id);
+}
+
+// "$850K (grants + SAFEs)" → 850000; "1.2m" → 1200000; "$2,500,000" → 2500000.
+// Takes the first money-looking figure. Returns null when nothing parses.
+export function parseMoney(text: string): number | null {
+  if (!text) return null;
+  const m = text.replace(/,/g, "").match(/\$?\s*(\d+(?:\.\d+)?)\s*(k|m|mm|b|thousand|million|billion)?/i);
+  if (!m) return null;
+  let n = parseFloat(m[1]);
+  const u = (m[2] || "").toLowerCase();
+  if (u === "k" || u === "thousand") n *= 1e3;
+  else if (u === "m" || u === "mm" || u === "million") n *= 1e6;
+  else if (u === "b" || u === "billion") n *= 1e9;
+  return Number.isFinite(n) ? n : null;
+}
+
+export function shortMoney(n: number | null, raw: string): string {
+  if (n === null) return raw || "—";
+  if (n === 0) return "None";
+  if (n >= 1e9) return `$${(n / 1e9).toFixed(n % 1e9 ? 1 : 0)}B`;
+  if (n >= 1e6) return `$${(n / 1e6).toFixed(n % 1e6 ? 1 : 0)}M`;
+  if (n >= 1e3) return `$${Math.round(n / 1e3)}K`;
+  return `$${n}`;
 }

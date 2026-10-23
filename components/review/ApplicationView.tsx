@@ -15,7 +15,8 @@ export function ApplicationView({ f }: { f: AppFields }) {
       <div className="box">
         <h3>At a glance</h3>
         <dl className="kv">
-          <dt>Founder</dt><dd>{f["Name"]} · {f["Role"]}</dd>
+          <dt>Company</dt><dd>{f["Company"]}</dd>
+          <dt>Role</dt><dd>{f["Role"]}</dd>
           <dt>Email</dt><dd><a href={`mailto:${f["Email"]}`}>{f["Email"]}</a></dd>
           <dt>LinkedIn</dt><dd><Link_ href={f["LinkedIn"]} /></dd>
           <dt>Region</dt><dd>{f["Region"]}</dd>
@@ -23,6 +24,7 @@ export function ApplicationView({ f }: { f: AppFields }) {
           <dt>Website</dt><dd><Link_ href={f["Website"]} /></dd>
           <dt>Deck</dt><dd><Link_ href={f["Packet Deck"] || f["Deck URL"]} /></dd>
           <dt>Demo</dt><dd><Link_ href={f["Demo URL"]} /></dd>
+          <dt>Raised to date</dt><dd>{f["Has Raised"] === "No" ? "None" : f["Total Raised"] || "—"}</dd>
           <dt>Investors</dt><dd>{f["Has Raised"] === "No" ? "None yet" : f["Investors"] || "—"}</dd>
           <dt>Raising</dt><dd>{f["Raising"]}{f["Raise Details"] ? ` — ${f["Raise Details"]}` : ""}</dd>
           <dt>Standard terms</dt><dd>{f["Terms OK"]}{f["Terms Notes"] ? ` — ${f["Terms Notes"]}` : ""}</dd>

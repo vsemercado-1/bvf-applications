@@ -71,6 +71,7 @@ export function LiveInterview({ appId, me, reviewerNames, initialReviews, initia
         appId={appId}
         stage="Interview"
         mine={mine}
+        firstName={me.name.split(" ")[0]}
         onSaved={(r) => setReviews((prev) => [...prev.filter((x) => x.id !== r.id), r])}
       />
       <OtherReviews reviews={reviews} stage="Interview" reviewerNames={reviewerNames} />

@@ -7,7 +7,7 @@ import { Avatar } from "@/components/Avatar";
 import { fmt } from "./StatusPill";
 import { useSort, Th } from "./sortable";
 import { recColor } from "./HomeList";
-import type { AppRow } from "@/lib/stage";
+import { shortMoney, type AppRow } from "@/lib/stage";
 
 interface Props {
   rows: AppRow[]; // still Submitted
@@ -31,6 +31,7 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
     (r: AppRow, k: string): string | number | null => {
       if (k === "company") return r.company || null;
       if (k === "name") return r.name || null;
+      if (k === "raised") return r.raisedNum;
       if (k === "avg") return r.screenAvg;
       if (k.startsWith("rv:")) return r.screen[k.slice(3)]?.avg ?? null;
       return null;
@@ -83,6 +84,7 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
     <tr>
       <Th id="name" label="Founder" sortKey={key} dir={dir} onSort={toggle} />
       <Th id="company" label="Company" sortKey={key} dir={dir} onSort={toggle} />
+      <Th id="raised" label="Raised" sortKey={key} dir={dir} onSort={toggle} numeric />
       {screeners.map((s) => <Th key={s.email} id={`rv:${s.email}`} label={s.first} sortKey={key} dir={dir} onSort={toggle} numeric />)}
       <Th id="avg" label="Average" sortKey={key} dir={dir} onSort={toggle} numeric />
       <th></th>
@@ -114,10 +116,10 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
     open === r.id ? (
       <tr key={`${r.id}-n`}>
         <td></td>
-        <td colSpan={4 + screeners.length}>
+        <td colSpan={5 + screeners.length}>
           <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: "4px 0 8px" }}>
             {screeners.filter((s) => r.screen[s.email]?.notes).map((s) => (
-              <div key={s.email} className="answer"><span className="q">{s.first}</span><span className="a small">{r.screen[s.email].notes}</span></div>
+              <div key={s.email} className="answer"><span className="q">{s.first}&apos;s notes</span><span className="a small">{r.screen[s.email].notes}</span></div>
             ))}
           </div>
         </td>
@@ -133,6 +135,7 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
         </div>
       </td>
       <td>{r.company}</td>
+      <td className="small" title={r.raised} style={{ whiteSpace: "nowrap" }}>{shortMoney(r.raisedNum, r.raised)}</td>
     </>
   );
 
@@ -154,7 +157,7 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
           <table className="table">
             <thead>{head}</thead>
             <tbody>
-              {sorted.length === 0 && <tr><td colSpan={5 + screeners.length} className="muted" style={{ textAlign: "center", padding: 28 }}>Everyone has been decided.</td></tr>}
+              {sorted.length === 0 && <tr><td colSpan={6 + screeners.length} className="muted" style={{ textAlign: "center", padding: 28 }}>Everyone has been decided.</td></tr>}
               {sorted.map((r) => (
                 <FragmentRows key={r.id}>
                   <tr>
@@ -201,7 +204,7 @@ export function DecideList({ rows: initialRows, invited: initialInvited, screene
           <table className="table">
             <thead>{head}</thead>
             <tbody>
-              {invited.length === 0 && <tr><td colSpan={5 + screeners.length} className="muted" style={{ textAlign: "center", padding: 28 }}>No one yet. Invite from the list above.</td></tr>}
+              {invited.length === 0 && <tr><td colSpan={6 + screeners.length} className="muted" style={{ textAlign: "center", padding: 28 }}>No one yet. Invite from the list above.</td></tr>}
               {[...invited].sort((a, b) => (b.screenAvg ?? -1) - (a.screenAvg ?? -1)).map((r) => (
                 <FragmentRows key={r.id}>
                   <tr style={{ background: "var(--accent-tint)" }}>

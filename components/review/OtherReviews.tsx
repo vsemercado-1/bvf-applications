@@ -38,7 +38,7 @@ export function OtherReviews({ reviews, stage, reviewerNames }: { reviews: Revie
       </div>
       {rs.filter((r) => r.notes).map((r) => (
         <div key={r.id} className="answer">
-          <span className="q">{r.reviewerName}</span>
+          <span className="q">{r.reviewerName.split(" ")[0]}&apos;s notes</span>
           <span className="a small">{r.notes}</span>
         </div>
       ))}

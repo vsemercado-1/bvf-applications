@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import { Avatar } from "@/components/Avatar";
 import { fmt } from "./StatusPill";
 import { useSort, Th } from "./sortable";
-import type { AppRow } from "@/lib/stage";
+import { shortMoney, type AppRow } from "@/lib/stage";
 
 interface Props {
   toScore: AppRow[];
@@ -26,6 +26,7 @@ export function HomeList({ toScore, scored, me, others, total, mineDone }: Props
     (r: AppRow, k: string): string | number | null => {
       if (k === "company") return r.company || null;
       if (k === "name") return r.name || null;
+      if (k === "raised") return r.raisedNum;
       if (k === "investors") return r.investors || null;
       if (k === "raising") return r.raising || null;
       if (k === "mine") return r.screen[me]?.avg ?? null;
@@ -43,6 +44,7 @@ export function HomeList({ toScore, scored, me, others, total, mineDone }: Props
     <tr>
       <Th id="name" label="Founder" sortKey={key} dir={dir} onSort={toggle} />
       <Th id="company" label="Company" sortKey={key} dir={dir} onSort={toggle} />
+      <Th id="raised" label="Raised to date" sortKey={key} dir={dir} onSort={toggle} numeric />
       <Th id="investors" label="Investors" sortKey={key} dir={dir} onSort={toggle} />
       <Th id="raising" label="Raising" sortKey={key} dir={dir} onSort={toggle} />
       {others.map((o) => <th key={o.email}>{o.first}</th>)}
@@ -64,6 +66,7 @@ export function HomeList({ toScore, scored, me, others, total, mineDone }: Props
           </div>
         </td>
         <td>{r.company || <span className="muted">—</span>}</td>
+        <td className="small" title={r.raised} style={{ whiteSpace: "nowrap" }}>{shortMoney(r.raisedNum, r.raised)}</td>
         <td className="small" style={{ maxWidth: 220 }}>{r.investors || <span className="muted">None yet</span>}</td>
         <td className="small">{shortRaising(r.raising)}</td>
         {others.map((o) => (

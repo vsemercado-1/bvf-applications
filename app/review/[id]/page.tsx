@@ -41,18 +41,19 @@ export default async function ApplicationPage({ params }: { params: Promise<{ id
         <Link href="/review" className="small muted" style={{ textDecoration: "none" }}>← Home</Link>
         <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginTop: 8 }}>
           <Avatar src={headshotUrl(f as Record<string, unknown>)} name={f["Name"]} size={44} />
-          <h1 style={{ fontSize: 30, fontWeight: 800 }}>{f["Company"]}</h1>
+          <h1 style={{ fontSize: 30, fontWeight: 800 }}>{f["Name"]}</h1>
           <StatusPill status={f["Status"]} />
           {finalist && <Link href={`/review/${id}/interview`} className="btn btn-ink btn-sm">Interview page →</Link>}
         </div>
-        <p className="body" style={{ marginTop: 6 }}>{f["One-liner"]}</p>
+        <p className="body" style={{ marginTop: 6, fontSize: 17 }}><b>{f["Company"]}</b>{f["Role"] ? ` · ${f["Role"]}` : ""} · {f["Region"]}</p>
+        <p className="body muted" style={{ marginTop: 4 }}>{f["One-liner"]}</p>
       </div>
 
       <div className="rv-layout">
         <ApplicationView f={f} />
         {me.screens && f["Status"] !== "Draft" && (
           <aside className="sticky" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <Scorecard appId={id} stage="Screen" mine={mine} />
+            <Scorecard appId={id} stage="Screen" mine={mine} firstName={me.name.split(" ")[0]} />
             {f["Status"] === "Submitted" ? (
               <div style={{ display: "flex", gap: 10 }}>
                 {nextId ? (

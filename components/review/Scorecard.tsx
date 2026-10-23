@@ -9,10 +9,11 @@ interface Props {
   stage: "Screen" | "Interview";
   mine?: Review; // this reviewer's existing review, if any
   onSaved?: (r: Review) => void;
+  firstName?: string; // the signed-in reviewer, for the notes label
 }
 
 // Scores save on every click; notes save a second after you stop typing.
-export function Scorecard({ appId, stage, mine, onSaved }: Props) {
+export function Scorecard({ appId, stage, mine, onSaved, firstName }: Props) {
   const [scores, setScores] = useState<Record<string, number | null>>(() => {
     const s: Record<string, number | null> = {};
     for (const a of SCORE_AXES) s[a.key] = mine?.scores[a.key] ?? null;
@@ -119,7 +120,7 @@ export function Scorecard({ appId, stage, mine, onSaved }: Props) {
       )}
 
       <div className="field">
-        <label htmlFor="notes">Notes</label>
+        <label htmlFor="notes">{firstName ? `${firstName}'s notes` : "Your notes"}</label>
         <textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} placeholder={stage === "Screen" ? "What stood out, what worries you, what you'd ask in an interview." : "What you heard. Keep typing; it saves as you go."} />
       </div>
 

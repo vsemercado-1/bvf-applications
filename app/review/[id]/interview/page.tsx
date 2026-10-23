@@ -35,11 +35,11 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
         <Link href="/review/interviews" className="small muted" style={{ textDecoration: "none" }}>← Interviews</Link>
         <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", marginTop: 8 }}>
           <Avatar src={headshotUrl(f as Record<string, unknown>)} name={f["Name"]} size={44} />
-          <h1 style={{ fontSize: 30, fontWeight: 800 }}>{f["Company"]}</h1>
+          <h1 style={{ fontSize: 30, fontWeight: 800 }}>{f["Name"]}</h1>
           <StatusPill status={f["Status"]} />
           <Link href={`/review/${id}`} className="small" style={{ marginLeft: "auto" }}>Screening page</Link>
         </div>
-        <p className="body" style={{ marginTop: 6 }}>{f["Name"]} · {f["Role"]} · {f["Region"]}</p>
+        <p className="body" style={{ marginTop: 6, fontSize: 17 }}><b>{f["Company"]}</b>{f["Role"] ? ` · ${f["Role"]}` : ""} · {f["Region"]}</p>
       </div>
 
       <div className="rv-layout">
@@ -95,7 +95,7 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
               <h3>From screening</h3>
               {screening.map((r) => (
                 <div key={r.id} className="answer">
-                  <span className="q">{r.reviewerName}{r.recommendation ? ` · ${r.recommendation}` : ""}</span>
+                  <span className="q">{r.reviewerName.split(" ")[0]}&apos;s notes{r.recommendation ? ` · ${r.recommendation}` : ""}</span>
                   <span className="a small">{r.notes}</span>
                 </div>
               ))}
