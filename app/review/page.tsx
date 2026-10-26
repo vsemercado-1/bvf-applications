@@ -34,8 +34,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ v
   const decideOpen = st.allScreened && st.submitted.length + st.finalists.length + st.decided.length > 0;
   const inDecide = view === "decide" ? true : view === "screen" ? false : decideOpen;
 
-  // The one sentence + one button for this reviewer right now.
+  // The one sentence + one button for this reviewer right now. Driven by the
+  // round's real stage, not by which view is open.
   let step: { title: string; body: string; cta?: { label: string; href: string } };
+  const selectedCount = st.decided.filter((r) => r.status === "Selected").length;
   if (st.submitted.length === 0 && st.finalists.length === 0 && st.decided.length === 0) {
     step = { title: "Waiting for applications", body: st.settings.accepting ? "Applications are open. Share the link and check back here." : "Applications are closed and none were received." };
   } else if (toScore.length > 0) {
@@ -51,19 +53,18 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ v
       title: "You're done scoring",
       body: `Waiting on ${waitingOn.map((o) => `${o.name.split(" ")[0]} (${st.perScreener[o.email].total - st.perScreener[o.email].done} left)`).join(", ")}. Decide opens when everyone has finished. You can still edit your scores below.`,
     };
-  } else if (inDecide && !decideOpen) {
-    const waitingOn = st.screeners.filter((o) => st.perScreener[o.email].done < st.perScreener[o.email].total);
-    step = {
-      title: "Decide isn't open yet",
-      body: `Scores stay private until everyone has finished. Still scoring: ${waitingOn.map((o) => `${o.name.split(" ")[0]} (${st.perScreener[o.email].total - st.perScreener[o.email].done} left)`).join(", ")}.`,
-      cta: { label: "Back to scoring →", href: "/review?view=screen" },
-    };
-  } else if (inDecide) {
+  } else if (decideOpen && st.submitted.length > 0) {
     const invited = st.finalists.length + st.decided.length;
-    step = {
-      title: invited ? `${invited} invited so far · ${st.submitted.length} still to decide` : "Decide who to interview",
-      body: "Both sets of scores are below, sorted by committee average. Invite anyone you want to meet; you can keep inviting, undo, or revisit your own score on any application. When you're done, Finish deciding marks the rest Not selected and closes applications.",
-    };
+    step = inDecide
+      ? {
+          title: invited ? `${invited} invited so far · ${st.submitted.length} still to decide` : "Decide who to interview",
+          body: "Both sets of scores are below, sorted by committee average. Invite anyone you want to meet; you can keep inviting, undo, or revisit your own score on any application. When you're done, Finish deciding marks the rest Not selected and closes applications.",
+        }
+      : {
+          title: "Decide is open",
+          body: `Everyone has finished scoring. You're looking at your own scores; ${st.submitted.length} application${st.submitted.length === 1 ? " is" : "s are"} waiting for a decision.`,
+          cta: { label: "Go to Decide →", href: "/review?view=decide" },
+        };
   } else if (st.current === "interview") {
     const next = [...st.finalists].filter((f) => f.status === "Finalist").sort((a, b) => (a.interviewTime || "9").localeCompare(b.interviewTime || "9"))[0];
     step = {
@@ -73,8 +74,10 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ v
     };
   } else if (st.current === "select") {
     step = { title: "All interviews are done", body: "Compare interview scores and record the committee's decision for each finalist.", cta: { label: "Go to Select →", href: "/review/select" } };
+  } else if (selectedCount > 0) {
+    step = { title: `${selectedCount} Fellow${selectedCount === 1 ? "" : "s"} selected`, body: "Selection is complete. Next: terms, materials, and the announcement.", cta: { label: "See the cohort →", href: "/review/select" } };
   } else {
-    step = { title: `${st.decided.filter((r) => r.status === "Selected").length} Fellows selected`, body: "Selection is complete. Next: terms, materials, and the announcement.", cta: { label: "See the cohort →", href: "/review/select" } };
+    step = { title: "Round closed", body: "No applications are in progress. Reopen applications from Round settings to start again.", cta: { label: "Round settings →", href: "/review/settings" } };
   }
 
   return (

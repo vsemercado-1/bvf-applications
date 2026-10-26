@@ -167,6 +167,23 @@ fieldset { border: 0; padding: 0; margin: 0; }
 /* Reviewer app */
 /* Interview page */
 .iv-hero { background: var(--ink); color: #fff; border-radius: 20px; padding: 28px 32px; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 28px; align-items: center; }
+.iv-hero-compact { padding: 24px 28px; grid-template-columns: minmax(0, 1fr) 300px; }
+.stat-grid-compact .stat-tile { padding: 12px 14px; }
+.stat-grid-compact .stat-value { font-size: 20px; }
+.iv-layout { grid-template-columns: minmax(0, 1fr) 340px; }
+.area-card { border: 1px solid var(--line); border-left: 4px solid var(--lane); border-radius: 12px; padding: 12px 14px; background: #fff; display: flex; flex-direction: column; gap: 10px; }
+.area-card.mine { background: color-mix(in srgb, var(--lane) 6%, #fff); }
+.area-card header { display: flex; align-items: center; gap: 10px; }
+.area-card .lane-title { font-size: 14px; }
+.area-btn { margin-left: auto; flex: 0 0 auto; border: 1px solid var(--line-2); background: #fff; border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 700; color: var(--lane); cursor: pointer; white-space: nowrap; }
+.area-btn:hover { border-color: var(--lane); }
+.area-q { margin: 0; font-size: 14px; line-height: 1.5; color: var(--body); padding: 10px 12px; background: var(--surface-2, #f7f8fa); border-radius: 10px; }
+.anchor-details summary { cursor: pointer; font-size: 12px; color: var(--muted); list-style: none; }
+.anchor-details summary::-webkit-details-marker { display: none; }
+.anchor-details summary::before { content: "ⓘ "; }
+.anchor-details[open] summary { margin-bottom: 4px; }
+.axis-live { padding: 14px 0; border-top: 1px solid var(--line); }
+.scale-live button { height: 44px; font-size: 16px; }
 .iv-hero-left { display: flex; gap: 22px; align-items: flex-start; min-width: 0; }
 .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .chip { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,0.1); color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,0.14); }
@@ -293,7 +310,7 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .login { max-width: 400px; margin: 80px auto; display: flex; flex-direction: column; gap: 20px; }
 
 @media (max-width: 900px) {
-  .iv-hero { grid-template-columns: 1fr; padding: 22px; }
+  .iv-hero, .iv-hero-compact { grid-template-columns: 1fr; padding: 22px; }
   .iv-hero-left { flex-direction: column; }
   .lane-grid { grid-template-columns: 1fr; }
   .committee-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }

@@ -93,7 +93,7 @@ export function Scorecard({ appId, stage, mine, onSaved, firstName, frameless }:
     <>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
         <div>
-          <h3 style={{ margin: 0 }}>{live ? "Your interview score" : "Your screening score"}</h3>
+          <h3 style={{ margin: 0, fontSize: live ? 20 : undefined }}>{live ? "Your interview score" : "Your screening score"}</h3>
           <span className="small muted">{done} of {axes.length} answered</span>
         </div>
         <span className={`avg-badge ${avg === null ? "empty" : ""}`}>{avg === null ? "—" : avg.toFixed(1)}</span>
@@ -120,9 +120,16 @@ export function Scorecard({ appId, stage, mine, onSaved, firstName, frameless }:
               </button>
             ))}
           </div>
-          <span className="anchor">
-            <b>1</b> {a.anchors[1]} <b>3</b> {a.anchors[3]} <b>5</b> {a.anchors[5]}
-          </span>
+          {live ? (
+            <details className="anchor-details">
+              <summary>What 1 · 3 · 5 mean</summary>
+              <span className="anchor"><b>1</b> {a.anchors[1]} <b>3</b> {a.anchors[3]} <b>5</b> {a.anchors[5]}</span>
+            </details>
+          ) : (
+            <span className="anchor">
+              <b>1</b> {a.anchors[1]} <b>3</b> {a.anchors[3]} <b>5</b> {a.anchors[5]}
+            </span>
+          )}
         </div>
       ))}
 
