@@ -16,11 +16,11 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
 export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
   await requireReviewer();
   const { id } = await ctx.params;
-  const body = (await req.json()) as Record<string, string | boolean>;
+  const body = (await req.json()) as Record<string, string | boolean | null>;
   const allowed = ["Status", "Prep Notes", "Interview Time", "Decision Notes"];
-  const fields: Record<string, string | boolean> = {};
+  const fields: Record<string, string | boolean | null> = {};
   for (const k of allowed) {
-    if (typeof body[k] === "string") fields[k] = body[k];
+    if (typeof body[k] === "string" || (body[k] === null && k === "Interview Time")) fields[k] = body[k];
   }
   if (typeof body["Shortlist"] === "boolean") fields["Shortlist"] = body["Shortlist"];
   if (typeof fields["Status"] === "string" && !(STATUSES as readonly string[]).includes(fields["Status"])) {

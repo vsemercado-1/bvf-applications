@@ -272,11 +272,11 @@ export const SCORE_AXES = [
   {
     key: "Founder Fit Score",
     label: "Founder",
-    question: "How well does this founder's experience and track record match the problem they're solving?",
+    question: "How well do {first}'s experience and track record match the problem {first} is solving?",
     anchors: {
       1: "No direct experience with the problem or the industry.",
       3: "Relevant background, but limited evidence of execution.",
-      5: "Has lived the problem, has built and sold before, and has already shown they can execute.",
+      5: "Has lived the problem, has built and sold before, and has already shown {first} can execute.",
     },
   },
   {
@@ -302,7 +302,7 @@ export const SCORE_AXES = [
   {
     key: "Catalytic Score",
     label: "Catalytic capital",
-    question: "How much difference would $250,000 make for this company right now?",
+    question: "How much difference would $250,000 make for {company} right now?",
     anchors: {
       1: "Immaterial; the company is well funded and the check changes nothing.",
       3: "Helpful, extends runway, but no specific milestone depends on it.",
@@ -312,7 +312,7 @@ export const SCORE_AXES = [
   {
     key: "Investor Signal Score",
     label: "Investor signal",
-    question: "How much diligence have credible investors already done on this company?",
+    question: "How much diligence have credible investors already done on {company}?",
     anchors: {
       1: "No outside investors, or friends and family only.",
       3: "Angels, an accelerator, or a regional fund; no institutional lead.",
@@ -337,27 +337,27 @@ export const INTERVIEW_AXES = [
   {
     key: "Clarity Score",
     label: "Clarity",
-    question: "Can they explain the business, the plan, and the numbers simply, and answer the question that was actually asked?",
+    question: "Can {first} explain the business, the plan, and the numbers simply, and answer the question that was actually asked?",
     anchors: {
       1: "Vague or jargon-heavy; answers drift away from the question.",
       3: "Clear on what the company does; fuzzy on the plan or the numbers.",
-      5: "Crisp on all three. You could repeat their plan back after one hearing.",
+      5: "Crisp on all three. You could repeat {first}'s plan back after one hearing.",
     },
   },
   {
     key: "Candor Score",
     label: "Candor",
-    question: "How honest are they about what is broken, what they got wrong, and what they don't know?",
+    question: "How honest is {first} about what is broken, what went wrong, and what {first} doesn't know?",
     anchors: {
       1: "Everything is going great; no mistakes, no unknowns.",
       3: "Admits problems when pressed.",
-      5: "Volunteers the hard parts and what they changed because of them.",
+      5: "Volunteers the hard parts and what changed because of them.",
     },
   },
   {
     key: "Numbers Score",
     label: "Command of the numbers",
-    question: "Did they know burn, runway, unit economics, and their cap table cold?",
+    question: "Does {first} know burn, runway, unit economics, and the cap table cold?",
     anchors: {
       1: "Had to guess or look things up; numbers didn't match the materials.",
       3: "Knew the headline numbers; thin on what drives them.",
@@ -367,21 +367,21 @@ export const INTERVIEW_AXES = [
   {
     key: "Fellowship Fit Score",
     label: "Fellowship fit",
-    question: "Would they make full use of a year of hands-on help and the network, and would we enjoy working with them?",
+    question: "Would {first} make full use of a year of hands-on help and the network, and would we enjoy working with {first}?",
     anchors: {
       1: "Mostly wants the check; little interest in the program.",
       3: "Open to help in general terms.",
-      5: "Specific about what they'd use the year for and who they'd want to meet.",
+      5: "Specific about what {first} would use the year for and who {first} wants to meet.",
     },
   },
   {
     key: "Conviction Score",
     label: "Conviction",
-    question: "Setting the scorecard aside: would you personally back this founder with $250,000?",
+    question: "Setting the scorecard aside: would you personally back {first} with $250,000?",
     anchors: {
       1: "No.",
       3: "Maybe, with reservations I can name.",
-      5: "Yes, and I'd want to be the one to tell them.",
+      5: "Yes, and I'd want to be the one to tell {first}.",
     },
   },
 ] as const;

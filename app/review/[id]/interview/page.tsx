@@ -55,7 +55,6 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
               {f["Packet 409A"] && <Chip href={f["Packet 409A"]}>409A</Chip>}
               <Chip href={f["LinkedIn"]}>LinkedIn</Chip>
               <Chip href={f["Website"]}>Website</Chip>
-              <Link href={`/review/${id}`} className="chip">Full application →</Link>
               {!packet && <CopyLink url={siteUrl(`/packet/${f["Resume Token"]}`)} label="Materials not received · copy request link" className="chip muted-chip" />}
             </div>
           </div>
@@ -74,9 +73,8 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
           appId={id}
           me={me}
           initialReviews={reviews}
-          initialPrepNotes={f["Prep Notes"] || ""}
-          initialInterviewTime={f["Interview Time"] || ""}
-          initialDecisionNotes={f["Decision Notes"] || ""}
+          fields={f}
+          first={first}
         />
 
         {/* What helps: areas, screening notes, post-call */}

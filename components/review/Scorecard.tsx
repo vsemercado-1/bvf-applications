@@ -11,12 +11,14 @@ interface Props {
   onSaved?: (r: Review) => void;
   firstName?: string; // the signed-in reviewer, for the notes label
   frameless?: boolean; // interview page supplies its own card
+  applicant?: { first: string; company: string }; // for {first}/{company} in questions
 }
 
 // One reviewer's scorecard for one stage. Scores save on every click; notes
 // save a second after you stop typing. The Interview stage uses different
 // axes (lib/schema INTERVIEW_AXES) and a coloured "live" look.
-export function Scorecard({ appId, stage, mine, onSaved, firstName, frameless }: Props) {
+export function Scorecard({ appId, stage, mine, onSaved, firstName, frameless, applicant }: Props) {
+  const t = (x: string) => x.replace(/\{first\}/g, applicant?.first || "the founder").replace(/\{company\}/g, applicant?.company || "the company");
   const axes = axesFor(stage);
   const [scores, setScores] = useState<Record<string, number | null>>(() => {
     const s: Record<string, number | null> = {};
@@ -105,7 +107,7 @@ export function Scorecard({ appId, stage, mine, onSaved, firstName, frameless }:
             <span>{live && <span className="axis-num">{i + 1}</span>}{a.label}</span>
             {scores[a.key] != null && <button type="button" className="link-btn small muted" onClick={() => setScore(a.key, scores[a.key] as number)}>clear</button>}
           </div>
-          <span className="small body">{a.question}</span>
+          <span className="small body">{t(a.question)}</span>
           <div className={`scale ${live ? "scale-live" : ""}`} role="radiogroup" aria-label={a.label}>
             {[1, 2, 3, 4, 5].map((n) => (
               <button
@@ -123,11 +125,11 @@ export function Scorecard({ appId, stage, mine, onSaved, firstName, frameless }:
           {live ? (
             <details className="anchor-details">
               <summary>What 1 · 3 · 5 mean</summary>
-              <span className="anchor"><b>1</b> {a.anchors[1]} <b>3</b> {a.anchors[3]} <b>5</b> {a.anchors[5]}</span>
+              <span className="anchor"><b>1</b> {t(a.anchors[1])} <b>3</b> {t(a.anchors[3])} <b>5</b> {t(a.anchors[5])}</span>
             </details>
           ) : (
             <span className="anchor">
-              <b>1</b> {a.anchors[1]} <b>3</b> {a.anchors[3]} <b>5</b> {a.anchors[5]}
+              <b>1</b> {t(a.anchors[1])} <b>3</b> {t(a.anchors[3])} <b>5</b> {t(a.anchors[5])}
             </span>
           )}
         </div>

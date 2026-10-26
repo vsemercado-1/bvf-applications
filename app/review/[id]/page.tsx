@@ -53,7 +53,7 @@ export default async function ApplicationPage({ params }: { params: Promise<{ id
         <ApplicationView f={f} />
         {me.screens && f["Status"] !== "Draft" && (
           <aside className="sticky" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <Scorecard appId={id} stage="Screen" mine={mine} firstName={me.name.split(" ")[0]} />
+            <Scorecard appId={id} stage="Screen" mine={mine} firstName={me.name.split(" ")[0]} applicant={{ first: (f["Name"] || "").split(" ")[0], company: f["Company"] || "" }} />
             {f["Status"] === "Submitted" ? (
               <div style={{ display: "flex", gap: 10 }}>
                 {nextId ? (
