@@ -23,11 +23,12 @@ export default async function Home() {
 
       <section className="dark hero">
         <div className="hero-glow" aria-hidden="true" />
+        <div className="hero-photo" aria-hidden="true" />
         <div className="wrap">
-          <div className="eyebrow">{settings.accepting ? <>Applications close {deadlineLong(settings.deadline)} · <Countdown deadline={settings.deadline} /></> : "Applications are closed"}</div>
-          <h1>Bravo Venture Fellowship</h1>
-          <p className="lede">$250,000 and a year of hands-on support for founders of Puerto Rican descent.</p>
-          <p className="desc">
+          <div className="hero-copy eyebrow">{settings.accepting ? <>Applications close {deadlineLong(settings.deadline)} · <Countdown deadline={settings.deadline} /></> : "Applications are closed"}</div>
+          <h1 className="hero-copy">Bravo Venture Fellowship</h1>
+          <p className="lede hero-copy">$250,000 and a year of hands-on support for founders of Puerto Rican descent.</p>
+          <p className="desc hero-copy">
             A program of the <a href="https://www.bravofamilyfoundation.org">Bravo Family Foundation</a>. Open to founders building in Puerto Rico, New York City, Miami, or the San Francisco Bay Area.
           </p>
           <div className="hero-ctas">
