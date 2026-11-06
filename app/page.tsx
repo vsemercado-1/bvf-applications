@@ -82,7 +82,7 @@ export default async function Home() {
           <div className="quotes">
             <div className="quote">
               <p>&ldquo;Having advisors who took the time to understand our business and challenges in depth made the feedback <b>specific and actionable, not generic</b>. And the Bravo network <b>opened doors to people and companies we simply wouldn&rsquo;t have reached on our own</b>.&rdquo;</p>
-              <span>Emmanuel Oquendo-Rosa · CEO, <a href="https://brainhi.com" target="_blank" rel="noreferrer">BrainHi</a> · 2025 Fellow</span>
+              <span>Emmanuel Oquendo-Rosa · Founder, <a href="https://brainhi.com" target="_blank" rel="noreferrer">BrainHi</a> · 2025 Fellow</span>
               <img className="quote-face" src="/fellows/emmanuel.jpg" alt="Emmanuel Oquendo-Rosa" width={64} height={64} />
             </div>
             <div className="quote">

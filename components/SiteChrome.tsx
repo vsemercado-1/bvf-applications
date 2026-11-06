@@ -19,7 +19,6 @@ export function SiteHeader({ nav = true }: { nav?: boolean }) {
         {nav && (
           <nav className="site-nav" aria-label="Primary">
             <Link href="/#eligibility">Who Can Apply</Link>
-            <Link href="/#benefits">What You Get</Link>
             <Link href="/#nominate">Nominate a Founder</Link>
             <Link href="/#apply" className="btn btn-accent">Apply</Link>
           </nav>
