@@ -81,12 +81,14 @@ export default async function Home() {
         <div className="wrap">
           <div className="quotes">
             <div className="quote">
-              <p>&ldquo;Having advisors who took the time to understand our business and challenges in depth made the feedback specific and actionable, not generic. And the Bravo network opened doors to people and companies we simply wouldn&rsquo;t have reached on our own.&rdquo;</p>
-              <span>Emmanuel Oquendo-Rosa · CEO, <a href="https://brainhi.com" target="_blank" rel="noreferrer">BrainHi</a> · 2024 Fellow</span>
+              <p>&ldquo;Having advisors who took the time to understand our business and challenges in depth made the feedback <b>specific and actionable, not generic</b>. And the Bravo network <b>opened doors to people and companies we simply wouldn&rsquo;t have reached on our own</b>.&rdquo;</p>
+              <span>Emmanuel Oquendo-Rosa · CEO, <a href="https://brainhi.com" target="_blank" rel="noreferrer">BrainHi</a> · 2025 Fellow</span>
+              <img className="quote-face" src="/fellows/emmanuel.jpg" alt="Emmanuel Oquendo-Rosa" width={64} height={64} />
             </div>
             <div className="quote">
-              <p>&ldquo;To have the Foundation betting on what we&rsquo;re building at Raya for Puerto Rico is something I don&rsquo;t take lightly. It gives us capital, mentorship, and a network that opens doors we couldn&rsquo;t open alone.&rdquo;</p>
+              <p>&ldquo;To have the Foundation betting on what we&rsquo;re building at Raya for Puerto Rico is something I don&rsquo;t take lightly. It gives us <b>capital, mentorship, and a network that opens doors we couldn&rsquo;t open alone</b>.&rdquo;</p>
               <span>Nicole González · Founder, <a href="https://rayapower.com" target="_blank" rel="noreferrer">Raya Power</a> · 2026 Fellow</span>
+              <img className="quote-face" src="/fellows/nicole.jpg" alt="Nicole González" width={64} height={64} />
             </div>
           </div>
         </div>
