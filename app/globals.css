@@ -124,9 +124,11 @@ input::placeholder, textarea::placeholder { color: #8a8a8a; }
 .card .num { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); }
 .card h3 { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
 .card p { font-size: 14px; line-height: 1.55; color: var(--body); }
-.quote { background: var(--ink); color: #fff; border-radius: 14px; padding: 32px 36px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between; }
-.quote p { font-size: 19px; line-height: 1.5; font-style: italic; max-width: 760px; flex: 1 1 520px; }
+.quotes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.quote { background: var(--ink); color: #fff; border-radius: 14px; padding: 30px 32px; display: flex; flex-direction: column; gap: 18px; justify-content: space-between; }
+.quote p { font-size: 18px; line-height: 1.5; font-style: italic; margin: 0; }
 .quote span { font-size: 14px; color: var(--on-dark-muted); }
+.quote span a { color: #fff; }
 
 /* Forms */
 .panel { background: #fff; border: 1.5px solid var(--ink); border-radius: 16px; padding: 32px; display: flex; flex-direction: column; gap: 28px; }
@@ -317,6 +319,7 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .login { max-width: 400px; margin: 80px auto; display: flex; flex-direction: column; gap: 20px; }
 
 @media (max-width: 900px) {
+  .quotes { grid-template-columns: 1fr; }
   .iv-hero, .iv-hero-compact { grid-template-columns: 1fr; padding: 22px; }
   .iv-hero-left { flex-direction: column; }
   .lane-grid { grid-template-columns: 1fr; }

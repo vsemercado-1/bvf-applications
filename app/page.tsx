@@ -79,9 +79,15 @@ export default async function Home() {
 
       <section className="section alt">
         <div className="wrap">
-          <div className="quote">
-            <p>&ldquo;To have the Foundation betting on what we&rsquo;re building at Raya for Puerto Rico is something I don&rsquo;t take lightly. It gives us capital, mentorship, and a network that opens doors we couldn&rsquo;t open alone.&rdquo;</p>
-            <span>Nicole González · Founder, <a href="https://rayapower.com" target="_blank" rel="noreferrer">Raya Power</a> · 2026 Fellow</span>
+          <div className="quotes">
+            <div className="quote">
+              <p>&ldquo;Having advisors who took the time to understand our business and challenges in depth made the feedback specific and actionable, not generic. And the Bravo network opened doors to people and companies we simply wouldn&rsquo;t have reached on our own.&rdquo;</p>
+              <span>Emmanuel Oquendo-Rosa · CEO, <a href="https://brainhi.com" target="_blank" rel="noreferrer">BrainHi</a> · 2024 Fellow</span>
+            </div>
+            <div className="quote">
+              <p>&ldquo;To have the Foundation betting on what we&rsquo;re building at Raya for Puerto Rico is something I don&rsquo;t take lightly. It gives us capital, mentorship, and a network that opens doors we couldn&rsquo;t open alone.&rdquo;</p>
+              <span>Nicole González · Founder, <a href="https://rayapower.com" target="_blank" rel="noreferrer">Raya Power</a> · 2026 Fellow</span>
+            </div>
           </div>
         </div>
       </section>
