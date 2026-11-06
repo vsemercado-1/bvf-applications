@@ -80,8 +80,8 @@ export default async function Home() {
       <section className="section alt">
         <div className="wrap">
           <div className="quote">
-            <p>&ldquo;[Quote from a previous Fellow about their experience in the program.]&rdquo;</p>
-            <span>[Name] · [Title], [Company] · [Year] Fellow</span>
+            <p>&ldquo;To have the Foundation betting on what we&rsquo;re building at Raya for Puerto Rico is something I don&rsquo;t take lightly. It gives us capital, mentorship, and a network that opens doors we couldn&rsquo;t open alone.&rdquo;</p>
+            <span>Nicole González · Founder, <a href="https://rayapower.com" target="_blank" rel="noreferrer">Raya Power</a> · 2026 Fellow</span>
           </div>
         </div>
       </section>
