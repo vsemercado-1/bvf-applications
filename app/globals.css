@@ -124,11 +124,13 @@ input::placeholder, textarea::placeholder { color: #8a8a8a; }
 .card .num { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); }
 .card h3 { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
 .card p { font-size: 14px; line-height: 1.55; color: var(--body); }
-.quotes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.quote { background: var(--ink); color: #fff; border-radius: 14px; padding: 30px 32px; display: flex; flex-direction: column; gap: 18px; justify-content: space-between; }
+.quotes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+.quote { position: relative; background: var(--ink); color: #fff; border-radius: 14px; padding: 30px 32px; display: flex; flex-direction: column; gap: 18px; justify-content: space-between; }
+.quote-face { position: absolute; right: -14px; bottom: -14px; width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); box-shadow: 0 0 0 4px var(--paper-2); }
 .quote p { font-size: 18px; line-height: 1.5; font-style: italic; margin: 0; }
 .quote span { font-size: 14px; color: var(--on-dark-muted); }
 .quote span a { color: #fff; }
+.quote p b { font-weight: 700; font-style: normal; color: #fff; }
 
 /* Forms */
 .panel { background: #fff; border: 1.5px solid var(--ink); border-radius: 16px; padding: 32px; display: flex; flex-direction: column; gap: 28px; }
@@ -319,7 +321,7 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .login { max-width: 400px; margin: 80px auto; display: flex; flex-direction: column; gap: 20px; }
 
 @media (max-width: 900px) {
-  .quotes { grid-template-columns: 1fr; }
+  .quotes { grid-template-columns: 1fr; gap: 28px; }
   .iv-hero, .iv-hero-compact { grid-template-columns: 1fr; padding: 22px; }
   .iv-hero-left { flex-direction: column; }
   .lane-grid { grid-template-columns: 1fr; }
