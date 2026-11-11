@@ -55,7 +55,7 @@ export default async function Home() {
             <div className="eyebrow">Eligibility</div>
             <h2>Who Can Apply</h2>
             <p className="body" style={{ fontSize: 17, lineHeight: 1.6 }}>
-              The Fellowship is designed for founders who have established early traction with their companies and are preparing to raise institutional venture capital. Their companies are typically pre-Series A and have raised less than $3 million. The Foundation will consider each company&apos;s potential contribution to Puerto Rico&apos;s economy over the course of the program.
+              The Fellowship is designed for founders who have established early traction with their companies and are preparing to raise institutional venture capital. Their companies are typically pre-Series A and have raised less than $3 million. Fellows are expected to have, or to build, a commercial presence in Puerto Rico: customers, design partners, suppliers, or operations on the island.
             </p>
           </div>
           <div className="lists">
@@ -65,6 +65,7 @@ export default async function Home() {
               <div className="list-item"><Check />You live in Puerto Rico, New York City, Miami, or the San Francisco Bay Area.</div>
               <div className="list-item"><Check />You&apos;re building a venture-stage company with paying customers, pilots, or signed commitments.</div>
               <div className="list-item"><Check />You&apos;re planning to raise capital in the next 12 months.</div>
+              <div className="list-item"><Check />You have customers, partners, or operations in Puerto Rico, or you intend to build that presence during the Fellowship.</div>
             </div>
             <div className="list">
               <div className="list-title" style={{ color: "var(--muted)" }}>You may not be a good fit</div>
@@ -72,6 +73,7 @@ export default async function Home() {
               <div className="list-item body"><Cross />Your company has already raised a priced Series A, or $250,000 would not be material to your business.</div>
               <div className="list-item body"><Cross />You&apos;re based in Puerto Rico but are not of Puerto Rican descent.</div>
               <div className="list-item body"><Cross />You don&apos;t intend to scale your business significantly.</div>
+              <div className="list-item body"><Cross />You have no plans for a commercial presence in Puerto Rico.</div>
             </div>
           </div>
         </div>

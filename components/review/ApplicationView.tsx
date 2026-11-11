@@ -21,6 +21,7 @@ export function ApplicationView({ f }: { f: AppFields }) {
           <dt>LinkedIn</dt><dd><Link_ href={f["LinkedIn"]} /></dd>
           <dt>Region</dt><dd>{f["Region"]}</dd>
           <dt>Puerto Rico</dt><dd>{f["PR Connection"]}</dd>
+          <dt>PR presence</dt><dd>{f["PR Presence"] || "—"}</dd>
           <dt>Website</dt><dd><Link_ href={f["Website"]} /></dd>
           <dt>Deck</dt><dd><Link_ href={f["Packet Deck"] || f["Deck URL"]} /></dd>
           <dt>Demo</dt><dd><Link_ href={f["Demo URL"]} /></dd>
@@ -37,7 +38,7 @@ export function ApplicationView({ f }: { f: AppFields }) {
           <h3>{fill(s.title, ctx)}</h3>
           <div className="answers">
             {s.fields
-              .filter((q) => !["Name", "Email", "LinkedIn", "Role", "PR Connection", "Website", "Deck URL", "Demo URL", "Heard From", "Raising", "Raise Details", "Terms OK", "Terms Notes", "Headshot", "Investors"].includes(q.key))
+              .filter((q) => !["Name", "Email", "LinkedIn", "Role", "PR Connection", "PR Presence", "Website", "Deck URL", "Demo URL", "Heard From", "Raising", "Raise Details", "Terms OK", "Terms Notes", "Headshot", "Investors"].includes(q.key))
               .filter((q) => isVisible(q, f))
               .map((q) => (
                 <div className="answer" key={q.key}>

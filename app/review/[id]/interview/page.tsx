@@ -62,7 +62,7 @@ export default async function InterviewPage({ params }: { params: Promise<{ id: 
         <div className="stat-grid stat-grid-compact">
           <Stat label="Screening" value={fmt(sum.avg)} />
           <Stat label="Raised" value={raised} />
-          <Stat label="Raising" value={f["Raising"] || "—"} />
+          <Stat label="PR presence" value={f["PR Presence"] === "Yes, today" ? "Yes" : f["PR Presence"]?.startsWith("Not yet") ? "Planned" : f["PR Presence"] || "—"} />
           <Stat label="Terms" value={f["Terms OK"] || "—"} />
         </div>
       </section>
