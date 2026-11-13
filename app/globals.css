@@ -103,6 +103,8 @@ input::placeholder, textarea::placeholder { color: #8a8a8a; }
 .fellows .eyebrow { color: #6b6b6b; font-size: 12px; }
 .fellows a { font-size: 16px; font-weight: 700; color: #e6e6e6; text-decoration: none; }
 .fellows a:hover { color: #fff; text-decoration: underline; }
+.fellows .fellow { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; }
+.fellows .fellow small { font-size: 12px; color: #6b6b6b; letter-spacing: 0.02em; }
 
 /* Sections */
 .section { padding: 72px 0; border-bottom: 1px solid var(--line); }

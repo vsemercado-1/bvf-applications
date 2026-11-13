@@ -32,7 +32,7 @@ export default async function Home() {
             A program of the <a href="https://www.bravofamilyfoundation.org">Bravo Family Foundation</a>. Open to founders building in Puerto Rico, New York City, Miami, or the San Francisco Bay Area.
           </p>
           <div className="hero-ctas">
-            {settings.accepting && <Link href="#apply" className="btn btn-accent">Apply · about 12 minutes</Link>}
+            {settings.accepting && <Link href="#apply" className="btn btn-accent">Apply · about 10 minutes</Link>}
             <Link href="#nominate" style={{ fontWeight: 600, textDecoration: "none", padding: "0 8px" }}>Nominate a founder →</Link>
           </div>
           <div className="tiles" id="benefits">
@@ -44,7 +44,10 @@ export default async function Home() {
           </div>
           <div className="fellows">
             <span className="eyebrow">Previous Fellows</span>
-            <a href="https://brainhi.com" target="_blank" rel="noreferrer">BrainHi</a><a href="https://skootel.com" target="_blank" rel="noreferrer">Skootel</a><a href="https://gosprout.app" target="_blank" rel="noreferrer">GoSprout</a><a href="https://rayapower.com" target="_blank" rel="noreferrer">Raya Power</a>
+            <span className="fellow"><a href="https://brainhi.com" target="_blank" rel="noreferrer">BrainHi</a><small>2025</small></span>
+            <span className="fellow"><a href="https://skootel.com" target="_blank" rel="noreferrer">Skootel</a><small>2025</small></span>
+            <span className="fellow"><a href="https://gosprout.app" target="_blank" rel="noreferrer">GoSprout</a><small>2026</small></span>
+            <span className="fellow"><a href="https://rayapower.com" target="_blank" rel="noreferrer">Raya Power</a><small>2026</small></span>
           </div>
         </div>
       </section>
@@ -100,8 +103,8 @@ export default async function Home() {
         <div className="narrow" style={{ display: "flex", flexDirection: "column", gap: 28 }}>
           <div className="section-head">
             <div className="eyebrow">Apply</div>
-            <h2>{settings.accepting ? "Two questions, then the application." : "Applications are closed."}</h2>
-            {settings.accepting && <p className="body" style={{ fontSize: 17 }}>These are the only hard requirements. The rest is about you and your company, and takes about twelve minutes.</p>}
+            <h2>{settings.accepting ? "Start here." : "Applications are closed."}</h2>
+            {settings.accepting && <p className="body" style={{ fontSize: 17 }}>These are the only hard requirements. The rest is about you and your company, and takes about ten minutes.</p>}
           </div>
           {settings.accepting ? (
             <>
