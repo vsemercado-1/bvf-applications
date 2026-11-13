@@ -13,7 +13,7 @@ export default async function ThanksPage({ searchParams }: { searchParams: Promi
           {company ? `Your application for ${company} has been submitted` : "Your application has been submitted"} to the Bravo Venture Fellowship. Applications are reviewed on a rolling basis, and the Foundation will be in touch by email. Finalists are invited to an interview with the selection committee in late January.
         </p>
         <p className="body">
-          If you know another founder who should apply, you can <Link href="/#nominate">nominate them here</Link>.
+          If you know another founder who should apply, send them <Link href="/">this page</Link>.
         </p>
       </main>
       <SiteFooter />

@@ -5,7 +5,6 @@ const API = "https://api.airtable.com/v0";
 export const TABLES = {
   applications: "Applications",
   reviews: "Reviews",
-  nominations: "Nominations",
 } as const;
 
 export type Fields = Record<string, unknown>;

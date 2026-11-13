@@ -2,7 +2,7 @@
 
 A Next.js site with three parts:
 
-1. **Public application** (`/`) — landing page, eligibility check, four-step application with autosave and a private resume link, nomination form, and a finalist materials page.
+1. **Public application** (`/`) — landing page, eligibility check, four-step application with autosave and a private resume link, a "send this to a founder" share prompt, and a finalist materials page.
 2. **Home: Screen, then Decide** (`/review`) — the screening reviewers score each application privately. Once both have finished, the same page becomes Decide: scores side by side, and a per-row **Invite to interview** button (immediate, undoable). **Finish deciding** marks the rest Not selected and closes applications.
 3. **Interviews** (`/review/interviews`) — one page per finalist with a quick summary, their materials, the three question lanes, shared prep notes, and live scoring that all three reviewers see as it is entered.
 
@@ -27,7 +27,7 @@ AIRTABLE_TOKEN=pat_xxx AIRTABLE_WORKSPACE_ID=wsp_xxx npm run setup:airtable
 
 (Your workspace ID is in the URL when you open a workspace in Airtable; it starts with `wsp`.)
 
-The script creates a base called **BVF 2027 Applications** with three tables — Applications, Reviews, Nominations — and prints the base ID. You only run this once.
+The script creates a base called **BVF 2027 Applications** with the tables Applications, Reviews, and Settings (a legacy Nominations table may also exist) — and prints the base ID. You only run this once.
 
 If you'd rather build the base by hand or in an existing base, the exact field names are in `scripts/setup-airtable.mjs`. The app looks fields up by name, so the names must match.
 
@@ -60,7 +60,7 @@ Every later change: commit in GitHub Desktop, push, and Vercel redeploys automat
 
 ## How the process works in the app
 
-**Applicants** answer the two gate questions (descent, region). An ineligible answer goes to a polite page with the nomination form. Eligible applicants go through four sections — Applicant, Company, Financing, Puerto Rico — with autosave every few seconds. Answers are kept in their browser, and after step 1 they get a private link they can copy to finish on another device. No emails are sent.
+**Applicants** answer the two gate questions (descent, region). An ineligible answer goes to a polite page with a prompt to share the site with a founder who qualifies. Eligible applicants go through four sections — Applicant, Company, Financing, Puerto Rico — with autosave every few seconds. Answers are kept in their browser, and after step 1 they get a private link they can copy to finish on another device. No emails are sent.
 
 **Home** (`/review`). A six-stage bar (Open → Screen → Decide → Interview → Select → Announce) and a black "Your next step" strip tell each reviewer exactly what to do now. During Screen, the full list is shown grouped into "To score" and "Scored by you"; other reviewers' scores are hidden, only a ✓ shows whether they have scored. Each reviewer scores on six axes (1–5) with written anchors, picks Interview / Maybe / Pass, and leaves notes; scores autosave and stay editable until Decide.
 

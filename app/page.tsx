@@ -4,7 +4,8 @@ import { getSettings, deadlineLong } from "@/lib/settings";
 import { Countdown } from "@/components/Countdown";
 import { BenefitArt } from "@/components/BenefitArt";
 import { EligibilityGate } from "@/components/EligibilityGate";
-import { NominateForm } from "@/components/NominateForm";
+import { ShareLink } from "@/components/ShareLink";
+import { siteUrl } from "@/lib/email";
 
 const Check = () => (
   <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a5fb0" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
@@ -33,7 +34,6 @@ export default async function Home() {
           </p>
           <div className="hero-ctas">
             {settings.accepting && <Link href="#apply" className="btn btn-accent">Apply · about 10 minutes</Link>}
-            <Link href="#nominate" style={{ fontWeight: 600, textDecoration: "none", padding: "0 8px" }}>Nominate a founder →</Link>
           </div>
           <div className="tiles" id="benefits">
             <div className="tile"><BenefitArt kind="capital" dark /><b>$250,000 investment</b><span>A standard SAFE at the valuation cap of your most recent round, plus a small common-stock purchase.</span></div>
@@ -117,13 +117,16 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="nominate" className="section alt" style={{ borderBottom: 0 }}>
+      <section id="share" className="section alt" style={{ borderBottom: 0 }}>
         <div className="wrap two-col" style={{ alignItems: "center" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <h2 style={{ fontSize: 28 }}>Nominate a Founder</h2>
-            <p className="body">The Foundation welcomes referrals. Share a founder&apos;s name and how to reach them, and the Foundation will get in touch.</p>
+            <h2 style={{ fontSize: 28 }}>Know a great Puerto Rican founder?</h2>
+            <p className="body">If someone comes to mind who would be a fit for the Fellowship, send them this page. The best applicants usually hear about it from someone who believed in them.</p>
           </div>
-          <NominateForm />
+          <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+            <ShareLink url={siteUrl("/")} />
+            <span className="small muted">fellowship.bravofamilyfoundation.org</span>
+          </div>
         </div>
       </section>
 

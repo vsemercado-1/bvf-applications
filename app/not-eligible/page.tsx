@@ -1,5 +1,6 @@
 import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
-import { NominateForm } from "@/components/NominateForm";
+import { ShareLink } from "@/components/ShareLink";
+import { siteUrl } from "@/lib/email";
 
 export default async function NotEligible({ searchParams }: { searchParams: Promise<{ reason?: string }> }) {
   const { reason } = await searchParams;
@@ -20,8 +21,8 @@ export default async function NotEligible({ searchParams }: { searchParams: Prom
         </p>
         <div className="box" style={{ marginTop: 8 }}>
           <h3>Know a founder who should apply?</h3>
-          <p className="body small">Provide a founder&apos;s name and company, and the Foundation will contact them directly.</p>
-          <NominateForm />
+          <p className="body small">If someone comes to mind who would be a fit, send them this page.</p>
+          <div><ShareLink url={siteUrl("/")} className="btn btn-ink btn-sm" /></div>
         </div>
       </main>
       <SiteFooter />

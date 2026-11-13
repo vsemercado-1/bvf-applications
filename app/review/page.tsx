@@ -75,7 +75,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ v
   } else if (st.current === "select") {
     step = { title: "All interviews are done", body: "Compare interview scores and record the committee's decision for each finalist.", cta: { label: "Go to Select →", href: "/review/select" } };
   } else if (selectedCount > 0) {
-    step = { title: `${selectedCount} Fellow${selectedCount === 1 ? "" : "s"} selected`, body: "Selection is complete. Next: terms, materials, and the announcement.", cta: { label: "See the cohort →", href: "/review/select" } };
+    step = { title: `${selectedCount} Fellow${selectedCount === 1 ? "" : "s"} selected`, body: "Selection is complete. Next: terms, materials, and the announcement.", cta: { label: "See the cohort →", href: "/review/announce" } };
   } else {
     step = { title: "Round closed", body: "No applications are in progress. Reopen applications from Round settings to start again.", cta: { label: "Round settings →", href: "/review/settings" } };
   }
@@ -122,7 +122,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ v
           <span><span className="muted">Applications</span> <b style={{ color: st.settings.accepting ? "#116b2b" : "var(--muted)" }}>{st.settings.accepting ? "currently open" : "closed"}</b></span>
           <span><span className="muted">Deadline</span> <b>{deadlineLong(st.settings.deadline)} · 11:59 PM PT</b></span>
           <span><span className="muted">Reviewers</span> <b>{st.screeners.map((r) => r.name.split(" ")[0]).join(", ")}</b> screen · <b>{st.reviewers.filter((r) => !r.screens).map((r) => r.name.split(" ")[0]).join(", ") || "—"}</b> joins at Interview</span>
-          <span><span className="muted">Nominations</span> <Link href="/review/nominations">view →</Link></span>
         </div>
         <Link href="/review/settings" className="small" style={{ fontWeight: 600 }}>Round settings →</Link>
       </div>
