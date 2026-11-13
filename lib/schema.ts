@@ -94,7 +94,7 @@ export const SECTIONS: Section[] = [
       { key: "LinkedIn", label: "Link to your LinkedIn profile", type: "url", required: true, placeholder: "https://linkedin.com/in/…" },
       { key: "Headshot", label: "A photo of you", type: "image", help: "Optional. It helps the selection committee remember who you are." },
       { key: "Company", label: "The name of your company", type: "text", required: true },
-      { key: "Website", label: "Your company's website", type: "url", placeholder: "https://" },
+      { key: "Website", label: "Your company's website", type: "url", required: true, placeholder: "https://", help: "A landing page or product site. If you don't have one yet, link your LinkedIn company page or app listing." },
       { key: "Role", label: "Your title at {company}", type: "text", placeholder: "Founder & CEO", required: true },
       {
         key: "PR Connection",

@@ -282,6 +282,8 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .table td { padding: 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
 .table tr:hover td { background: var(--paper-2); }
 .table a { color: inherit; font-weight: 600; text-decoration: none; }
+.table a.btn-ink { color: #fff; }
+.table a.btn-accent { color: #fff; }
 .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--paper-2); border: 1px solid var(--line); white-space: nowrap; }
 .pill.submitted { background: var(--accent-tint); border-color: #cfe0f7; color: var(--accent-ink); }
 .pill.finalist, .pill.interviewed { background: #fff4e5; border-color: #fdd9a8; color: #9a5b00; }
