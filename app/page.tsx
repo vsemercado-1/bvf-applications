@@ -4,8 +4,6 @@ import { getSettings, deadlineLong } from "@/lib/settings";
 import { Countdown } from "@/components/Countdown";
 import { BenefitArt } from "@/components/BenefitArt";
 import { EligibilityGate } from "@/components/EligibilityGate";
-import { ShareLink } from "@/components/ShareLink";
-import { siteUrl } from "@/lib/email";
 
 const Check = () => (
   <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0a5fb0" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
@@ -118,15 +116,9 @@ export default async function Home() {
       </section>
 
       <section id="share" className="section alt" style={{ borderBottom: 0 }}>
-        <div className="wrap two-col" style={{ alignItems: "center" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <h2 style={{ fontSize: 28 }}>Know a great Puerto Rican founder?</h2>
-            <p className="body">If someone comes to mind who would be a fit for the Fellowship, send them this page. The best applicants usually hear about it from someone who believed in them.</p>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
-            <ShareLink url={siteUrl("/")} />
-            <span className="small muted">fellowship.bravofamilyfoundation.org</span>
-          </div>
+        <div className="wrap" style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 820 }}>
+          <h2 style={{ fontSize: 28 }}>Know a great Puerto Rican founder?</h2>
+          <p className="body" style={{ fontSize: 17, lineHeight: 1.6 }}>If someone comes to mind who would be a fit for the Fellowship, send them this page. The best applicants usually hear about it from someone who believed in them.</p>
         </div>
       </section>
 
