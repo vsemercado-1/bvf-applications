@@ -49,7 +49,6 @@ export function HomeList({ toScore, scored, me, total, mineDone }: Props) {
       <Th id="investors" label="Investors" sortKey={key} dir={dir} onSort={toggle} />
       <Th id="raising" label="Raising" sortKey={key} dir={dir} onSort={toggle} />
       <Th id="mine" label="My score" sortKey={key} dir={dir} onSort={toggle} numeric />
-      <Th id="rec" label="My call" sortKey={key} dir={dir} onSort={toggle} />
       <th style={{ textAlign: "right" }}></th>
     </tr>
   );
@@ -72,7 +71,6 @@ export function HomeList({ toScore, scored, me, total, mineDone }: Props) {
         <td className="small" style={{ maxWidth: 220 }}>{r.investors || <span className="muted">None yet</span>}</td>
         <td className="small">{shortRaising(r.raising)}</td>
         <td style={{ fontSize: 17, fontWeight: 800, whiteSpace: "nowrap" }}>{mine?.avg == null ? <span className="muted" style={{ fontWeight: 400 }}>—</span> : fmt(mine.avg)}</td>
-        <td className="small" style={{ fontWeight: 700, color: recColor(mine?.rec), whiteSpace: "nowrap" }}>{mine?.rec || <span className="muted" style={{ fontWeight: 400 }}>—</span>}</td>
         <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
           {mine?.avg == null ? (
             <Link href={`/review/${r.id}`} className="btn btn-ink btn-sm" style={{ height: 36 }}>Score →</Link>
@@ -88,10 +86,7 @@ export function HomeList({ toScore, scored, me, total, mineDone }: Props) {
     <div className="box" style={{ gap: 16 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
         <div style={{ fontSize: 16, fontWeight: 800 }}>All {total} application{total === 1 ? "" : "s"}</div>
-        <div style={{ display: "flex", gap: 16 }} className="small muted">
-          <span><b style={{ color: "var(--ink)" }}>{total - mineDone}</b> to score</span>
-          <span><b style={{ color: "var(--ink)" }}>{mineDone}</b> scored by you</span>
-        </div>
+        <span className="small muted">You&apos;ve scored <b style={{ color: "var(--ink)" }}>{mineDone}</b> of <b style={{ color: "var(--ink)" }}>{total}</b></span>
       </div>
 
       {all.length === 0 && <p className="muted small" style={{ padding: "16px 0" }}>No applications yet.</p>}

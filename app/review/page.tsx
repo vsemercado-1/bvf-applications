@@ -100,14 +100,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ v
         <StageBar current={st.current} counts={st.counts} viewing={inDecide ? "decide" : "screen"} />
       </div>
 
-      <div className="next-step">
+      {inDecide && <div className="next-step">
         <div style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
           <div className="eyebrow" style={{ color: "var(--accent-on-dark)" }}>Your next step</div>
           <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.01em" }}>{step.title}</div>
           <div style={{ fontSize: 14, color: "var(--on-dark-body)", lineHeight: 1.5 }}>{step.body}</div>
         </div>
         {step.cta && <Link href={step.cta.href} className="btn btn-accent" style={{ whiteSpace: "nowrap" }}>{step.cta.label}</Link>}
-      </div>
+      </div>}
 
       {inDecide && !decideOpen ? (
         <HomeList toScore={toScore} scored={scored} me={me.email} others={others.map((o) => ({ email: o.email, first: o.name.split(" ")[0] }))} total={st.submitted.length} mineDone={mine.done} />
