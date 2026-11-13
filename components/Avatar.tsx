@@ -1,7 +1,13 @@
+"use client";
+
+import { useState } from "react";
+
 // Circular avatar: the applicant's photo if there is one, otherwise initials
 // on the brand blue. Used in the application header and reviewer views.
 
-export function Avatar({ src, name, size = 40 }: { src?: string; name?: string; size?: number }) {
+export function Avatar({ src: srcProp, name, size = 40 }: { src?: string; name?: string; size?: number }) {
+  const [broken, setBroken] = useState(false);
+  const src = broken ? undefined : srcProp;
   const initials = (name || "")
     .trim()
     .split(/\s+/)
@@ -26,7 +32,7 @@ export function Avatar({ src, name, size = 40 }: { src?: string; name?: string; 
   };
   if (src) {
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={src} alt={name ? `Photo of ${name}` : "Photo"} style={style} />;
+    return <img src={src} alt={name ? `Photo of ${name}` : "Photo"} style={style} onError={() => setBroken(true)} />;
   }
   return (
     <span style={style} aria-hidden="true">

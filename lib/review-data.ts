@@ -5,6 +5,9 @@ export type AppFields = Record<string, string | undefined>;
 
 // Airtable returns attachments as arrays; pull the first thumbnail-able URL.
 export function headshotUrl(fields: Record<string, unknown>): string | undefined {
+  // Prefer the permanent Blob URL; Airtable attachment links expire after ~2h.
+  const direct = fields["Headshot URL"];
+  if (typeof direct === "string" && /^https:\/\//.test(direct)) return direct;
   const v = fields["Headshot"];
   if (Array.isArray(v) && v[0] && typeof v[0] === "object") {
     const a = v[0] as { url?: string; thumbnails?: { large?: { url: string } } };

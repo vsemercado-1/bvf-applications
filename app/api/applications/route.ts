@@ -45,7 +45,10 @@ export async function POST(req: Request) {
   }
   const headshot = body.values?.["Headshot"];
   const attachments: Record<string, unknown> = {};
-  if (typeof headshot === "string" && /^https:\/\//.test(headshot)) attachments["Headshot"] = [{ url: headshot }];
+  if (typeof headshot === "string" && /^https:\/\//.test(headshot) && !/airtableusercontent\.com/.test(headshot)) {
+    attachments["Headshot"] = [{ url: headshot }]; // Airtable keeps a copy
+    fields["Headshot URL"] = headshot; // ...but this is the link that never expires
+  }
   fields["Region"] = body.region;
   fields["Descent"] = "Yes";
 
