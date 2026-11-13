@@ -5,6 +5,7 @@ import { useState } from "react";
 export function NominateForm({ compact = true }: { compact?: boolean }) {
   const [founder, setFounder] = useState("");
   const [link, setLink] = useState("");
+  const [email, setEmail] = useState("");
   const [nominator, setNominator] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
 
@@ -15,7 +16,7 @@ export function NominateForm({ compact = true }: { compact?: boolean }) {
     const res = await fetch("/api/nominations", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ founder, link, nominator }),
+      body: JSON.stringify({ founder, link, email, nominator }),
     });
     setState(res.ok ? "done" : "error");
   }
@@ -30,6 +31,8 @@ export function NominateForm({ compact = true }: { compact?: boolean }) {
       <input id="nom-founder" value={founder} onChange={(e) => setFounder(e.target.value)} placeholder="Founder's name" required style={{ flex: "1 1 160px" }} />
       <label htmlFor="nom-link" style={srOnly}>Company or LinkedIn profile</label>
       <input id="nom-link" value={link} onChange={(e) => setLink(e.target.value)} placeholder="Company or LinkedIn profile" style={{ flex: "1 1 160px" }} />
+      <label htmlFor="nom-email" style={srOnly}>Founder&apos;s email (if you have it)</label>
+      <input id="nom-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Founder's email (if you have it)" style={{ flex: "1 1 160px" }} />
       {!compact && (
         <>
           <label htmlFor="nom-you" style={srOnly}>Your name and email (optional)</label>

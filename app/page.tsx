@@ -118,7 +118,7 @@ export default async function Home() {
         <div className="wrap two-col" style={{ alignItems: "center" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             <h2 style={{ fontSize: 28 }}>Nominate a Founder</h2>
-            <p className="body">The Foundation welcomes referrals. Provide a founder&apos;s name and company, and the Foundation will contact them directly.</p>
+            <p className="body">The Foundation welcomes referrals. Share a founder&apos;s name and how to reach them, and the Foundation will get in touch.</p>
           </div>
           <NominateForm />
         </div>

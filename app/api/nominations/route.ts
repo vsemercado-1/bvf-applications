@@ -4,7 +4,7 @@ import { createRecord, TABLES } from "@/lib/airtable";
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
-  let body: { founder?: string; link?: string; nominator?: string };
+  let body: { founder?: string; link?: string; email?: string; nominator?: string };
   try {
     body = await req.json();
   } catch {
@@ -15,6 +15,7 @@ export async function POST(req: Request) {
   await createRecord(TABLES.nominations, {
     "Founder Name": founder,
     "Company or LinkedIn": (body.link || "").trim().slice(0, 500),
+    "Founder Email": (body.email || "").trim().slice(0, 200),
     Nominator: (body.nominator || "").trim().slice(0, 300),
   });
   return NextResponse.json({ ok: true });

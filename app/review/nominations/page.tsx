@@ -12,14 +12,15 @@ export default async function NominationsPage() {
       <p className="muted small">{recs.length} founders referred through the site. Reach out and invite them to apply.</p>
       <table className="table">
         <thead>
-          <tr><th>Founder</th><th>Company or LinkedIn</th><th>Nominated by</th><th>When</th></tr>
+          <tr><th>Founder</th><th>Company or LinkedIn</th><th>Founder email</th><th>Nominated by</th><th>When</th></tr>
         </thead>
         <tbody>
-          {recs.length === 0 && <tr><td colSpan={4} className="muted" style={{ textAlign: "center", padding: 32 }}>No nominations yet.</td></tr>}
+          {recs.length === 0 && <tr><td colSpan={5} className="muted" style={{ textAlign: "center", padding: 32 }}>No nominations yet.</td></tr>}
           {recs.map((r) => (
             <tr key={r.id}>
               <td style={{ fontWeight: 600 }}>{r.fields["Founder Name"]}</td>
               <td>{linkify(r.fields["Company or LinkedIn"])}</td>
+              <td>{r.fields["Founder Email"] ? <a href={`mailto:${r.fields["Founder Email"]}`}>{r.fields["Founder Email"]}</a> : <span className="muted">—</span>}</td>
               <td>{r.fields["Nominator"] || <span className="muted">—</span>}</td>
               <td className="small muted">{new Date(r.createdTime).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</td>
             </tr>
