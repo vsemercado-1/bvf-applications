@@ -39,6 +39,8 @@ export async function POST(req: Request) {
     if (f.type === "money") {
       const n = Number(v.replace(/\D/g, ""));
       if (Number.isFinite(n)) { numbers[f.key] = n; fields[f.key] = String(n); } // fields[] copy only for the required-field check
+    } else if (f.type === "url") {
+      fields[f.key] = normalizeUrl(v);
     } else fields[f.key] = v.trim().slice(0, 5000);
   }
   const headshot = body.values?.["Headshot"];
@@ -94,4 +96,14 @@ export async function POST(req: Request) {
 
   const resumeUrl = siteUrl(`/resume/${token}`);
   return NextResponse.json({ id: recordId, token, resumeUrl });
+}
+
+// "www.google.com" → "https://www.google.com". Full URLs pass through
+// untouched; near-misses like "https//site.com" or "http:/site.com" are repaired.
+function normalizeUrl(v: string): string {
+  const t = v.trim().slice(0, 500);
+  if (!t) return t;
+  if (/^https?:\/\//i.test(t)) return t;
+  const bare = t.replace(/^(https?)?:?\/*/i, "");
+  return bare ? `https://${bare}` : "";
 }
