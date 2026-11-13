@@ -29,7 +29,6 @@ export function SiteHeader({ nav = true }: { nav?: boolean }) {
 }
 
 export async function SiteFooter() {
-  const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "";
   return (
     <footer className="site-footer">
       <div className="wrap" style={{ justifyContent: "flex-end" }}>
@@ -41,12 +40,6 @@ export async function SiteFooter() {
           <b>A program of the Bravo Family Foundation</b>
           <span>
             <a href="https://www.bravofamilyfoundation.org">bravofamilyfoundation.org</a>
-            {email && (
-              <>
-                {" · Questions? "}
-                <a href={`mailto:${email}`}>{email}</a>
-              </>
-            )}
           </span>
         </div>
       </div>

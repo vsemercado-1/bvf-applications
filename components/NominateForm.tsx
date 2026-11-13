@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export function NominateForm({ compact = true }: { compact?: boolean }) {
+export function NominateForm() {
   const [founder, setFounder] = useState("");
   const [link, setLink] = useState("");
   const [email, setEmail] = useState("");
@@ -28,18 +28,14 @@ export function NominateForm({ compact = true }: { compact?: boolean }) {
   return (
     <form onSubmit={submit} style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
       <label htmlFor="nom-founder" className="sr-only" style={srOnly}>Founder&apos;s name</label>
-      <input id="nom-founder" value={founder} onChange={(e) => setFounder(e.target.value)} placeholder="Founder's name" required style={{ flex: "1 1 160px" }} />
+      <input id="nom-founder" value={founder} onChange={(e) => setFounder(e.target.value)} placeholder="Founder's name" required style={{ flex: "1 1 calc(50% - 5px)" }} />
       <label htmlFor="nom-link" style={srOnly}>Company or LinkedIn profile</label>
-      <input id="nom-link" value={link} onChange={(e) => setLink(e.target.value)} placeholder="Company or LinkedIn profile" style={{ flex: "1 1 160px" }} />
+      <input id="nom-link" value={link} onChange={(e) => setLink(e.target.value)} placeholder="Company or LinkedIn" style={{ flex: "1 1 calc(50% - 5px)" }} />
       <label htmlFor="nom-email" style={srOnly}>Founder&apos;s email (if you have it)</label>
-      <input id="nom-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Founder's email (if you have it)" style={{ flex: "1 1 160px" }} />
-      {!compact && (
-        <>
-          <label htmlFor="nom-you" style={srOnly}>Your name and email (optional)</label>
-          <input id="nom-you" value={nominator} onChange={(e) => setNominator(e.target.value)} placeholder="Your name and email (optional)" style={{ flex: "1 1 100%" }} />
-        </>
-      )}
-      <button type="submit" className="btn btn-ink" style={{ height: 48 }} disabled={state === "sending"}>
+      <input id="nom-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Founder's email (optional)" style={{ flex: "1 1 calc(50% - 5px)" }} />
+      <label htmlFor="nom-you" style={srOnly}>Your name and email (optional)</label>
+      <input id="nom-you" value={nominator} onChange={(e) => setNominator(e.target.value)} placeholder="Your name and email (optional)" style={{ flex: "1 1 calc(50% - 5px)" }} />
+      <button type="submit" className="btn btn-ink" style={{ height: 48, flex: "0 0 auto" }} disabled={state === "sending"}>
         {state === "sending" ? "Sending…" : "Submit"}
       </button>
       {state === "error" && <p className="error" style={{ flexBasis: "100%" }}>Something went wrong. Please try again.</p>}

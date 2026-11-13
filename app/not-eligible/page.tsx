@@ -21,7 +21,7 @@ export default async function NotEligible({ searchParams }: { searchParams: Prom
         <div className="box" style={{ marginTop: 8 }}>
           <h3>Know a founder who should apply?</h3>
           <p className="body small">Provide a founder&apos;s name and company, and the Foundation will contact them directly.</p>
-          <NominateForm compact={false} />
+          <NominateForm />
         </div>
       </main>
       <SiteFooter />
