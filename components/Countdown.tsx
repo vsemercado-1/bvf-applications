@@ -41,9 +41,12 @@ export function Countdown({ deadline }: { deadline: string }) {
   if (p === undefined) return <span className="countdown" />;
   if (p === null) return <span className="countdown">Applications are closed</span>;
 
-  const units: [number, string][] = [];
-  if (p.months) units.push([p.months, "month"]);
-  units.push([p.days, "day"], [p.hours, "hour"], [p.minutes, "minute"]);
+  // Two units at a time, at the precision that matters right now.
+  const units: [number, string][] = p.months
+    ? [[p.months, "month"], [p.days, "day"]]
+    : p.days
+      ? [[p.days, "day"], [p.hours, "hour"]]
+      : [[p.hours, "hour"], [p.minutes, "minute"]];
 
   return (
     <span className="countdown">

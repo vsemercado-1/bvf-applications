@@ -37,9 +37,9 @@ export default async function Home() {
           </div>
           <div className="tiles" id="benefits">
             <div className="tile"><BenefitArt kind="capital" dark /><b>$250,000 investment</b><span>A standard SAFE at the valuation cap of your most recent round, plus a small common-stock purchase.</span></div>
+            <div className="tile"><BenefitArt kind="orlando" dark /><b>Time with Orlando Bravo</b><span>Orlando meets with each Fellow during the program to review their business and offer support.</span></div>
             <div className="tile"><BenefitArt kind="mentorship" dark /><b>A Thoma Bravo advisor</b><span>Paired with you for the year as a thought partner on strategy, go-to-market, and organizational questions.</span></div>
             <div className="tile"><BenefitArt kind="communications" dark /><b>PR and fundraising support</b><span>Dedicated public relations support, including media placements, and hands-on help with your pitch and your raise.</span></div>
-            <div className="tile"><BenefitArt kind="orlando" dark /><b>Time with Orlando Bravo</b><span>Orlando meets with each Fellow during the program to review their business and offer support.</span></div>
             <div className="tile"><BenefitArt kind="community" dark /><b>A community of Puerto Rican founders</b><span>Fellowship alumni and founders from across the Foundation&apos;s programs, plus the Foundation&apos;s resources for entrepreneurs in Puerto Rico.</span></div>
           </div>
           <div className="fellows">
